@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'dart:math';
 
+import 'package:skateright_flutter/locations/skatelocation.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -109,6 +111,17 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            SizedBox(
+              height: 6,
+              width: MediaQuery.of(context).size.width,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SkateLocation()));
+              },
+              child: const Text("Skate Locations"),
+            )
           ],
         ),
       ),
