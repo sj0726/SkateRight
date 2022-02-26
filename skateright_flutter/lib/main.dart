@@ -1,6 +1,13 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'dart:math';
 
-void main() {
+import 'package:skateright_flutter/locations/skatelocation.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -51,6 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
+    DatabaseReference _testRef = FirebaseDatabase.instance.ref().child("test");
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
@@ -59,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+    _testRef.set("Numbers clicked: $_counter");
   }
 
   @override
@@ -102,6 +111,17 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            SizedBox(
+              height: 6,
+              width: MediaQuery.of(context).size.width,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SkateLocation()));
+              },
+              child: const Text("Skate Locations"),
+            )
           ],
         ),
       ),
