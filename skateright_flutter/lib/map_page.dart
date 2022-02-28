@@ -33,7 +33,7 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   static const _initialCameraPosition = CameraPosition(
     target: LatLng(42.350138473333864, -71.11174104622769),
-    zoom: 11.5,
+    zoom: 13.5,
   );
 
   late GoogleMapController _googleMapController;
@@ -41,7 +41,7 @@ class _MapScreenState extends State<MapScreen> {
 
   getData() async {
     /**
-     TODO: 
+     TODO (Aira): 
      * GET DATA FROM DATABASE
      * Decode JSON to fit format
      * 
@@ -66,6 +66,7 @@ class _MapScreenState extends State<MapScreen> {
         position: LatLng(42.35111488978059, -71.10889075787007),
         infoWindow: InfoWindow(
           title: "George Sherman Union INFO",
+          // onTap: _buildSpotPage()
         ),
       ));
 
