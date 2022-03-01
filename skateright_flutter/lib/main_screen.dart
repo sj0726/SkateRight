@@ -40,9 +40,9 @@ class _MainScreenState extends State<MainScreen> {
                     onTap: _onNavigationTap,
                     items: const <BottomNavigationBarItem>[
                       BottomNavigationBarItem(
-                          icon: Icon(Icons.person), label: 'Spots'),
+                          icon: Icon(Icons.map_outlined), label: 'Map'),
                       BottomNavigationBarItem(
-                          icon: Icon(Icons.cookie), label: 'Clicker'),
+                          icon: Icon(Icons.skateboarding), label: 'Spots'),
                     ],
                   ),
                 );

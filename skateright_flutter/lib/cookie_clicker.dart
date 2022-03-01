@@ -22,7 +22,7 @@ class ClickerPage extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Skate Locations'),
     );
   }
 }
@@ -39,11 +39,12 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
-    DatabaseReference _testRef = FirebaseDatabase.instance.ref().child("test");
+    DatabaseReference _testRef =
+        FirebaseDatabase.instance.ref().child("SkateLocation");
     setState(() {
       _counter++;
     });
-    _testRef.set("Numbers clicked: $_counter");
+    _testRef.set("Count: $_counter");
   }
 
   @override
@@ -57,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'Total Number of Skate Locations:',
             ),
             Text(
               '$_counter',
@@ -72,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => SkateLocation()));
               },
-              child: const Text("Skate Locations"),
+              child: const Text("Add a Spot"),
             )
           ],
         ),

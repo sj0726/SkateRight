@@ -32,6 +32,6 @@
             android:value="2" />
         <!--SKATERIGHT-->
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAqtTBwA1iivh4RuXXXXXXX" /> <!-- INSERT API KEY-->
+            android:value="AIzaSyAqtTBwA1iivh4RusnkAVvYl9bXI7eDN-A" /> <!-- INSERT API KEY-->
     </application>
 </manifest>
