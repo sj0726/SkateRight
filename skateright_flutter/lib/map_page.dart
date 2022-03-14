@@ -229,6 +229,9 @@ class _SpotPopupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// TODO: Find a way to add a RectTween to hero to get an animation to play
+    /// Possible solution - wrap [_SpotPopupCard] in a Gesture widget
+    ///   set onTap: this, child: rectTween
     return Hero(
       tag: spot.id,
       child: Padding(
