@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
+
+import './spot.dart';
+import './fake_spot.dart';
+import './hero_dialog_route.dart';
 
 void main() {
   runApp(const MapPage());
@@ -33,7 +38,7 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   static const _initialCameraPosition = CameraPosition(
     target: LatLng(42.350138473333864, -71.11174104622769),
-    zoom: 13.5,
+    zoom: 15,
   );
 
   late GoogleMapController _googleMapController;
@@ -48,7 +53,16 @@ class _MapScreenState extends State<MapScreen> {
      *  */
 
     _markers.clear();
+  }
 
+  _onMarkerTap() {
+    Navigator.of(context).push(
+      HeroDialogRoute(
+        builder: (context) => Center(
+          child: _SpotPopupCard(spot: fakeSpot),
+        ),
+      ),
+    );
   }
 
   void _onMapCreated(controller) async {
@@ -61,21 +75,25 @@ class _MapScreenState extends State<MapScreen> {
     // TODO: turn into a loop that reads from JSON
     // see - https://stackoverflow.com/questions/67153885/how-to-add-marker-in-the-google-map-using-json-api-in-flutter
     setState(() {
-      _markers.add(const Marker(
+      _markers.add(Marker(
         markerId: MarkerId("GSU"),
         position: LatLng(42.35111488978059, -71.10889075787007),
+        // onTap: () => _onMarkerTap(),
+
+        /// Call with ID
         infoWindow: InfoWindow(
-          title: "George Sherman Union INFO",
-          // onTap: _buildSpotPage()
-        ),
+            title: "George Sherman Union",
+            snippet: "more info...",
+            onTap: () => _onMarkerTap()),
       ));
 
-      _markers.add(const Marker(
+      _markers.add(Marker(
         markerId: MarkerId("808"),
         position: LatLng(42.350669405851505, -71.11207366936073),
-        infoWindow: InfoWindow(
-          title: "808 Comm Ave INFO",
-        ),
+        onTap: () => _onMarkerTap(),
+        // infoWindow: InfoWindow(
+          // title: "808 Comm Ave INFO",
+        // ),
       ));
 
       _markers.add(const Marker(
@@ -103,68 +121,144 @@ class _MapScreenState extends State<MapScreen> {
         initialCameraPosition: _initialCameraPosition,
         onMapCreated: (controller) => _onMapCreated(controller),
         markers: _markers,
-
-        // Lets get rid of some places of interest
-        
       ),
-
-      //this centers the map to 808 but with a bit of a zoom
-      // can be reused for a search button if needed idk
-      /* 
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.black,
-        onPressed: () => _googleMapController.animateCamera(
-        CameraUpdate.newCameraPosition(_initialCameraPosition),
-      ),
-      child: const Icon(Icons.center_focus_strong),
-       ),
-       */
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+/// Formats title of spot so it displays in bigger font
+/// Used in [_SpotPopupCard]
+class _SpotTitle extends StatelessWidget {
+  const _SpotTitle({Key? key, required this.title}) : super(key: key);
+
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  Widget build(BuildContext context) {
+    return Text(title,
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18));
+  }
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+/// Formats comments/reviews
+/// Called by [_SpotPopupCard]
+class _SpotComments extends StatelessWidget {
+  const _SpotComments({Key? key, required this.comments}) : super(key: key);
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  final List<Comment> comments;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+    return Column(children: [
+      for (final cmnt in comments) _SpotCommentTile(comment: cmnt),
+    ]);
+  }
+}
+
+/// Formats individual comments as they appear in the list of comments
+/// Called by [_SpotComments]
+class _SpotCommentTile extends StatelessWidget {
+  const _SpotCommentTile({Key? key, required this.comment}) : super(key: key);
+
+  final Comment comment;
+
+  @override
+  Widget build(BuildContext context) {
+    Icon trailing = const Icon(Icons.favorite, color: Colors.transparent);
+    if (comment.isReview) {
+      trailing = const Icon(Icons.favorite, color: Colors.red);
+    }
+
+    return ListTile(
+      leading: const Icon(Icons.person, color: Colors.blue),
+      trailing: trailing,
+      title: Text(comment.user),
+      subtitle: Text(comment.description),
+      // tileColor: Colors.grey[300],
+      minVerticalPadding: 13,
+    );
+  }
+}
+
+class _SpotPictures extends StatelessWidget {
+  const _SpotPictures({Key? key, required this.pictures}) : super(key: key);
+
+  final List<String> pictures;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 240,
+      child: 
+      ClipRRect(
+        borderRadius: BorderRadius.circular(7.0),
+        child:
+          ListView(
+            // padding: const EdgeInsets.symmetric(horizontal: 40),
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            children: [
+              for (final pic in pictures) _SpotPictureTile(picture: pic),
+            ],
+          )
+    )
+    );
+
+    // return ListView.builder(
+    // shrinkWrap: true,
+    // scrollDirection: Axis.horizontal,
+    // itemCount: pictures.length,
+    // itemBuilder: (context, index) => Image.network(pictures[index])
+  }
+}
+
+class _SpotPictureTile extends StatelessWidget {
+  const _SpotPictureTile({Key? key, required this.picture}) : super(key: key);
+
+  final String picture;
+
+  @override
+  Widget build(BuildContext context) {
+    return Image(image: NetworkImage(picture), fit: BoxFit.fill, );
+  }
+}
+
+class _SpotPopupCard extends StatelessWidget {
+  const _SpotPopupCard({Key? key, required this.spot}) : super(key: key);
+  final Spot spot;
+
+  @override
+  Widget build(BuildContext context) {
+    return Hero(
+      tag: spot.id,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Material(
+          borderRadius: BorderRadius.circular(16.0),
+          color: Colors.grey[100],
+          child: SizedBox(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  _SpotTitle(title: spot.title),
+                  const SizedBox(
+                    height: 12,
+                  ),
+
+                  if (spot.pictures != null) ...[
+                    const Divider(),
+                    _SpotPictures(pictures: spot.pictures!)
+                  ],
+
+                  const SizedBox(height: 25),
+                  const _SpotTitle(title: 'Comments'),
+                  if (spot.comments != null) ...[
+                    const Divider(),
+                    _SpotComments(comments: spot.comments!),
+                  ],
+                ]),
+          )))),
       ),
     );
   }
