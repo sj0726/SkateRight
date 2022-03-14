@@ -28,10 +28,11 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _pageIndex,
-        selectedItemColor: Colors.purple[600],
+        selectedItemColor: Colors.blueAccent,
+        backgroundColor: Colors.grey[300],
         onTap: _onNavigationTap,
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Spots'),
+          BottomNavigationBarItem(icon: Icon(Icons.map_outlined), label: 'Spots'),
           BottomNavigationBarItem(icon: Icon(Icons.cookie), label: 'Clicker'),
         ],
       ),

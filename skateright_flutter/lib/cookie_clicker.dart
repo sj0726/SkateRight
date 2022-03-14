@@ -18,7 +18,7 @@ class ClickerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'WARNING - going back to maps is ANOTHER API CALL',
+      title: 'Database Interaction',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
