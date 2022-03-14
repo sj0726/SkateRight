@@ -15,7 +15,10 @@ class _MainScreenState extends State<MainScreen> {
   final Future<FirebaseApp> _future = Firebase.initializeApp();
   @override
   int _pageIndex = 0;
-  List<Widget> pageList = <Widget>[MapPage(), ClickerPage()];
+  List<Widget> pageList = <Widget>[
+    MapPage(),
+    ClickerPage(),
+  ];
 
   void _onNavigationTap(int index) {
     setState(() {
