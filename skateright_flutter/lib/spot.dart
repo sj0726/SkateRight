@@ -1,19 +1,21 @@
 import 'package:meta/meta.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 /// Model for a skate spot. Can contain an optional list of [Comment]s
 /// if users have submitted comments on the spot
-/// 
+///
 /// Used in building spot card popups in map icon onTap()
 class Spot {
-  const Spot({
-    this.id = "0", // TODO: Set to required once infrastructure in place
-    required this.title,
-    // required this.address,
+  const Spot(
+      {this.id = "0", // TODO: Set to required once infrastructure in place
+      required this.title,
+      // required this.address,
 
-    this.pictures,
-    this.score,
-    this.comments,
-  });
+      this.pictures,
+      this.score,
+      this.comments});
 
   final String id;
   final String title;
@@ -23,22 +25,33 @@ class Spot {
   /// Nullable & optional
   final double? score;
   final List<Comment>? comments;
+
+  // Instance method to add spot to Firebase's Realtime Database
+  bool addToDatabase() {
+    DatabaseReference _ref = FirebaseDatabase.instance.ref().child("Spots");
+    // _ref.set("HI");
+    DatabaseReference newSpot = _ref.push();
+    newSpot.set({
+      "id": id,
+      "title": title,
+      "score": score,
+      // "comments": comments, // problematic.. comment data type needs to be converted into JSON-friendly text/list
+      "pictures": pictures
+    });
+    return true;
+  }
 }
 
 /// An individual review model, used within a [Spot].
 class Comment {
   /// {@macro item}
   Comment(
-      {
-        required this.id,
-        required this.user,
-        
-        this.description = '',
-
-        this.isReview = false,  // Post is default a comment
-        this.score              // Nullable
-      }
-    );
+      {required this.id,
+      required this.user,
+      this.description = '',
+      this.isReview = false, // Post is default a comment
+      this.score // Nullable
+      });
 
   /// The id of the comment itself
   final String id;

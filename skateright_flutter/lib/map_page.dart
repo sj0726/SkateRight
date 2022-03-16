@@ -63,6 +63,7 @@ class _MapScreenState extends State<MapScreen> {
         ),
       ),
     );
+    fakeSpot.addToDatabase();
   }
 
   void _onMapCreated(controller) async {
