@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "599126871537",
+    "firebase_url": "https://skateright-c919c-default-rtdb.firebaseio.com",
+    "project_id": "skateright-c919c",
+    "storage_bucket": "skateright-c919c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599126871537:android:6414a3de8dc184cd708850",
+        "android_client_info": {
+          "package_name": "com.example.skateright_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "599126871537-r993td9bj2t6c5a45db5rcfnghrjacs5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKRkpU8367JXBl8P6zMbgvqJOs5c4JJVM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "599126871537-r993td9bj2t6c5a45db5rcfnghrjacs5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "599126871537-tu68llc9ug4e8liljpgaoh1ebav11du9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.skaterightFlutter"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
