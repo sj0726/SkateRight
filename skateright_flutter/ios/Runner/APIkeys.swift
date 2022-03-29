@@ -8,5 +8,5 @@
 import Foundation
 
 struct APIkeys {
-    static let googleMapsKey = "APIKEY_HERE"
+    static let googleMapsKey = "testing_gitignore"
 }
