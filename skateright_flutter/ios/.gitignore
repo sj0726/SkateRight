@@ -1,3 +1,6 @@
+APIkeys.swift
+GoogleService-Info.plist
+
 
 # Created by https://www.toptal.com/developers/gitignore/api/swift,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=swift,macos
@@ -67,8 +70,6 @@ DerivedData/
 ## Playgrounds
 timeline.xctimeline
 playground.xcworkspace
-APIkeys.swift
-GoogleService-Info.plist
 
 # Swift Package Manager
 # Add this line if you want to avoid checking in source code from Swift Package Manager dependencies.
