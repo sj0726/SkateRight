@@ -5,7 +5,8 @@ const sCream = Color(0xFFf0e6d0);
 const sRed = Color(0xFFEB001B);
 const sLightGreen = Color(0xFF94B321);
 const sDarkGreen = Color(0xFF015C00);
-const sYellow = Color.fromARGB(255, 206, 187, 19); // Need actual value
+const sYellow = Color(0xFFf1c200); 
+const sYellow1 = Color.fromARGB(255, 206, 187, 19);
 
 final skateTheme = ThemeData(
   // General values that can be aceessed by all inheritors of Theme (all pages)
