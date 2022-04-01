@@ -41,6 +41,7 @@ dependencies:
   async: ^2.8.2
   firebase_core: ^1.13.1
   firebase_database: ^9.0.8
+  cloud_functions: ^3.2.10
 
 
 dev_dependencies:
