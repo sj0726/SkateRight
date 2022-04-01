@@ -31,11 +31,8 @@ class _MainScreenState extends State<MainScreen> {
         bucket: bucket,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
+        // All styling info stored in skate_theme
         currentIndex: _pageIndex,
-        selectedItemColor: Theme.of(context).accentColor,
-        unselectedItemColor: Colors.grey,        
-        backgroundColor: Colors.grey[850],
         onTap: (int index) => setState(() => _pageIndex = index),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.map_outlined), label: 'Spots'),

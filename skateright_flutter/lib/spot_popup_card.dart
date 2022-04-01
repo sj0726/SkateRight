@@ -39,7 +39,7 @@ class SpotPopupCard extends StatelessWidget {
                   const _Interactions(),
                   const SizedBox(height: 12),
 
-                  _Obstacles(), // Call with spot.obstacles
+                  _Obstacles(), // Call with spot
                   const SizedBox(height: 12),
 
                   _SpotComments(comments: spot.comments!),
@@ -220,8 +220,8 @@ class _SpotCommentTile extends StatelessWidget {
     return ListTile(
       leading: const Icon(Icons.person, color: Colors.blue),
       trailing: trailing,
-      title: Text(comment.user),
-      subtitle: Text(comment.description),
+      title: Text(comment.user, style: Theme.of(context).textTheme.subtitle1),
+      subtitle: Text(comment.description, style: Theme.of(context).textTheme.bodyText2),
       // tileColor: Colors.grey[300],
       minVerticalPadding: 13,
     );

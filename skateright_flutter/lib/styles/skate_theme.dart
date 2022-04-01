@@ -8,17 +8,12 @@ const sDarkGreen = Color(0xFF015C00);
 const sYellow = Color.fromARGB(255, 206, 187, 19); // Need actual value
 
 final skateTheme = ThemeData(
-  // General
+  // General values that can be aceessed by all inheritors of Theme (all pages)
   backgroundColor: sBlack,
   accentColor: sLightGreen,
-
-  // Used in main_screen.dart
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    // TODO
-  ),
   secondaryHeaderColor: sYellow,
 
-  // Text Theme
+  // Text Themes
   textTheme: const TextTheme(
     headline1: TextStyle(
       fontFamily: 'RobotoMono',
@@ -34,5 +29,16 @@ final skateTheme = ThemeData(
     ),
     subtitle1: TextStyle(fontFamily: 'Karla', fontSize: 16, color: sCream),
     bodyText1: TextStyle(fontFamily: 'Karla', fontSize: 15, color: sCream),
+    bodyText2: TextStyle(fontFamily: 'Karla', fontSize: 12, color: sCream),
+  ),
+
+  // Used in main_screen.dart
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    // TODO - Figure out NavBar theme
+    backgroundColor: Colors.grey[850],
+    selectedItemColor: sLightGreen,
+    unselectedItemColor: Colors.grey,
+
+    type: BottomNavigationBarType.fixed,
   ),
 );

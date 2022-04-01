@@ -1,7 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import './main_screen.dart';
+import 'main_screen.dart';
 import 'styles/skate_theme.dart';
 
 void main() => runApp(MyApp());

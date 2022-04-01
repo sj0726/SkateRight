@@ -14,10 +14,12 @@ class _SkateLocationState extends State<SkateLocation> {
       ),
       body: Center(
           child: Padding(
-              padding: const EdgeInsets.only(top: 15.0),
+            padding: const EdgeInsets.only(top: 15.0),
               child: Column(
                 children: const [],
-              ))),
+              ),
+          ),
+      ),
     );
   }
 }
