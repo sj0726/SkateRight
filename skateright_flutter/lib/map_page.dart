@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
+
+import 'package:flutter/services.dart';
 
 import './spot.dart';
 import './fake_spot.dart';
 import './hero_dialog_route.dart';
+import 'spot_popup_card.dart';
 
 void main() {
   runApp(const MapPage());
@@ -20,9 +22,7 @@ class MapPage extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Maps Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: Theme.of(context),
       home: MapScreen(),
     );
   }
@@ -41,6 +41,7 @@ class _MapScreenState extends State<MapScreen> {
     zoom: 15,
   );
 
+  bool _mapCreated = false;
   late GoogleMapController _googleMapController;
   Set<Marker> _markers = {};
 
@@ -57,12 +58,40 @@ class _MapScreenState extends State<MapScreen> {
 
   _onMarkerTap() {
     Navigator.of(context).push(
+      HeroDialogRoute(builder: (context) => SpotPopupCard(spot: fakeSpot)),
+    );
+
+    // Navigator.of(context).push(HeroDialogRoute(
+    //   builder: (context) => Container(
+    //     alignment: Alignment.bottomCenter,
+    //     child: FractionallySizedBox(
+    //         widthFactor: 1.0,
+    //         heightFactor: .9,
+    //         child: _SpotPopupCard(spot: fakeSpot)),
+    //   ),
+    // ));
+    /*
+    Navigator.of(context).push(
       HeroDialogRoute(
         builder: (context) => Center(
-          child: _SpotPopupCard(spot: fakeSpot),
-        ),
+            child: _SpotPopupCard(spot: fakeSpot),
+            // child: SpotInfoPage(spot: fakeSpot,),
+            ),
       ),
     );
+    // */
+  }
+
+  void changeMapStyle() {
+    getJsonFile('assets/map_style.json').then(setMapStyle);
+  }
+
+  Future<String> getJsonFile(String path) async {
+    return await rootBundle.loadString('path');
+  }
+
+  void setMapStyle(String mapStyle) {
+    _googleMapController.setMapStyle(mapStyle);
   }
 
   void _onMapCreated(controller) async {
@@ -92,7 +121,7 @@ class _MapScreenState extends State<MapScreen> {
         position: LatLng(42.350669405851505, -71.11207366936073),
         onTap: () => _onMarkerTap(),
         // infoWindow: InfoWindow(
-          // title: "808 Comm Ave INFO",
+        // title: "808 Comm Ave INFO",
         // ),
       ));
 
@@ -104,6 +133,7 @@ class _MapScreenState extends State<MapScreen> {
         ),
       ));
     });
+    _mapCreated = true;
   }
 
   @override
@@ -114,6 +144,7 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    changeMapStyle();
     return Scaffold(
       body: GoogleMap(
         myLocationButtonEnabled: false,
@@ -125,6 +156,14 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 }
+
+
+/**
+ * EVERYTHING BELOW THIS POINT IS DEPRECATED
+ * 
+ * Spot info cards now handled in spot_popup.dart
+ */
+
 
 /// Formats title of spot so it displays in bigger font
 /// Used in [_SpotPopupCard]
@@ -188,27 +227,17 @@ class _SpotPictures extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 240,
-      child: 
-      ClipRRect(
-        borderRadius: BorderRadius.circular(7.0),
-        child:
-          ListView(
-            // padding: const EdgeInsets.symmetric(horizontal: 40),
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            children: [
-              for (final pic in pictures) _SpotPictureTile(picture: pic),
-            ],
-          )
-    )
-    );
-
-    // return ListView.builder(
-    // shrinkWrap: true,
-    // scrollDirection: Axis.horizontal,
-    // itemCount: pictures.length,
-    // itemBuilder: (context, index) => Image.network(pictures[index])
+        height: 240,
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(7.0),
+            child: ListView(
+              // padding: const EdgeInsets.symmetric(horizontal: 40),
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              children: [
+                for (final pic in pictures) _SpotPictureTile(picture: pic),
+              ],
+            )));
   }
 }
 
@@ -219,7 +248,10 @@ class _SpotPictureTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image(image: NetworkImage(picture), fit: BoxFit.fill, );
+    return Image(
+      image: NetworkImage(picture),
+      fit: BoxFit.fill,
+    );
   }
 }
 
@@ -234,35 +266,33 @@ class _SpotPopupCard extends StatelessWidget {
     ///   set onTap: this, child: rectTween
     return Hero(
       tag: spot.id,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Material(
-          borderRadius: BorderRadius.circular(16.0),
+      child: Material(
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
           color: Colors.grey[100],
-          child: SizedBox(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
+          child: Padding(
+              padding: const EdgeInsets.only(top: 24.0),
               child: SingleChildScrollView(
-                child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  _SpotTitle(title: spot.title),
-                  const SizedBox(
-                    height: 12,
-                  ),
-
-                  if (spot.pictures != null) ...[
-                    const Divider(),
-                    _SpotPictures(pictures: spot.pictures!)
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _SpotTitle(title: spot.title),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    if (spot.pictures != null) ...[
+                      const Divider(),
+                      _SpotPictures(pictures: spot.pictures!)
+                    ],
+                    const SizedBox(height: 25),
+                    const _SpotTitle(title: 'Comments'),
+                    if (spot.comments != null) ...[
+                      const Divider(),
+                      _SpotComments(comments: spot.comments!),
+                    ],
                   ],
-
-                  const SizedBox(height: 25),
-                  const _SpotTitle(title: 'Comments'),
-                  if (spot.comments != null) ...[
-                    const Divider(),
-                    _SpotComments(comments: spot.comments!),
-                  ],
-                ]),
-          )))),
-      ),
+                ),
+              ))),
     );
   }
 }
