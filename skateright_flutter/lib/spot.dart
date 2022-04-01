@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 
 /// Model for a skate spot. Can contain an optional list of [Comment]s
 /// if users have submitted comments on the spot
-/// 
+///
 /// Used in building spot card popups in map icon onTap()
 class Spot {
   const Spot({
@@ -13,32 +13,32 @@ class Spot {
     this.pictures,
     this.score,
     this.comments,
+    this.obstacles
+
   });
 
   final String id;
   final String title;
+
   // final String address;
   final List<String>? pictures;
 
   /// Nullable & optional
   final double? score;
   final List<Comment>? comments;
+  final List<String>? obstacles;
 }
 
 /// An individual review model, used within a [Spot].
 class Comment {
   /// {@macro item}
   Comment(
-      {
-        required this.id,
-        required this.user,
-        
-        this.description = '',
-
-        this.isReview = false,  // Post is default a comment
-        this.score              // Nullable
-      }
-    );
+      {required this.id,
+      required this.user,
+      this.description = '',
+      this.isReview = false, // Post is default a comment
+      this.score // Nullable
+      });
 
   /// The id of the comment itself
   final String id;
