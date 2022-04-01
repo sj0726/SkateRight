@@ -12,8 +12,8 @@ class _MainScreenState extends State<MainScreen> {
   @override
   int _pageIndex = 0;
   List<Widget> pageList = <Widget>[
-    MapPage(),
-    ClickerPage(),
+    MapPage(key: PageStorageKey('Map')),
+    ClickerPage(key: PageStorageKey('Clicker')),
   ];
 
   void _onNavigationTap(int index) {
@@ -22,15 +22,21 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  final PageStorageBucket bucket = PageStorageBucket();
+
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pageList[_pageIndex],
+      body: PageStorage(  /// Saves state of pages... no reload required
+        child: pageList[_pageIndex],
+        bucket: bucket,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _pageIndex,
-        selectedItemColor: Colors.blueAccent,
-        backgroundColor: Colors.grey[300],
-        onTap: _onNavigationTap,
+        selectedItemColor: Theme.of(context).accentColor,
+        unselectedItemColor: Colors.grey,        
+        backgroundColor: Colors.grey[850],
+        onTap: (int index) => setState(() => _pageIndex = index),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.map_outlined), label: 'Spots'),
           BottomNavigationBarItem(icon: Icon(Icons.cookie), label: 'Clicker'),
