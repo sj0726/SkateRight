@@ -66,6 +66,17 @@ class _MapScreenState extends State<MapScreen> {
     fakeSpot.addToDatabase();
   }
 
+  //   _onImageTap() {
+  //   Navigator.of(context).push(
+  //       MaterialPageRoute(
+  //       builder: (context) => Column(
+  //         // child: _ImagesScreen(spot: fakeSpot),
+  //         children: [ for (final pic in fakeSpot.pictures) _SpotPictureTile(picture: pic) Divider() ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
   void _onMapCreated(controller) async {
     // Set map controller
     _googleMapController = controller;
@@ -216,9 +227,21 @@ class _SpotPictureTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image(
-      image: NetworkImage(picture),
-      fit: BoxFit.fill,
+    return GestureDetector(
+      onTap: () {
+        // _onImageTap();
+      }, // Image tapped
+      child: Image(
+        image: NetworkImage(picture),
+        fit: BoxFit.fill,
+      ),
+
+      // Image.asset(
+      //   'assets/cat.jpg',
+      //   fit: BoxFit.cover, // Fixes border issues
+      //   width: 110.0,
+      //   height: 110.0,
+      // ),
     );
   }
 }
@@ -236,6 +259,45 @@ class _SpotPopupCard extends StatelessWidget {
       tag: spot.id,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
+        child: Material(
+            borderRadius: BorderRadius.circular(16.0),
+            color: Colors.grey[100],
+            child: SizedBox(
+                child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: SingleChildScrollView(
+                      child: Column(mainAxisSize: MainAxisSize.min, children: [
+                        _SpotTitle(title: spot.title),
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        if (spot.pictures != null) ...[
+                          const Divider(),
+                          _SpotPictures(pictures: spot.pictures!)
+                        ],
+                        const SizedBox(height: 25),
+                        const _SpotTitle(title: 'Comments'),
+                        if (spot.comments != null) ...[
+                          const Divider(),
+                          _SpotComments(comments: spot.comments!),
+                        ],
+                      ]),
+                    )))),
+      ),
+    );
+  }
+}
+
+class _ImagesScreen extends StatelessWidget {
+  const _ImagesScreen({Key? key, required this.spot}) : super(key: key);
+  final Spot spot;
+
+  @override
+  Widget build(BuildContext context) {
+    return Hero(
+      tag: spot.id,
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
         child: Material(
             borderRadius: BorderRadius.circular(16.0),
             color: Colors.grey[100],
