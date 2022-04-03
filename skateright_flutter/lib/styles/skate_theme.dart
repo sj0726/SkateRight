@@ -13,6 +13,7 @@ final skateTheme = ThemeData(
   backgroundColor: sBlack,
   accentColor: sLightGreen,
   secondaryHeaderColor: sYellow,
+  cardColor: sDarkGreen,
 
   // Text Themes
   textTheme: const TextTheme(
@@ -24,7 +25,7 @@ final skateTheme = ThemeData(
     ),
     headline2: TextStyle(
       fontFamily: 'RobotoMono',
-      fontSize: 18,
+      fontSize: 20, // Supposed to be 18 but I like this better
       fontWeight: FontWeight.w400,
       color: sCream,
     ),
@@ -42,4 +43,19 @@ final skateTheme = ThemeData(
 
     type: BottomNavigationBarType.fixed,
   ),
+  
+  appBarTheme: AppBarTheme(
+    backgroundColor: sDarkGreen,
+    
+  ),
+
+  // ignore: prefer_const_constructors
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    // ignore: prefer_const_constructors
+    style: ButtonStyle(
+      backgroundColor: MaterialStateColor.resolveWith((states) => sDarkGreen),
+      // textStyle not taking the appropriate color...
+      textStyle: MaterialStateProperty.resolveWith((states) => skateTheme.textTheme.headline1!.copyWith(color: Colors.white))
+    )
+  )
 );

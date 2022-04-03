@@ -12,7 +12,7 @@ class Spot {
 
     this.pictures,
     this.score,
-    this.comments,
+    required this.comments,
     this.obstacles
 
   });
@@ -25,7 +25,7 @@ class Spot {
 
   /// Nullable & optional
   final double? score;
-  final List<Comment>? comments;
+  final List<Comment> comments;
   final List<String>? obstacles;
 }
 

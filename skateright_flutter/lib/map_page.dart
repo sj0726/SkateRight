@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
@@ -7,7 +9,7 @@ import 'package:flutter/services.dart';
 import './spot.dart';
 import './fake_spot.dart';
 import './hero_dialog_route.dart';
-import 'spot_popup_card.dart';
+import 'spot_page/spot_popup_card.dart';
 
 void main() {
   runApp(const MapPage());
@@ -43,95 +45,42 @@ class _MapScreenState extends State<MapScreen> {
 
   bool _mapCreated = false;
   late GoogleMapController _googleMapController;
+  late BitmapDescriptor customMarker;
+  late String _mapStyle;
   Set<Marker> _markers = {};
 
-  getData() async {
-    /**
-     TODO (Aira): 
-     * GET DATA FROM DATABASE
-     * Decode JSON to fit format
-     * 
-     *  */
-
-    _markers.clear();
+  void setCustomMarker() async {
+    customMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 5.0), 'assets/map/map_pin.png');
   }
 
-  _onMarkerTap() {
-    Navigator.of(context).push(
-      HeroDialogRoute(builder: (context) => SpotPopupCard(spot: fakeSpot)),
-    );
-
-    // Navigator.of(context).push(HeroDialogRoute(
-    //   builder: (context) => Container(
-    //     alignment: Alignment.bottomCenter,
-    //     child: FractionallySizedBox(
-    //         widthFactor: 1.0,
-    //         heightFactor: .9,
-    //         child: _SpotPopupCard(spot: fakeSpot)),
-    //   ),
-    // ));
-    /*
-    Navigator.of(context).push(
-      HeroDialogRoute(
-        builder: (context) => Center(
-            child: _SpotPopupCard(spot: fakeSpot),
-            // child: SpotInfoPage(spot: fakeSpot,),
-            ),
-      ),
-    );
-    // */
+  @override
+  void initState() {
+    super.initState();
+    // _setMapStyle();
+    setCustomMarker();
   }
 
-  void changeMapStyle() {
-    getJsonFile('assets/map_style.json').then(setMapStyle);
+  _onMarkerTap(Spot spot) {
+    Navigator.of(context).push(
+      HeroDialogRoute(builder: (context) => SpotPopupCard(spot: spot)),
+    );
+  }
+
+  void _setMapStyle() {
+    getJsonFile('assets/map/map_style.json').then((value) => _mapStyle = value);
   }
 
   Future<String> getJsonFile(String path) async {
-    return await rootBundle.loadString('path');
-  }
-
-  void setMapStyle(String mapStyle) {
-    _googleMapController.setMapStyle(mapStyle);
+    return await rootBundle.loadString(path);
   }
 
   void _onMapCreated(controller) async {
     // Set map controller
     _googleMapController = controller;
-
-    // atm does nothing but clear the set of markers
-    await getData();
-
-    // TODO: turn into a loop that reads from JSON
-    // see - https://stackoverflow.com/questions/67153885/how-to-add-marker-in-the-google-map-using-json-api-in-flutter
     setState(() {
-      _markers.add(Marker(
-        markerId: MarkerId("GSU"),
-        position: LatLng(42.35111488978059, -71.10889075787007),
-        // onTap: () => _onMarkerTap(),
-
-        /// Call with ID
-        infoWindow: InfoWindow(
-            title: "George Sherman Union",
-            snippet: "more info...",
-            onTap: () => _onMarkerTap()),
-      ));
-
-      _markers.add(Marker(
-        markerId: MarkerId("808"),
-        position: LatLng(42.350669405851505, -71.11207366936073),
-        onTap: () => _onMarkerTap(),
-        // infoWindow: InfoWindow(
-        // title: "808 Comm Ave INFO",
-        // ),
-      ));
-
-      _markers.add(const Marker(
-        markerId: MarkerId("Agganis Arena"),
-        position: LatLng(42.35260646322381, -71.11782537730139),
-        infoWindow: InfoWindow(
-          title: "Agganis Arena INFO",
-        ),
-      ));
+      setMarkers();
+      // _googleMapController.setMapStyle(_mapStyle);
     });
     _mapCreated = true;
   }
@@ -142,9 +91,46 @@ class _MapScreenState extends State<MapScreen> {
     super.dispose();
   }
 
+  setMarkers() {
+    _markers.clear();
+    _markers.add(
+      Marker(
+        markerId: MarkerId("GSU"),
+        position: LatLng(42.35111488978059, -71.10889075787007),
+        // icon: BitmapDescriptor.defaultMarkerWithHue(50),
+        icon: customMarker,
+        infoWindow: InfoWindow(
+            title: "George Sherman Union",
+            snippet: "more info...",
+            onTap: () => _onMarkerTap(fakeSpot1)),
+      ),
+    );
+    _markers.add(
+      Marker(
+        markerId: MarkerId("808"),
+        position: LatLng(42.350669405851505, -71.11207366936073),
+        // icon: BitmapDescriptor.defaultMarkerWithHue(50),
+        icon: customMarker,
+        onTap: () => _onMarkerTap(fakeSpot),
+      ),
+    );
+
+    _markers.add(
+      Marker(
+        markerId: MarkerId("Agganis Arena"),
+        position: LatLng(42.35260646322381, -71.11782537730139),
+        // icon: BitmapDescriptor.defaultMarkerWithHue(50),
+        icon: customMarker,
+        onTap: _onMarkerTap(fakeSpot),
+        infoWindow: InfoWindow(
+          title: "Agganis Arena INFO",
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    changeMapStyle();
     return Scaffold(
       body: GoogleMap(
         myLocationButtonEnabled: false,
@@ -157,13 +143,11 @@ class _MapScreenState extends State<MapScreen> {
   }
 }
 
-
 /**
  * EVERYTHING BELOW THIS POINT IS DEPRECATED
  * 
  * Spot info cards now handled in spot_popup.dart
  */
-
 
 /// Formats title of spot so it displays in bigger font
 /// Used in [_SpotPopupCard]
@@ -288,7 +272,7 @@ class _SpotPopupCard extends StatelessWidget {
                     const _SpotTitle(title: 'Comments'),
                     if (spot.comments != null) ...[
                       const Divider(),
-                      _SpotComments(comments: spot.comments!),
+                      _SpotComments(comments: spot.comments),
                     ],
                   ],
                 ),
