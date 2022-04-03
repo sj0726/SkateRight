@@ -168,9 +168,17 @@ class _Interactions extends StatelessWidget {
           size: 30,
         ),
         SizedBox(width: 12),
-        Icon(Icons.star_border_outlined, color: Colors.green, size: 30),
+        Icon(
+          Icons.star_border_outlined,
+          color: Colors.green,
+          size: 30,
+        ),
         SizedBox(width: 12),
-        Icon(Icons.photo_camera_outlined, color: Colors.grey, size: 30)
+        Icon(
+          Icons.photo_camera_outlined,
+          color: Colors.grey,
+          size: 30,
+        )
       ],
     );
   }
