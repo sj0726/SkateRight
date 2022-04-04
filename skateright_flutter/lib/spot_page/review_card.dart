@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:map_app/styles/skate_theme.dart';
 import '../spot.dart';
 
-int maxSize = 50;
+int maxSize = 80; // Max char length of review text preview
 
 // Stateful required for "tap to see more"... expanding to read full review
 class ReviewCard extends StatefulWidget {
@@ -19,14 +19,43 @@ class ReviewCard extends StatefulWidget {
 }
 
 class _ReviewCardState extends State<ReviewCard> {
+  final double _profileRadius = 26.0;
   late String previewText;
   late String hiddenText;
   late Comment review; // replaces widget.review with review... legibility
   bool expanded = false;
 
+  final _random = new Random();
+  List<Color> colors = [sCream, sLightGreen, sYellow];
+  List<Image> profilePics = [];
+
+  Color _chooseColor() {
+    return colors[_random.nextInt(colors.length)];
+  }
+
+  Image _chooseProfilePic() {
+    return profilePics[_random.nextInt(profilePics.length)];
+  }
+
+  void _loadProfilePics() {
+    profilePics.add(Image.asset(
+      'assets/figures/skater1.png',
+      height: 28 * 1.5,
+    ));
+    profilePics
+        .add(Image.asset('assets/figures/skater2.png', height: _profileRadius * 1.60));
+    profilePics
+        .add(Image.asset('assets/figures/skater3.png', height: _profileRadius * 1.60));
+    profilePics
+        .add(Image.asset('assets/figures/skater4.png', height: _profileRadius * 1.60));
+  }
+
   @override
   void initState() {
     super.initState();
+
+    _loadProfilePics();
+
     review = widget.review;
 
     if (review.description.length > maxSize) {
@@ -43,15 +72,23 @@ class _ReviewCardState extends State<ReviewCard> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: const CircleAvatar(
-        backgroundColor: sCream,
+      leading: CircleAvatar(
+        radius: _profileRadius,
+        backgroundColor: _chooseColor(),
+        child: ClipOval(
+          child: _chooseProfilePic(),
+        ),
       ),
       title: Text(
         review.user,
         style: Theme.of(context).textTheme.subtitle1,
       ),
       subtitle: hiddenText.isEmpty
-          ? Text(previewText, style: Theme.of(context).textTheme.bodyText2, textAlign: TextAlign.start,)
+          ? Text(
+              previewText,
+              style: Theme.of(context).textTheme.bodyText2,
+              textAlign: TextAlign.start,
+            )
           : Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [

@@ -28,10 +28,14 @@ final _comments = [
 ];
 
 final _picsGSU = [
-  'https://www.bu.edu/meetatbu/files/2014/07/503678580503_0_bg.jpg',
-  'https://www.bu.edu/files/2020/11/resized-20-1472-GSURRENO-074.jpg',
-  'https://i0.wp.com/bunewsservice.com/wp-content/uploads/2019/01/shadow-boxes-Ann-9.jpg?resize=810%2C608',
-  'https://www.bu.edu/cpo/files/2010/10/GSU_After_1.jpg',
+  'assets/images/gsu1',
+  'assets/images/gsu2',
+  'assets/images/gsu3',
+  'assets/images/gsu4',
+  // 'https://www.bu.edu/meetatbu/files/2014/07/503678580503_0_bg.jpg',
+  // 'https://www.bu.edu/files/2020/11/resized-20-1472-GSURRENO-074.jpg',
+  // 'https://i0.wp.com/bunewsservice.com/wp-content/uploads/2019/01/shadow-boxes-Ann-9.jpg?resize=810%2C608',
+  // 'https://www.bu.edu/cpo/files/2010/10/GSU_After_1.jpg',
 ];
 
 final fakeSpot1 = Spot(
@@ -53,9 +57,15 @@ final fakeSpot = Spot(
 );
 
 final _picsLFS = [
-  "https://345v4845f1o72rvbx12u5xsh-wpengine.netdna-ssl.com/wp-content/uploads/2016/07/0706PeoplePlace_LynchFamilySkateparkPC.jpg",
-  "https://blog.skateboard.com.au/images/lynchfamily1.jpg",
-  "https://i.pinimg.com/originals/c3/3e/9f/c33e9fe702f6ea33833539dea774b60f.jpg",
-  "https://i.ytimg.com/vi/JDfUfrI_EFI/maxresdefault.jpg",
-  "https://images.squarespace-cdn.com/content/v1/54543035e4b0b65b3fa91f52/1447728417023-7ST26WFKKQTJD9MT67XZ/3C4A9308.jpg"
+  'assets/images/lynch1.jpg',
+  'assets/images/lynch2.jpg',
+  'assets/images/lynch3.jpg',
+  'assets/images/lynch4.jpg',
+  'assets/images/lynch5.jpg',
+  
+  // "https://345v4845f1o72rvbx12u5xsh-wpengine.netdna-ssl.com/wp-content/uploads/2016/07/0706PeoplePlace_LynchFamilySkateparkPC.jpg",
+  // "https://i.pinimg.com/originals/c3/3e/9f/c33e9fe702f6ea33833539dea774b60f.jpg",
+  // "https://i.ytimg.com/vi/JDfUfrI_EFI/maxresdefault.jpg",
+  // "https://images.squarespace-cdn.com/content/v1/54543035e4b0b65b3fa91f52/1447728417023-7ST26WFKKQTJD9MT67XZ/3C4A9308.jpg",
+  // "https://blog.skateboard.com.au/images/lynchfamily1.jpg",
 ];

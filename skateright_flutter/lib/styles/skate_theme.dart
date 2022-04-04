@@ -29,24 +29,28 @@ final skateTheme = ThemeData(
       fontWeight: FontWeight.w400,
       color: sCream,
     ),
-    subtitle1: TextStyle(fontFamily: 'Karla', fontSize: 16, color: sCream),
-    bodyText1: TextStyle(fontFamily: 'Karla', fontSize: 15, color: sCream),
-    bodyText2: TextStyle(fontFamily: 'Karla', fontSize: 12, color: sCream),
+    subtitle1: TextStyle(fontFamily: 'Karla', fontSize: 18, color: sCream), // Should be 16
+    bodyText1: TextStyle(fontFamily: 'Karla', fontSize: 16, color: sCream), // Should be 15
+    bodyText2: TextStyle(fontFamily: 'Karla', fontSize: 14, color: sCream), // Should be 12
   ),
 
   // Used in main_screen.dart
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    // TODO - Figure out NavBar theme
+    // TODO - Figure out NavBar color scheme
     backgroundColor: Colors.grey[850],
     selectedItemColor: sLightGreen,
     unselectedItemColor: Colors.grey,
+
+    /// Doesn't work...
+    unselectedLabelStyle: const TextStyle(fontFamily: 'Karla', fontSize: 14, color: Colors.pink),
+    selectedLabelStyle: const TextStyle(fontFamily: 'Karla', fontSize: 14, color: Colors.blue),
 
     type: BottomNavigationBarType.fixed,
   ),
   
   appBarTheme: AppBarTheme(
     backgroundColor: sDarkGreen,
-    
+    // titleTextStyle: TextStyle(fontFamily: 'Karla', fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white)
   ),
 
   // ignore: prefer_const_constructors

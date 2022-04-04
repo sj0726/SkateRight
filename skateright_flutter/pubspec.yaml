@@ -39,9 +39,11 @@ dependencies:
   dio: ^4.0.0
   flutter_polyline_points: ^0.2.6
   google_maps_flutter: ^2.1.1
+  geolocator: ^8.2.0
   async: ^2.8.2
   firebase_core: ^1.13.1
   firebase_database: ^9.0.8
+  location_web: ^3.1.1
 
 
 dev_dependencies:
@@ -68,10 +70,10 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/z5Cf7.png
-    - assets/map/map_style.json
-    - assets/map/map_pin.png
-    - assets/
+    - assets/map/
+    - assets/figures/
+    - assets/backgrounds/
+    - assets/images/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

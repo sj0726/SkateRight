@@ -141,8 +141,9 @@ class _SpotPhoto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: Image(
-        image: NetworkImage(spot.pictures![0]),
+      child: Image.asset(
+        // image: NetworkImage(spot.pictures![0]),
+        spot.pictures![0],
         fit: BoxFit.cover,
       ),
       onTap: () => {

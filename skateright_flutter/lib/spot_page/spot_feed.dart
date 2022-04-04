@@ -18,24 +18,39 @@ class SpotFeed extends StatelessWidget {
           style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: ListView(
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          children: [
-            for (final pic in pictures!) ...[
-              SizedBox(height: 24.0),
-              _SpotPictureTile(picture: pic),
-            ],
-            // Box at the end so users can see the last image at the top
-            // of the screen if desired
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 2,
-            )
-          ],
-        ),
-      ),
+      /*body: Stack(
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height,
+            // width: MediaQuery.of(context).size.width,
+            child: Image.asset(
+              'assets/backgrounds/Rectangle915.png',
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+          ),
+          // */
+          body: Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+            child: ListView(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              children: [
+                for (final pic in pictures!) ...[
+                  const SizedBox(
+                      height: 24.0), // topmost functions as scroll-away padding
+                  _SpotPictureTile(picture: pic),
+                ],
+                // Box at the end so users can see the last image at the top
+                // of the screen if desired
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 2,
+                )
+              ],
+            ),
+          ),
+        // ], // Taken out from stack implementation
+      // ),   // Taken out from stack implementation
     );
   }
 }
@@ -47,8 +62,9 @@ class _SpotPictureTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image(
-      image: NetworkImage(picture),
+    return Image.asset(
+      // image: NetworkImage(picture),
+      picture,
       fit: BoxFit.fill,
     );
   }
