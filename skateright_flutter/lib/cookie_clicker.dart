@@ -1,7 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'dart:math';
 
 import './locations/skatelocation.dart';
 
@@ -21,8 +20,10 @@ class ClickerPage extends StatelessWidget {
       title: 'Database Interaction',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        //  primarySwatch: Theme.of(context).colorScheme.primary,
+
       ),
-      home: const MyHomePage(title: 'Skate Locations'),
+      home: const MyHomePage(title: 'Testing'),
     );
   }
 }
@@ -39,12 +40,11 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
-    DatabaseReference _testRef =
-        FirebaseDatabase.instance.ref().child("SkateLocation");
+    DatabaseReference _testRef = FirebaseDatabase.instance.ref().child("test");
     setState(() {
       _counter++;
     });
-    _testRef.set("Count: $_counter");
+    _testRef.set("Numbers clicked: $_counter");
   }
 
   @override
@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'Total Number of Skate Locations:',
+              'You have pushed the button this many times:',
             ),
             Text(
               '$_counter',
@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => SkateLocation()));
               },
-              child: const Text("Add a Spot"),
+              child: const Text("Skate Locations"),
             )
           ],
         ),
