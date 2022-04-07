@@ -15,7 +15,6 @@ class ProfilePage extends StatelessWidget {
         body:
         CreateProfileForm(),
       ),
-      // theme: ThemeData(primaryColor: const Color(0x00141414)),
       theme: ThemeData(
           backgroundColor: const Color.fromARGB(255, 20, 20, 20)
       )
