@@ -44,3 +44,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Firestore functions related
+/skateright_flutter/functions/*
+/skateright_flutter/functions/node_modules/

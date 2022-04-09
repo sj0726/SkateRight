@@ -1,11 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
+
+import 'package:flutter/services.dart';
 
 import './spot.dart';
 import './fake_spot.dart';
 import './hero_dialog_route.dart';
+import 'spot_page/spot_popup_card.dart';
 
 void main() {
   runApp(const MapPage());
@@ -20,9 +24,7 @@ class MapPage extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Maps Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: Theme.of(context),
       home: MapScreen(),
     );
   }
@@ -41,87 +43,91 @@ class _MapScreenState extends State<MapScreen> {
     zoom: 15,
   );
 
+  bool _mapCreated = false;
   late GoogleMapController _googleMapController;
+  late BitmapDescriptor customMarker;
+  late String _mapStyle;
   Set<Marker> _markers = {};
 
-  getData() async {
-    /**
-     TODO (Aira): 
-     * GET DATA FROM DATABASE
-     * Decode JSON to fit format
-     * 
-     *  */
-
-    _markers.clear();
+  void setCustomMarker() async {
+    customMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 5.0), 'assets/map/map_pin.png');
   }
 
-  _onMarkerTap() {
+  @override
+  void initState() {
+    super.initState();
+    // _setMapStyle();
+    setCustomMarker();
+  }
+
+  _onMarkerTap(Spot spot) {
     Navigator.of(context).push(
-      HeroDialogRoute(
-        builder: (context) => Center(
-          child: _SpotPopupCard(spot: fakeSpot),
-        ),
-      ),
+      HeroDialogRoute(builder: (context) => SpotPopupCard(spot: spot)),
     );
     fakeSpot.addToDatabase();
   }
 
-  //   _onImageTap() {
-  //   Navigator.of(context).push(
-  //       MaterialPageRoute(
-  //       builder: (context) => Column(
-  //         // child: _ImagesScreen(spot: fakeSpot),
-  //         children: [ for (final pic in fakeSpot.pictures) _SpotPictureTile(picture: pic) Divider() ],
-  //       ),
-  //     ),
-  //   );
-  // }
+  void _setMapStyle() {
+    getJsonFile('assets/map/map_style.json').then((value) => _mapStyle = value);
+  }
+
+  Future<String> getJsonFile(String path) async {
+    return await rootBundle.loadString(path);
+  }
 
   void _onMapCreated(controller) async {
     // Set map controller
     _googleMapController = controller;
-
-    // atm does nothing but clear the set of markers
-    await getData();
-
-    // TODO: turn into a loop that reads from JSON
-    // see - https://stackoverflow.com/questions/67153885/how-to-add-marker-in-the-google-map-using-json-api-in-flutter
     setState(() {
-      _markers.add(Marker(
-        markerId: MarkerId("GSU"),
-        position: LatLng(42.35111488978059, -71.10889075787007),
-        // onTap: () => _onMarkerTap(),
-
-        /// Call with ID
-        infoWindow: InfoWindow(
-            title: "George Sherman Union",
-            snippet: "more info...",
-            onTap: () => _onMarkerTap()),
-      ));
-
-      _markers.add(Marker(
-        markerId: MarkerId("808"),
-        position: LatLng(42.350669405851505, -71.11207366936073),
-        onTap: () => _onMarkerTap(),
-        // infoWindow: InfoWindow(
-        // title: "808 Comm Ave INFO",
-        // ),
-      ));
-
-      _markers.add(const Marker(
-        markerId: MarkerId("Agganis Arena"),
-        position: LatLng(42.35260646322381, -71.11782537730139),
-        infoWindow: InfoWindow(
-          title: "Agganis Arena INFO",
-        ),
-      ));
+      setMarkers();
+      // _googleMapController.setMapStyle(_mapStyle);
     });
+    _mapCreated = true;
   }
 
   @override
   void dispose() {
     _googleMapController.dispose();
     super.dispose();
+  }
+
+  setMarkers() {
+    _markers.clear();
+    _markers.add(
+      Marker(
+        markerId: MarkerId("GSU"),
+        position: LatLng(42.35111488978059, -71.10889075787007),
+        // icon: BitmapDescriptor.defaultMarkerWithHue(50),
+        icon: customMarker,
+        infoWindow: InfoWindow(
+            title: "George Sherman Union",
+            snippet: "more info...",
+            onTap: () => _onMarkerTap(fakeSpot1)),
+      ),
+    );
+    _markers.add(
+      Marker(
+        markerId: MarkerId("808"),
+        position: LatLng(42.350669405851505, -71.11207366936073),
+        // icon: BitmapDescriptor.defaultMarkerWithHue(50),
+        icon: customMarker,
+        onTap: () => _onMarkerTap(fakeSpot),
+      ),
+    );
+
+    _markers.add(
+      Marker(
+        markerId: MarkerId("Agganis Arena"),
+        position: LatLng(42.35260646322381, -71.11782537730139),
+        // icon: BitmapDescriptor.defaultMarkerWithHue(50),
+        icon: customMarker,
+        onTap: _onMarkerTap(fakeSpot),
+        infoWindow: InfoWindow(
+          title: "Agganis Arena INFO",
+        ),
+      ),
+    );
   }
 
   @override
@@ -137,6 +143,12 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 }
+
+/**
+ * EVERYTHING BELOW THIS POINT IS DEPRECATED
+ * 
+ * Spot info cards now handled in spot_popup.dart
+ */
 
 /// Formats title of spot so it displays in bigger font
 /// Used in [_SpotPopupCard]
@@ -211,12 +223,6 @@ class _SpotPictures extends StatelessWidget {
                 for (final pic in pictures) _SpotPictureTile(picture: pic),
               ],
             )));
-
-    // return ListView.builder(
-    // shrinkWrap: true,
-    // scrollDirection: Axis.horizontal,
-    // itemCount: pictures.length,
-    // itemBuilder: (context, index) => Image.network(pictures[index])
   }
 }
 
@@ -227,21 +233,9 @@ class _SpotPictureTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // _onImageTap();
-      }, // Image tapped
-      child: Image(
-        image: NetworkImage(picture),
-        fit: BoxFit.fill,
-      ),
-
-      // Image.asset(
-      //   'assets/cat.jpg',
-      //   fit: BoxFit.cover, // Fixes border issues
-      //   width: 110.0,
-      //   height: 110.0,
-      // ),
+    return Image(
+      image: NetworkImage(picture),
+      fit: BoxFit.fill,
     );
   }
 }
@@ -257,72 +251,33 @@ class _SpotPopupCard extends StatelessWidget {
     ///   set onTap: this, child: rectTween
     return Hero(
       tag: spot.id,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Material(
-            borderRadius: BorderRadius.circular(16.0),
-            color: Colors.grey[100],
-            child: SizedBox(
-                child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: SingleChildScrollView(
-                      child: Column(mainAxisSize: MainAxisSize.min, children: [
-                        _SpotTitle(title: spot.title),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                        if (spot.pictures != null) ...[
-                          const Divider(),
-                          _SpotPictures(pictures: spot.pictures!)
-                        ],
-                        const SizedBox(height: 25),
-                        const _SpotTitle(title: 'Comments'),
-                        if (spot.comments != null) ...[
-                          const Divider(),
-                          _SpotComments(comments: spot.comments!),
-                        ],
-                      ]),
-                    )))),
-      ),
-    );
-  }
-}
-
-class _ImagesScreen extends StatelessWidget {
-  const _ImagesScreen({Key? key, required this.spot}) : super(key: key);
-  final Spot spot;
-
-  @override
-  Widget build(BuildContext context) {
-    return Hero(
-      tag: spot.id,
-      child: Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: Material(
-            borderRadius: BorderRadius.circular(16.0),
-            color: Colors.grey[100],
-            child: SizedBox(
-                child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: SingleChildScrollView(
-                      child: Column(mainAxisSize: MainAxisSize.min, children: [
-                        _SpotTitle(title: spot.title),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                        if (spot.pictures != null) ...[
-                          const Divider(),
-                          _SpotPictures(pictures: spot.pictures!)
-                        ],
-                        const SizedBox(height: 25),
-                        const _SpotTitle(title: 'Comments'),
-                        if (spot.comments != null) ...[
-                          const Divider(),
-                          _SpotComments(comments: spot.comments!),
-                        ],
-                      ]),
-                    )))),
-      ),
+      child: Material(
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
+          color: Colors.grey[100],
+          child: Padding(
+              padding: const EdgeInsets.only(top: 24.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _SpotTitle(title: spot.title),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    if (spot.pictures != null) ...[
+                      const Divider(),
+                      _SpotPictures(pictures: spot.pictures)
+                    ],
+                    const SizedBox(height: 25),
+                    const _SpotTitle(title: 'Comments'),
+                    if (spot.comments != null) ...[
+                      const Divider(),
+                      _SpotComments(comments: spot.comments),
+                    ],
+                  ],
+                ),
+              ))),
     );
   }
 }

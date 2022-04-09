@@ -16,8 +16,8 @@ class _MainScreenState extends State<MainScreen> {
   @override
   int _pageIndex = 0;
   List<Widget> pageList = <Widget>[
-    MapPage(),
-    ClickerPage(),
+    MapPage(key: PageStorageKey('Map')),
+    ClickerPage(key: PageStorageKey('Clicker')),
   ];
 
   void _onNavigationTap(int index) {
@@ -25,6 +25,8 @@ class _MainScreenState extends State<MainScreen> {
       _pageIndex = index;
     });
   }
+
+  final PageStorageBucket bucket = PageStorageBucket();
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +41,6 @@ class _MainScreenState extends State<MainScreen> {
                   bottomNavigationBar: BottomNavigationBar(
                     type: BottomNavigationBarType.fixed,
                     currentIndex: _pageIndex,
-                    selectedItemColor: Colors.purple[600],
                     onTap: _onNavigationTap,
                     items: const <BottomNavigationBarItem>[
                       BottomNavigationBarItem(

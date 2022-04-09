@@ -13,18 +13,21 @@ class Spot {
       required this.title,
       // required this.address,
 
-      this.pictures,
+      required this.pictures,
       this.score,
-      this.comments});
+      required this.comments,
+      required this.obstacles});
 
   final String id;
   final String title;
+
   // final String address;
-  final List<String>? pictures;
+  final List<String> pictures;
 
   /// Nullable & optional
   final double? score;
-  final List<Comment>? comments;
+  final List<Comment> comments;
+  final List<String> obstacles;
 
   // Instance method to add spot to Firebase's Realtime Database
   bool addToDatabase() {

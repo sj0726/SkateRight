@@ -49,14 +49,14 @@ exports.getGoogleNearby = functions.firestore.document('/Coordinates/{documentId
     const lat = snap.data().latitude;
     const long = snap.data().longitude;
     const radius = 1500;
-    const key = "AIzaSyBedDUKU41U3bxNlZwOy7uqW9xyudEIr1w";
+    const key = "x";
     var config = {
       method: 'get',
       url: `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat}%2C${long}&radius=${radius}&key=${key}`,
       // params: {
       //   location: lat + '%2C' + long,
       //   radius: 1500,
-      //   key: 'AIzaSyBedDUKU41U3bxNlZwOy7uqW9xyudEIr1w'
+      //   key: 'x'
       // },
       headers: { }
     };
