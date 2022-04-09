@@ -45,7 +45,7 @@ class _MainScreenState extends State<MainScreen> {
                       BottomNavigationBarItem(
                           icon: Icon(Icons.map_outlined), label: 'Map'),
                       BottomNavigationBarItem(
-                          icon: Icon(Icons.skateboarding), label: 'Spots'),
+                          icon: Icon(Icons.skateboarding), label: 'User'),
                     ],
                   ),
                 );

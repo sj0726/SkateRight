@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SkateLocation extends StatefulWidget {
   @override
@@ -43,6 +44,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
+  final firestoreInstance = FirebaseFirestore.instance;
   TextEditingController latController = TextEditingController();
   TextEditingController longController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -116,6 +118,11 @@ class MyCustomFormState extends State<MyCustomForm> {
                   DatabaseReference _ref =
                       FirebaseDatabase.instance.ref().child("Spots");
                   _ref.push().set({
+                    "latitude": double.parse(latController.text),
+                    "longitude": double.parse(longController.text),
+                    "name": nameController.text
+                  });
+                  firestoreInstance.collection("Coordinates").add({
                     "latitude": double.parse(latController.text),
                     "longitude": double.parse(longController.text),
                     "name": nameController.text
