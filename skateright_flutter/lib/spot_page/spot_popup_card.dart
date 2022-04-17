@@ -2,7 +2,7 @@ import 'dart:developer' as dev;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:map_app/styles/skate_theme.dart';
+import '/styles/skate_theme.dart';
 import '../spot.dart';
 import 'review_card.dart';
 import 'reviews_page.dart';
@@ -143,7 +143,7 @@ class _SpotPhoto extends StatelessWidget {
     return GestureDetector(
       child: Image.asset(
         // image: NetworkImage(spot.pictures![0]),
-        spot.pictures![0],
+        spot.pictures[0],
         fit: BoxFit.cover,
       ),
       onTap: () => {

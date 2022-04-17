@@ -5,12 +5,15 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:location/location.dart';
 
 import './spot.dart';
 import './fake_spot.dart';
 import './hero_dialog_route.dart';
 import 'spot_page/spot_popup_card.dart';
+import 'search_bar.dart';
 
+late GoogleMapController globalMapController;
 void main() {
   runApp(const MapPage());
 }
@@ -44,15 +47,15 @@ class _MapScreenState extends State<MapScreen> {
   );
 
   bool _mapCreated = false;
-  late GoogleMapController _googleMapController;
+  late GoogleMapController googleMapController;
+  Location location = Location();
+  late LocationData _locationData;
+  late bool _locationServEnabled;
+  late PermissionStatus _locationPermEnabled;
+
   late BitmapDescriptor customMarker;
   late String _mapStyle;
   Set<Marker> _markers = {};
-
-  void setCustomMarker() async {
-    customMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 5.0), 'assets/map/map_pin.png');
-  }
 
   @override
   void initState() {
@@ -61,14 +64,22 @@ class _MapScreenState extends State<MapScreen> {
     setCustomMarker();
   }
 
+  void setCustomMarker() async {
+    customMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 5.0), 'assets/map/map_pin.png');
+  }
+
   _onMarkerTap(Spot spot) {
     Navigator.of(context).push(
       HeroDialogRoute(builder: (context) => SpotPopupCard(spot: spot)),
     );
   }
 
-  void _setMapStyle() {
-    getJsonFile('assets/map/map_style.json').then((value) => _mapStyle = value);
+  void _setMapStyle(GoogleMapController controller) async {
+    String value = await DefaultAssetBundle.of(context)
+        .loadString('assets/map/maps_style.json');
+    controller.setMapStyle(value);
+    // getJsonFile('assets/map/map_style.json').then((value) => _mapStyle = value);
   }
 
   Future<String> getJsonFile(String path) async {
@@ -77,17 +88,38 @@ class _MapScreenState extends State<MapScreen> {
 
   void _onMapCreated(controller) async {
     // Set map controller
-    _googleMapController = controller;
+    googleMapController = controller;
+    globalMapController = controller;
+    _setMapStyle(googleMapController);
+
     setState(() {
       setMarkers();
-      // _googleMapController.setMapStyle(_mapStyle);
+      // _googleMapController.setMapStyle(_mapStyleString);
     });
+
+    _locationServEnabled = await location.serviceEnabled();
+    if (!_locationServEnabled) {
+      _locationServEnabled = await location.requestService();
+    }
+
+    _locationPermEnabled = await location.hasPermission();
+    if (_locationPermEnabled == PermissionStatus.denied) {
+      _locationPermEnabled = await location.requestPermission();
+    }
+
+    _locationData = await location.getLocation();
+    print(_locationData);
+
+    location.onLocationChanged.listen((newPos) {
+      _locationData = newPos;
+    });
+
     _mapCreated = true;
   }
 
   @override
   void dispose() {
-    _googleMapController.dispose();
+    googleMapController.dispose();
     super.dispose();
   }
 
@@ -100,9 +132,10 @@ class _MapScreenState extends State<MapScreen> {
         // icon: BitmapDescriptor.defaultMarkerWithHue(50),
         icon: customMarker,
         infoWindow: InfoWindow(
-            title: "George Sherman Union",
-            snippet: "more info...",
-            onTap: () => _onMarkerTap(fakeSpot1)),
+          title: "George Sherman Union",
+          snippet: "more info...",
+          onTap: () => _onMarkerTap(fakeSpot1),
+        ),
       ),
     );
     _markers.add(
@@ -121,7 +154,7 @@ class _MapScreenState extends State<MapScreen> {
         position: LatLng(42.35260646322381, -71.11782537730139),
         // icon: BitmapDescriptor.defaultMarkerWithHue(50),
         icon: customMarker,
-        onTap: _onMarkerTap(fakeSpot),
+        // onTap: _onMarkerTap(fakeSpot), /// Being called on build for some reason
         infoWindow: InfoWindow(
           title: "Agganis Arena INFO",
         ),
@@ -132,14 +165,32 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GoogleMap(
-        myLocationButtonEnabled: false,
-        zoomControlsEnabled: true,
-        initialCameraPosition: _initialCameraPosition,
-        onMapCreated: (controller) => _onMapCreated(controller),
-        markers: _markers,
+      resizeToAvoidBottomInset: false,
+      // floatingActionButton: !searching
+      //     ? FloatingActionButton(
+      //         child: const Icon(Icons.search),
+      //         onPressed: () => setState(() => searching = !searching)
+      //         )
+      //     : null,
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      body: Stack(
+        children: [
+          GoogleMap(
+            myLocationEnabled: true,
+            myLocationButtonEnabled: true,
+            zoomControlsEnabled: true,
+            initialCameraPosition: _initialCameraPosition,
+            onMapCreated: (controller) => _onMapCreated(controller),
+            markers: _markers,
+          ),
+          SearchBar(),
+        ],
       ),
     );
+  }
+
+  GoogleMapController getMapController() {
+    return googleMapController;
   }
 }
 
@@ -266,7 +317,7 @@ class _SpotPopupCard extends StatelessWidget {
                     ),
                     if (spot.pictures != null) ...[
                       const Divider(),
-                      _SpotPictures(pictures: spot.pictures!)
+                      _SpotPictures(pictures: spot.pictures)
                     ],
                     const SizedBox(height: 25),
                     const _SpotTitle(title: 'Comments'),

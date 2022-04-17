@@ -18,25 +18,14 @@ class SpotFeed extends StatelessWidget {
           style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
       ),
-      /*body: Stack(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height,
-            // width: MediaQuery.of(context).size.width,
-            child: Image.asset(
-              'assets/backgrounds/Rectangle915.png',
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-          // */
-          body: Padding(
+      body:
+          Padding(  // See above comment block for Scaffold attrs
             padding: const EdgeInsets.only(left: 16.0, right: 16.0),
             child: ListView(
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               children: [
-                for (final pic in pictures!) ...[
+                for (final pic in pictures) ...[
                   const SizedBox(
                       height: 24.0), // topmost functions as scroll-away padding
                   _SpotPictureTile(picture: pic),
@@ -49,8 +38,6 @@ class SpotFeed extends StatelessWidget {
               ],
             ),
           ),
-        // ], // Taken out from stack implementation
-      // ),   // Taken out from stack implementation
     );
   }
 }

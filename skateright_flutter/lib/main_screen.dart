@@ -26,6 +26,7 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: PageStorage(  /// Saves state of pages... no reload required
         child: pageList[_pageIndex],
         bucket: bucket,
