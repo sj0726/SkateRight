@@ -57,6 +57,7 @@ class _SearchBarState extends State<SearchBar> {
       openAxisAlignment: 0.0,
       width: isPortrait ? 600 : 500,
       debounceDelay: const Duration(milliseconds: 500),
+
       onQueryChanged: (input) {
         // Changing query calls builder which handles DB querying
         query = input;
@@ -103,12 +104,10 @@ class _SearchBarState extends State<SearchBar> {
   }
 
   List<Widget> _buildSearchResults() {
-    // MUST COMPLETE BEFORE building
-    // Idea - use a global flag  queryDone or use futureBuilder
-    List<Spot> results = _getResultsFromQuery(query);
+    // Idea - use a global flag  queryDone, futureBuilder, or .then()
+    List<Spot> results = _getResultsFromQuery(query); // MUST COMPLETE BEFORE BUILDING
     List<ListTile> tiles = [];
 
-    /// ATTN SANJOON:
     for (Spot result in results) {
       tiles.add(
         ListTile(
@@ -123,7 +122,7 @@ class _SearchBarState extends State<SearchBar> {
 
   List<Spot> _getResultsFromQuery(String query) {
     /// ATTENTION SANJOON
-    /// Do some database fetching... only title of spot (see _buildSearchResult())
+    /// Compile database/API calls into list and return as spots
     return [fakeSpot, fakeSpot1];
   }
 
@@ -133,7 +132,7 @@ class _SearchBarState extends State<SearchBar> {
     LatLng newLatLng = LatLng(spot.latitude, spot.longitude);
     globalMapController.moveCamera(
       CameraUpdate.newCameraPosition(
-        CameraPosition(target: newLatLng, zoom: 15),
+        CameraPosition(target: newLatLng, zoom: 20),
       ),
     );
     // loadSpotsAtLocation(newLatLng)
