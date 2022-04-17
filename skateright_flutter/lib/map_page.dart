@@ -60,8 +60,12 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-    // _setMapStyle();
     setCustomMarker();
+    DefaultAssetBundle.of(context).loadString('assets/map/map_style.json').then((asString) {
+      _mapStyle = asString;
+    }).catchError((error) {
+      log(error.toString());
+    });
   }
 
   void setCustomMarker() async {
@@ -75,24 +79,27 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  void _setMapStyle(GoogleMapController controller) async {
-    String value = await DefaultAssetBundle.of(context)
-        .loadString('assets/map/maps_style.json');
-    controller.setMapStyle(value);
-    // getJsonFile('assets/map/map_style.json').then((value) => _mapStyle = value);
-  }
-
   Future<String> getJsonFile(String path) async {
     return await rootBundle.loadString(path);
   }
 
   void _onMapCreated(controller) async {
-    // Set map controller
-    googleMapController = controller;
     globalMapController = controller;
-    _setMapStyle(googleMapController);
-
+    // Set map controller
     setState(() {
+      googleMapController = controller;
+      if (_mapStyle != null) {
+        googleMapController.setMapStyle(_mapStyle).
+        then((value) {
+          log("Map Style set");
+        }).catchError((error) =>
+            log("Error setting map style:" + error.toString()));
+      }
+      else {
+        log(
+            "GoogleMapView:_onMapCreated: Map style could not be loaded.");
+      }
+
       setMarkers();
       // _googleMapController.setMapStyle(_mapStyleString);
     });
