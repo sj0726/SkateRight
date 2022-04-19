@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
@@ -5,25 +6,27 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'spot.dart';
-import 'map_page.dart';
 
 import 'fake_spot.dart';
 
-class SearchBar extends StatefulWidget {
-  const SearchBar({
-    Key? key,
-  }) : super(key: key);
+List<String> options = ['Park', 'Street', 'Ramps', 'Flat', 'Rails'];
+Map<String, int> selections = {};
 
-  // final GoogleMapController mapController;
+class SearchBar extends StatefulWidget {
+  const SearchBar({Key? key, required this.placeSpotMarker, required this.goToSpot})
+      : super(key: key);
+  final placeSpotMarker;
+  final goToSpot;
 
   @override
   State<SearchBar> createState() => _SearchBarState();
 }
 
 class _SearchBarState extends State<SearchBar> {
-  late bool expanded;
-  late bool searching;
   late FloatingSearchBarController _controller;
+  // functions from [map_page]
+  late final addSpotMarker;
+  late final goToSpot;
 
   String query = '';
 
@@ -31,8 +34,13 @@ class _SearchBarState extends State<SearchBar> {
   void initState() {
     super.initState();
     _controller = FloatingSearchBarController();
-    expanded = false;
-    searching = false;
+    addSpotMarker = widget.placeSpotMarker;
+    goToSpot = widget.goToSpot;
+
+    for (String opt in options) {
+      selections[opt] = 1; // Note: this is bad for desired stair implementation
+    }
+
     // mapController = widget.mapController;
     // filteredSearchHistory = filterSearchTerms(filter: null);
   }
@@ -43,7 +51,8 @@ class _SearchBarState extends State<SearchBar> {
         MediaQuery.of(context).orientation == Orientation.portrait;
 
     return FloatingSearchBar(
-      backgroundColor: Theme.of(context).primaryColorLight,
+      backgroundColor: Colors.grey[200],
+      // backgroundColor: Theme.of(context).primaryColorLight,
       borderRadius: BorderRadius.circular(60),
       queryStyle:
           Theme.of(context).textTheme.subtitle1!.copyWith(color: Colors.black),
@@ -63,24 +72,68 @@ class _SearchBarState extends State<SearchBar> {
         query = input;
       },
       onSubmitted: (input) {
-        // Closes keyboard
-        FocusManager.instance.primaryFocus?.unfocus();
+        query = input;
+        // Closes keyboard... should be used when we have autcomplete features
+        // FocusManager.instance.primaryFocus?.unfocus();
       },
       transition: CircularFloatingSearchBarTransition(),
       actions: [
+        /* Advanced search menu */
         FloatingSearchBarAction(
           showIfOpened: false,
           child: CircularButton(
-            icon: const Icon(Icons.chevron_right),
+            icon: const Icon(Icons.menu),
             onPressed: () {
-              query = "";
-              _controller.close();
-              // _controller.hide();
+              var size = MediaQuery.of(context).size;
+              showModalBottomSheet(
+                context: context,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12.0),
+                      topRight: Radius.circular(12.0)),
+                ),
+                backgroundColor: Theme.of(context).cardColor,
+                builder: (context) {
+                  return StatefulBuilder(// Allows checkboxes to update state
+                      builder: (BuildContext context, StateSetter setState) {
+                    return FractionallySizedBox(
+                      heightFactor: .60,
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          top: 24.0,
+                          left: 16.0,
+                          right: 16.0,
+                        ),
+                        child: GridView.count(
+                          crossAxisCount: 2,
+                          childAspectRatio: size.height / size.width * 2,
+                          children: selections.keys.map(
+                            (key) {
+                              return CheckboxListTile(
+                                title: Text(key),
+                                value: selections[key] == 1 ? true : false,
+                                onChanged: (flag) {
+                                  setState(
+                                    () {
+                                      log(selections[key].toString());
+                                      selections[key] = flag! ? 1 : 0;
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          ).toList(),
+                        ),
+                      ),
+                    );
+                  });
+                },
+              );
             },
           ),
         ),
         FloatingSearchBarAction.searchToClear(
-          // Note: does not clear keyboard
+          // Note: does not remove keyboard from screen
           showIfClosed: false,
         ),
       ],
@@ -88,7 +141,7 @@ class _SearchBarState extends State<SearchBar> {
         return ClipRRect(
           borderRadius: BorderRadius.circular(16),
           child: Material(
-            color: Colors.white,
+            color: Colors.grey[50],
             elevation: 4.0,
             child: Container(
               width: double.infinity,
@@ -105,7 +158,8 @@ class _SearchBarState extends State<SearchBar> {
 
   List<Widget> _buildSearchResults() {
     // Idea - use a global flag  queryDone, futureBuilder, or .then()
-    List<Spot> results = _getResultsFromQuery(query); // MUST COMPLETE BEFORE BUILDING
+    List<Spot> results =
+        _getResultsFromQuery(query); // MUST COMPLETE BEFORE BUILDING
     List<ListTile> tiles = [];
 
     for (Spot result in results) {
@@ -113,7 +167,13 @@ class _SearchBarState extends State<SearchBar> {
         ListTile(
           title: Text(result.title),
           leading: const Icon(Icons.location_on),
-          onTap: () => goToSpot(result),
+          onTap: () {
+            _controller.close();
+            goToSpot(result);
+          },
+          tileColor: Colors.grey[200],
+          hoverColor: Colors.grey[300],
+          selectedTileColor: Colors.grey[400],
         ),
       );
     }
@@ -124,17 +184,5 @@ class _SearchBarState extends State<SearchBar> {
     /// ATTENTION SANJOON
     /// Compile database/API calls into list and return as spots
     return [fakeSpot, fakeSpot1];
-  }
-
-  void goToSpot(Spot spot) {
-    _controller.close();
-
-    LatLng newLatLng = LatLng(spot.latitude, spot.longitude);
-    globalMapController.moveCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(target: newLatLng, zoom: 20),
-      ),
-    );
-    // loadSpotsAtLocation(newLatLng)
   }
 }
