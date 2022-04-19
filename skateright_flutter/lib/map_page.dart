@@ -13,7 +13,6 @@ import './hero_dialog_route.dart';
 import 'spot_page/spot_popup_card.dart';
 import 'search_bar.dart';
 
-late GoogleMapController globalMapController;
 void main() {
   runApp(const MapPage());
 }
@@ -41,6 +40,8 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  final GlobalKey<_MapScreenState> _mapKey = GlobalKey();
+
   static const _initialCameraPosition = CameraPosition(
     target: LatLng(42.350138473333864, -71.11174104622769),
     zoom: 15,
@@ -49,7 +50,7 @@ class _MapScreenState extends State<MapScreen> {
   bool _mapCreated = false;
   late GoogleMapController googleMapController;
   Location location = Location();
-  late LocationData _locationData;
+  late LocationData _currentLocation;
   late bool _locationServEnabled;
   late PermissionStatus _locationPermEnabled;
 
@@ -57,111 +58,104 @@ class _MapScreenState extends State<MapScreen> {
   late String _mapStyle;
   Set<Marker> _markers = {};
 
+  /*  ----- Init state methods -----   */
+
+  /// Called from [initState]
+  void loadCustomMarker() async {
+    customMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 20.0), 'assets/map/map_pin.png');
+  }
+
   @override
   void initState() {
     super.initState();
-    setCustomMarker();
-    DefaultAssetBundle.of(context).loadString('assets/map/map_style.json').then((asString) {
-      _mapStyle = asString;
-    }).catchError((error) {
-      log(error.toString());
-    });
-  }
-
-  void setCustomMarker() async {
-    customMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 5.0), 'assets/map/map_pin.png');
-  }
-
-  _onMarkerTap(Spot spot) {
-    Navigator.of(context).push(
-      HeroDialogRoute(builder: (context) => SpotPopupCard(spot: spot)),
+    loadCustomMarker();
+    DefaultAssetBundle.of(context).loadString('assets/map/map_style.json').then(
+      (asString) {
+        _mapStyle = asString;
+      },
+    ).catchError(
+      (error) {
+        log(error.toString());
+      },
     );
   }
 
-  Future<String> getJsonFile(String path) async {
-    return await rootBundle.loadString(path);
+  /// I think this is garbage collection on app closure/changing nav route stack
+  @override
+  void dispose() {
+    super.dispose();
+    googleMapController.dispose();
   }
 
-  void _onMapCreated(controller) async {
-    globalMapController = controller;
-    // Set map controller
-    setState(() {
-      googleMapController = controller;
-      if (_mapStyle != null) {
-        googleMapController.setMapStyle(_mapStyle).
-        then((value) {
-          log("Map Style set");
-        }).catchError((error) =>
-            log("Error setting map style:" + error.toString()));
-      }
-      else {
-        log(
-            "GoogleMapView:_onMapCreated: Map style could not be loaded.");
-      }
+  /*  ----- Methods Called on Map Build -----  */
 
-      setMarkers();
-      // _googleMapController.setMapStyle(_mapStyleString);
-    });
-
+  Future<bool> _checkLocationPerms() async {
     _locationServEnabled = await location.serviceEnabled();
     if (!_locationServEnabled) {
       _locationServEnabled = await location.requestService();
+
+      // If denied -> no point in continuing
+      if (!_locationServEnabled) {
+        return false;
+      }
     }
 
     _locationPermEnabled = await location.hasPermission();
     if (_locationPermEnabled == PermissionStatus.denied) {
       _locationPermEnabled = await location.requestPermission();
+
+      if (_locationPermEnabled == PermissionStatus.denied) {
+        return false;
+      }
     }
 
-    _locationData = await location.getLocation();
-    print(_locationData);
-
-    location.onLocationChanged.listen((newPos) {
-      _locationData = newPos;
-    });
-
-    _mapCreated = true;
+    return true;
   }
 
-  @override
-  void dispose() {
-    googleMapController.dispose();
-    super.dispose();
-  }
-
-  setMarkers() {
-    _markers.clear();
-    _markers.add(
-      Marker(
-        markerId: MarkerId("GSU"),
-        position: LatLng(42.35111488978059, -71.10889075787007),
-        // icon: BitmapDescriptor.defaultMarkerWithHue(50),
-        icon: customMarker,
-        infoWindow: InfoWindow(
-          title: "George Sherman Union",
-          snippet: "more info...",
-          onTap: () => _onMarkerTap(fakeSpot1),
+  /// Called from [_myLocationButton]
+  /// Moves camera to users current location
+  void _goToCurrentLocation() async {
+    googleMapController.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          bearing: 0,
+          target:
+              LatLng(_currentLocation.latitude!, _currentLocation.longitude!),
+          zoom: 16,
         ),
       ),
     );
-    _markers.add(
-      Marker(
-        markerId: MarkerId("808"),
-        position: LatLng(42.350669405851505, -71.11207366936073),
-        // icon: BitmapDescriptor.defaultMarkerWithHue(50),
-        icon: customMarker,
-        onTap: () => _onMarkerTap(fakeSpot),
+  }
+
+  /// Called from [build]
+  Widget _myLocationButton() {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 15, right: 15),
+      child: Align(
+        alignment: Alignment.bottomRight,
+        child: FloatingActionButton(
+          onPressed: _goToCurrentLocation,
+          child: const Icon(
+              Icons.my_location), //alt: my_location, memory, control_camera
+          // Note: pin_drop seems good for placing spot button
+        ),
       ),
     );
+  }
+
+  /// Called from [_onMapCreated]
+  /// TODO: Delete after database connection set up
+  void setDummyMarkers() {
+    _markers.clear();
+    addSpotMarker(fakeSpot);
+    addSpotMarker(fakeSpot1);
 
     _markers.add(
       Marker(
         markerId: MarkerId("Agganis Arena"),
         position: LatLng(42.35260646322381, -71.11782537730139),
-        // icon: BitmapDescriptor.defaultMarkerWithHue(50),
         icon: customMarker,
-        // onTap: _onMarkerTap(fakeSpot), /// Being called on build for some reason
         infoWindow: InfoWindow(
           title: "Agganis Arena INFO",
         ),
@@ -169,172 +163,99 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
+  void _onMapCreated(controller) async {
+    setState(
+      // Set map style
+      () {
+        googleMapController = controller;
+        if (_mapStyle != null) {
+          googleMapController.setMapStyle(_mapStyle).catchError(
+                (error) => log("Error setting map style:" + error.toString()),
+              );
+        } else {
+          log("GoogleMapView:_onMapCreated: Map style could not be loaded.");
+        }
+
+        setDummyMarkers();
+      },
+    );
+
+    // Ensure/Request location permissions
+    _checkLocationPerms().then((enabled) async {
+      if (enabled) {
+        _currentLocation = await location.getLocation();
+
+        location.onLocationChanged
+            .listen((newPos) => _currentLocation = newPos);
+      }
+    });
+
+    _mapCreated = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      // floatingActionButton: !searching
-      //     ? FloatingActionButton(
-      //         child: const Icon(Icons.search),
-      //         onPressed: () => setState(() => searching = !searching)
-      //         )
-      //     : null,
-      // floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       body: Stack(
         children: [
           GoogleMap(
+            mapToolbarEnabled: false,
             myLocationEnabled: true,
-            myLocationButtonEnabled: true,
-            zoomControlsEnabled: true,
+            myLocationButtonEnabled: false,
+            zoomControlsEnabled: false,
             initialCameraPosition: _initialCameraPosition,
             onMapCreated: (controller) => _onMapCreated(controller),
             markers: _markers,
+            buildingsEnabled: false,
           ),
-          SearchBar(),
+          SearchBar(
+            placeSpotMarker: addSpotMarker,
+            goToSpot: goToSpot,
+          ),
+          _myLocationButton(),
         ],
       ),
     );
   }
 
-  GoogleMapController getMapController() {
-    return googleMapController;
+  /*  ----- Methods Utilized Externally -----  */
+
+  _onMarkerTap(Spot spot) {
+    Navigator.of(context).push(
+      HeroDialogRoute(builder: (context) => SpotPopupCard(spot: spot)),
+    );
   }
-}
 
-/**
- * EVERYTHING BELOW THIS POINT IS DEPRECATED
- * 
- * Spot info cards now handled in spot_popup.dart
- */
+  /// Called from [SearchBar]
+  /// Centers camera on given spot
+  void goToSpot(Spot spot) {
+    // Add spot marker to map if not there already
+    addSpotMarker(spot);
 
-/// Formats title of spot so it displays in bigger font
-/// Used in [_SpotPopupCard]
-class _SpotTitle extends StatelessWidget {
-  const _SpotTitle({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(title,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18));
+    LatLng newLatLng = LatLng(spot.latitude, spot.longitude);
+    googleMapController.moveCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(target: newLatLng, zoom: 15.5),
+      ),
+    );
+    googleMapController.showMarkerInfoWindow(MarkerId(spot.id));
   }
-}
 
-/// Formats comments/reviews
-/// Called by [_SpotPopupCard]
-class _SpotComments extends StatelessWidget {
-  const _SpotComments({Key? key, required this.comments}) : super(key: key);
+  /// Called from [SearchBar]
+  /// In future should be called from a method loadArea(LatLng,  radius)
+  ///
+  /// Places a spot marker on map if not on map already
+  addSpotMarker(Spot spot) {
+    Marker newMarker = Marker(
+      markerId: MarkerId(spot.id),
+      position: LatLng(spot.latitude, spot.longitude),
+      icon: customMarker,
+      onTap: () => _onMarkerTap(spot),
+    );
 
-  final List<Comment> comments;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      for (final cmnt in comments) _SpotCommentTile(comment: cmnt),
-    ]);
-  }
-}
-
-/// Formats individual comments as they appear in the list of comments
-/// Called by [_SpotComments]
-class _SpotCommentTile extends StatelessWidget {
-  const _SpotCommentTile({Key? key, required this.comment}) : super(key: key);
-
-  final Comment comment;
-
-  @override
-  Widget build(BuildContext context) {
-    Icon trailing = const Icon(Icons.favorite, color: Colors.transparent);
-    if (comment.isReview) {
-      trailing = const Icon(Icons.favorite, color: Colors.red);
+    if (!_markers.contains(newMarker)) {
+      setState(() => _markers.add(newMarker));
     }
-
-    return ListTile(
-      leading: const Icon(Icons.person, color: Colors.blue),
-      trailing: trailing,
-      title: Text(comment.user),
-      subtitle: Text(comment.description),
-      // tileColor: Colors.grey[300],
-      minVerticalPadding: 13,
-    );
-  }
-}
-
-class _SpotPictures extends StatelessWidget {
-  const _SpotPictures({Key? key, required this.pictures}) : super(key: key);
-
-  final List<String> pictures;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        height: 240,
-        child: ClipRRect(
-            borderRadius: BorderRadius.circular(7.0),
-            child: ListView(
-              // padding: const EdgeInsets.symmetric(horizontal: 40),
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              children: [
-                for (final pic in pictures) _SpotPictureTile(picture: pic),
-              ],
-            )));
-  }
-}
-
-class _SpotPictureTile extends StatelessWidget {
-  const _SpotPictureTile({Key? key, required this.picture}) : super(key: key);
-
-  final String picture;
-
-  @override
-  Widget build(BuildContext context) {
-    return Image(
-      image: NetworkImage(picture),
-      fit: BoxFit.fill,
-    );
-  }
-}
-
-class _SpotPopupCard extends StatelessWidget {
-  const _SpotPopupCard({Key? key, required this.spot}) : super(key: key);
-  final Spot spot;
-
-  @override
-  Widget build(BuildContext context) {
-    /// TODO: Find a way to add a RectTween to hero to get an animation to play
-    /// Possible solution - wrap [_SpotPopupCard] in a Gesture widget
-    ///   set onTap: this, child: rectTween
-    return Hero(
-      tag: spot.id,
-      child: Material(
-          borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
-          color: Colors.grey[100],
-          child: Padding(
-              padding: const EdgeInsets.only(top: 24.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _SpotTitle(title: spot.title),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    if (spot.pictures != null) ...[
-                      const Divider(),
-                      _SpotPictures(pictures: spot.pictures)
-                    ],
-                    const SizedBox(height: 25),
-                    const _SpotTitle(title: 'Comments'),
-                    if (spot.comments != null) ...[
-                      const Divider(),
-                      _SpotComments(comments: spot.comments),
-                    ],
-                  ],
-                ),
-              ))),
-    );
   }
 }
