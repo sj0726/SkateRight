@@ -46,6 +46,9 @@ final skateTheme = ThemeData(
 
   // Used in main_screen.dart
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    showUnselectedLabels: false,
+    showSelectedLabels: false,
+    
     // TODO - Figure out NavBar color scheme
     backgroundColor: Colors.grey[850],
     selectedItemColor: sLightGreen,

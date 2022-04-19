@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.map_app">
+    <!--Needed to get current location from user-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
    <application
         android:label="map_app"
         android:name="${applicationName}"
@@ -30,8 +33,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <!--SKATERIGHT-->
-        <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAqtTBwA1iivh4RuXXXXXXX" /> <!-- INSERT API KEY-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAqtTBwA1iivh4RuXXXXXXX"/> <!-- INSERT API KEY-->
     </application>
 </manifest>

@@ -18,26 +18,25 @@ class SpotFeed extends StatelessWidget {
           style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
       ),
-      body:
-          Padding(  // See above comment block for Scaffold attrs
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-            child: ListView(
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              children: [
-                for (final pic in pictures) ...[
-                  const SizedBox(
-                      height: 24.0), // topmost functions as scroll-away padding
-                  _SpotPictureTile(picture: pic),
-                ],
-                // Box at the end so users can see the last image at the top
-                // of the screen if desired
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 2,
-                )
-              ],
-            ),
-          ),
+      body: Padding(
+        // See above comment block for Scaffold attrs
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+        child: ListView(
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          children: [
+            for (final pic in pictures) ...[
+              // First box functions as scroll-away AppBar padding
+              const SizedBox(height: 24.0),
+              _SpotPictureTile(picture: pic),
+            ],
+            // Gives wiggle-room at end so users can over-scroll if desired
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 5,
+            )
+          ],
+        ),
+      ),
     );
   }
 }
