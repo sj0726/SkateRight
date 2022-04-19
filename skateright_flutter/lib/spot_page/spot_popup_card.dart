@@ -17,43 +17,48 @@ class SpotPopupCard extends StatelessWidget {
     /// TODO: Find a way to add a RectTween to hero to get an animation to play
     /// Possible solution - wrap [_SpotPopupCard] in a Gesture widget
     ///   set onTap: this, child: rectTween
-    return FractionallySizedBox(
-      alignment: Alignment.bottomCenter,
-      heightFactor: .85,
-      child: Hero(
-        tag: spot.id,
-        child: Material(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(12.0),
-            topRight: Radius.circular(12.0),
-          ),
-          color: Theme.of(context).backgroundColor,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 32.0,
-              left: 16.0,
-              right: 16.0,
+    return Hero(
+      tag: spot.id,
+      child: FractionallySizedBox(
+        alignment: Alignment.bottomCenter,
+        heightFactor: 0.85,
+        child: Dismissible(
+          key: Key('spotPage'),
+          direction: DismissDirection.down,
+          onDismissed: (_) => Navigator.pop(context),
+          child: Material(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(12.0),
+              topRight: Radius.circular(12.0),
             ),
-            child: SingleChildScrollView(
-              child: Column(
-                // Begin Spot info widgets
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _DetailsAndPhoto(spot: spot),
-                  const SizedBox(height: 10),
+            color: Theme.of(context).backgroundColor,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 32.0,
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  // Begin Spot info widgets
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _DetailsAndPhoto(spot: spot),
+                    const SizedBox(height: 10),
 
-                  const _Interactions(),
-                  const SizedBox(height: 24),
+                    const _Interactions(),
+                    const SizedBox(height: 24),
 
-                  _Obstacles(), // Call with spot
-                  const SizedBox(height: 24),
+                    _Obstacles(), // Call with spot
+                    const SizedBox(height: 24),
 
-                  _SpotReviews(reviews: spot.comments),
-                  const SizedBox(height: 12),
+                    _SpotReviews(reviews: spot.comments),
+                    const SizedBox(height: 12),
 
-                  _ToReviews(spot: spot),
-                  const SizedBox(height: 12),
-                ],
+                    _ToReviews(spot: spot),
+                    const SizedBox(height: 12),
+                  ],
+                ),
               ),
             ),
           ),
@@ -292,70 +297,6 @@ class _SpotReviews extends StatelessWidget {
           ..._buildReviewCards()
         ]
       ],
-    );
-    // : Column(
-    //     children: [
-    //       Row(
-    //         children: [
-    //           ReviewCard(review: reviews[0]),
-    //           ReviewCard(review: reviews[1])
-    //         ],
-    //       ),
-    //       Row(
-    //         children: [
-    //           ReviewCard(review: reviews[2]),
-    //           ReviewCard(review: reviews[3])
-    //         ],
-    //       ),
-    //     ],
-    // );
-    // Flexible(
-    //     child: GridView.count(
-    //       crossAxisCount: 2,
-    //       physics: const NeverScrollableScrollPhysics(),
-    //       children: [..._buildReviewCards()],
-    //     ),
-    //   );
-  }
-}
-
-/// ------------------------------DEPRECATED----------------------------------
-/// Formats comments/reviews
-class _SpotComments extends StatelessWidget {
-  const _SpotComments({Key? key, required this.comments}) : super(key: key);
-
-  final List<Comment> comments;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      for (final cmnt in comments) _SpotCommentTile(comment: cmnt),
-    ]);
-  }
-}
-
-/// Formats individual comments as they appear in the list of comments
-/// Called by [_SpotComments]
-class _SpotCommentTile extends StatelessWidget {
-  const _SpotCommentTile({Key? key, required this.comment}) : super(key: key);
-
-  final Comment comment;
-
-  @override
-  Widget build(BuildContext context) {
-    Icon trailing = const Icon(Icons.favorite, color: Colors.transparent);
-    if (comment.isReview) {
-      trailing = const Icon(Icons.favorite, color: Colors.red);
-    }
-
-    return ListTile(
-      leading: const Icon(Icons.person, color: Colors.blue),
-      trailing: trailing,
-      title: Text(comment.user, style: Theme.of(context).textTheme.subtitle1),
-      subtitle: Text(comment.description,
-          style: Theme.of(context).textTheme.bodyText2),
-      // tileColor: Colors.grey[300],
-      minVerticalPadding: 13,
     );
   }
 }
