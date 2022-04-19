@@ -236,7 +236,7 @@ class _MapScreenState extends State<MapScreen> {
     LatLng newLatLng = LatLng(spot.latitude, spot.longitude);
     googleMapController.moveCamera(
       CameraUpdate.newCameraPosition(
-        CameraPosition(target: newLatLng, zoom: 15.5),
+        CameraPosition(target: newLatLng, zoom: 16),
       ),
     );
     googleMapController.showMarkerInfoWindow(MarkerId(spot.id));

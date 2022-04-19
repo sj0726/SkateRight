@@ -13,7 +13,8 @@ List<String> options = ['Park', 'Street', 'Ramps', 'Flat', 'Rails'];
 Map<String, int> selections = {};
 
 class SearchBar extends StatefulWidget {
-  const SearchBar({Key? key, required this.placeSpotMarker, required this.goToSpot})
+  const SearchBar(
+      {Key? key, required this.placeSpotMarker, required this.goToSpot})
       : super(key: key);
   final placeSpotMarker;
   final goToSpot;
@@ -40,9 +41,47 @@ class _SearchBarState extends State<SearchBar> {
     for (String opt in options) {
       selections[opt] = 1; // Note: this is bad for desired stair implementation
     }
+  }
 
-    // mapController = widget.mapController;
-    // filteredSearchHistory = filterSearchTerms(filter: null);
+  StatefulBuilder _advSearchBuilder() {
+    Size size = MediaQuery.of(context).size;
+
+    return StatefulBuilder(
+      // Allows checkboxes to update state
+      builder: (BuildContext context, StateSetter setState) {
+        return FractionallySizedBox(
+          heightFactor: .60,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 16.0,
+              left: 16.0,
+              right: 16.0,
+            ),
+            child: GridView.count(
+              physics: NeverScrollableScrollPhysics(),
+              crossAxisCount: 2,
+              childAspectRatio: size.height / size.width * 2,
+              children: selections.keys.map(
+                (key) {
+                  // For each search option, generate checkbox
+                  return CheckboxListTile(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    title: Text(key),
+                    value: selections[key] == 1 ? true : false,
+                    onChanged: (flag) {
+                      setState(
+                        () => selections[key] = flag! ? 1 : 0,
+                      );
+                    },
+                  );
+                },
+              ).toList(),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -69,12 +108,11 @@ class _SearchBarState extends State<SearchBar> {
 
       onQueryChanged: (input) {
         // Changing query calls builder which handles DB querying
-        query = input;
+        setState(() => query = input);
       },
       onSubmitted: (input) {
-        query = input;
-        // Closes keyboard... should be used when we have autcomplete features
-        // FocusManager.instance.primaryFocus?.unfocus();
+        query = input; // Not necesary due to onQueryChanged ?
+        FocusManager.instance.primaryFocus?.unfocus();
       },
       transition: CircularFloatingSearchBarTransition(),
       actions: [
@@ -84,7 +122,6 @@ class _SearchBarState extends State<SearchBar> {
           child: CircularButton(
             icon: const Icon(Icons.menu),
             onPressed: () {
-              var size = MediaQuery.of(context).size;
               showModalBottomSheet(
                 context: context,
                 shape: const RoundedRectangleBorder(
@@ -93,41 +130,7 @@ class _SearchBarState extends State<SearchBar> {
                       topRight: Radius.circular(12.0)),
                 ),
                 backgroundColor: Theme.of(context).cardColor,
-                builder: (context) {
-                  return StatefulBuilder(// Allows checkboxes to update state
-                      builder: (BuildContext context, StateSetter setState) {
-                    return FractionallySizedBox(
-                      heightFactor: .60,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 24.0,
-                          left: 16.0,
-                          right: 16.0,
-                        ),
-                        child: GridView.count(
-                          crossAxisCount: 2,
-                          childAspectRatio: size.height / size.width * 2,
-                          children: selections.keys.map(
-                            (key) {
-                              return CheckboxListTile(
-                                title: Text(key),
-                                value: selections[key] == 1 ? true : false,
-                                onChanged: (flag) {
-                                  setState(
-                                    () {
-                                      log(selections[key].toString());
-                                      selections[key] = flag! ? 1 : 0;
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                          ).toList(),
-                        ),
-                      ),
-                    );
-                  });
-                },
+                builder: (context) => _advSearchBuilder(),
               );
             },
           ),

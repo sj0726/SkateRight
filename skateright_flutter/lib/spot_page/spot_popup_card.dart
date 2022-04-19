@@ -21,7 +21,7 @@ class SpotPopupCard extends StatelessWidget {
       tag: spot.id,
       child: FractionallySizedBox(
         alignment: Alignment.bottomCenter,
-        heightFactor: 0.85,
+        heightFactor: 0.80,
         child: Dismissible(
           key: Key('spotPage'),
           direction: DismissDirection.down,
