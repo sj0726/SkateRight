@@ -1,4 +1,7 @@
-import 'package:meta/meta.dart';
+import 'dart:convert';
+
+List<Spot> spotFromJson(String str, String apiKey) =>
+    List<Spot>.from(json.decode(str).map((item) => Spot.fromJson(item, apiKey)));
 
 /// Model for a skate spot. Can contain an optional list of [Comment]s
 /// if users have submitted comments on the spot
@@ -8,10 +11,10 @@ class Spot {
   const Spot({
     this.id = "0", // TODO: Set to required once infrastructure in place
     required this.title,
-    // required this.address,
+    this.address,
     required this.latitude,
     required this.longitude,
-    this.isPark = true,
+    this.isPark = false,
     required this.pictures,
     this.score,
     required this.comments,
@@ -24,7 +27,7 @@ class Spot {
   final double longitude;
   final bool isPark;
 
-  // final String address;
+  final String? address;
   final List<String> pictures;
 
   /// Nullable & optional
@@ -34,6 +37,26 @@ class Spot {
 
   List<Comment> getComments() {
     return comments;
+  }
+
+  factory Spot.fromJson(Map<String, dynamic> json, String apiKey) {
+    return Spot(
+      id: json['place_id'],
+      title: json['name'],
+      address: json.containsKey('vicinity') ? json['vicinity'] : null,
+      latitude: json['geometry']['location']['lat'],
+      longitude: json['geometry']['location']['lng'],
+      isPark: true,
+      pictures: [
+        for (var picture in json['photos']) ...[
+          "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference="
+          + picture['photo_reference']
+          + "&key="+apiKey
+        ],
+      ],
+      comments: [],
+      obstacles: [],
+    );
   }
 }
 

@@ -45,8 +45,8 @@ final fakeSpot1 = Spot(
   comments: _comments,
   pictures: _picsGSU,
   obstacles: ["ramp", "rail", "bump", "flat"],
-  latitude: 42.35111488978059,
-  longitude: -71.10889075787007,
+  latitude: 42.350669405851505,
+  longitude: -71.11207366936073,
 );
 
 final fakeSpot = Spot(
@@ -56,8 +56,8 @@ final fakeSpot = Spot(
   comments: _comments,
   pictures: _picsLFS,
   obstacles: ["ramp", "rail", "bump", "flat"],
-  latitude: 42.350669405851505,
-  longitude: -71.11207366936073,
+  latitude: 42.35111488978059,
+  longitude: -71.10889075787007,
 );
 
 final _picsLFS = [

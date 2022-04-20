@@ -1,11 +1,11 @@
 import 'dart:developer';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 import 'spot.dart';
+import 'places_interface.dart';
 
 import 'fake_spot.dart';
 
@@ -14,10 +14,14 @@ Map<String, int> selections = {};
 
 class SearchBar extends StatefulWidget {
   const SearchBar(
-      {Key? key, required this.placeSpotMarker, required this.goToSpot})
+      {Key? key,
+      required this.placeSpotMarker,
+      required this.goToSpot,
+      required this.location})
       : super(key: key);
   final placeSpotMarker;
   final goToSpot;
+  final Location location;
 
   @override
   State<SearchBar> createState() => _SearchBarState();
@@ -28,8 +32,10 @@ class _SearchBarState extends State<SearchBar> {
   // functions from [map_page]
   late final addSpotMarker;
   late final goToSpot;
+  late final PlacesInterface placeCaller;
 
   String query = '';
+  bool makeAPICall = false;
 
   @override
   void initState() {
@@ -37,10 +43,12 @@ class _SearchBarState extends State<SearchBar> {
     _controller = FloatingSearchBarController();
     addSpotMarker = widget.placeSpotMarker;
     goToSpot = widget.goToSpot;
+    placeCaller = PlacesInterface(location: widget.location);
 
     for (String opt in options) {
       selections[opt] = 1; // Note: this is bad for desired stair implementation
     }
+    selections['Park'] = 0; // Used for demo day 4/20 to showcase API calls
   }
 
   StatefulBuilder _advSearchBuilder() {
@@ -112,13 +120,15 @@ class _SearchBarState extends State<SearchBar> {
       },
       onSubmitted: (input) {
         query = input; // Not necesary due to onQueryChanged ?
+        makeAPICall = true;
         FocusManager.instance.primaryFocus?.unfocus();
       },
       transition: CircularFloatingSearchBarTransition(),
       actions: [
         /* Advanced search menu */
         FloatingSearchBarAction(
-          showIfOpened: false,
+          showIfOpened: true,
+          showIfClosed: true,
           child: CircularButton(
             icon: const Icon(Icons.menu),
             onPressed: () {
@@ -148,10 +158,32 @@ class _SearchBarState extends State<SearchBar> {
             elevation: 4.0,
             child: Container(
               width: double.infinity,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: query.isEmpty ? [] : _buildSearchResults(),
-              ),
+              child: query.isEmpty
+                  ? Column(children: [])
+                  : FutureBuilder(
+                      future: _getResultsFromQuery(query),
+                      builder: (context, AsyncSnapshot<List<Spot>> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          if (snapshot.hasError) {
+                            log('error = ${snapshot.error}');
+                            return Text(snapshot.error.toString());
+                          }
+                          return _buildSearchResults(snapshot.data!);
+                        } else {
+                          return const SizedBox(height: 36,
+                          child: Center(
+                            child: SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator()),
+                          ),);
+                        }
+                      },
+                    ),
+              // Column(
+              //   mainAxisSize: MainAxisSize.min,
+              //   children: query.isEmpty ? [] : _buildSearchResults(),
+              // ),
             ),
           ),
         );
@@ -159,33 +191,39 @@ class _SearchBarState extends State<SearchBar> {
     );
   }
 
-  List<Widget> _buildSearchResults() {
-    // Idea - use a global flag  queryDone, futureBuilder, or .then()
-    List<Spot> results =
-        _getResultsFromQuery(query); // MUST COMPLETE BEFORE BUILDING
+  Column _buildSearchResults(List<Spot> results) {
+    // List<Spot> results =
+    //     _getResultsFromQuery(query); // MUST COMPLETE BEFORE BUILDING
     List<ListTile> tiles = [];
 
-    for (Spot result in results) {
-      tiles.add(
-        ListTile(
-          title: Text(result.title),
-          leading: const Icon(Icons.location_on),
-          onTap: () {
-            _controller.close();
-            goToSpot(result);
-          },
-          tileColor: Colors.grey[200],
-          hoverColor: Colors.grey[300],
-          selectedTileColor: Colors.grey[400],
-        ),
-      );
-    }
-    return tiles;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (Spot result in results) ...[
+          ListTile(
+            title: Text(result.title),
+            leading: const Icon(Icons.location_on),
+            onTap: () {
+              _controller.close();
+              goToSpot(result);
+            },
+            tileColor: Colors.grey[200],
+            hoverColor: Colors.grey[300],
+            selectedTileColor: Colors.grey[400],
+          ),
+        ],
+      ],
+    );
   }
 
-  List<Spot> _getResultsFromQuery(String query) {
+  Future<List<Spot>> _getResultsFromQuery(String query) async {
     /// ATTENTION SANJOON
     /// Compile database/API calls into list and return as spots
-    return [fakeSpot, fakeSpot1];
+
+    if (selections['Park'] == 0 || makeAPICall == false) {
+      return [fakeSpot, fakeSpot1];
+    } else {
+      return placeCaller.nearbySearch(query);
+    }
   }
 }
