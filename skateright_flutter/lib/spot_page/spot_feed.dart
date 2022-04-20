@@ -28,7 +28,7 @@ class SpotFeed extends StatelessWidget {
             for (final pic in pictures) ...[
               // First box functions as scroll-away AppBar padding
               const SizedBox(height: 24.0),
-              _SpotPictureTile(picture: pic),
+              _SpotPictureTile(picture: pic, fromNetwork: spot.isPark),
             ],
             // Gives wiggle-room at end so users can over-scroll if desired
             SizedBox(
@@ -42,16 +42,23 @@ class SpotFeed extends StatelessWidget {
 }
 
 class _SpotPictureTile extends StatelessWidget {
-  const _SpotPictureTile({Key? key, required this.picture}) : super(key: key);
+  const _SpotPictureTile(
+      {Key? key, required this.picture, required this.fromNetwork})
+      : super(key: key);
 
   final String picture;
+  final bool fromNetwork;
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      // image: NetworkImage(picture),
-      picture,
-      fit: BoxFit.fill,
-    );
+    return fromNetwork
+        ? Image.network(
+            picture,
+            fit: BoxFit.fill,
+          )
+        : Image.asset(
+            picture,
+            fit: BoxFit.fill,
+          );
   }
 }

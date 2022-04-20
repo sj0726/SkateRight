@@ -149,7 +149,7 @@ class _MapScreenState extends State<MapScreen> {
   void setDummyMarkers() {
     _markers.clear();
     addSpotMarker(fakeSpot);
-    addSpotMarker(fakeSpot1);
+    // addSpotMarker(fakeSpot1);
 
     _markers.add(
       Marker(
@@ -212,6 +212,7 @@ class _MapScreenState extends State<MapScreen> {
           SearchBar(
             placeSpotMarker: addSpotMarker,
             goToSpot: goToSpot,
+            location: location,
           ),
           _myLocationButton(),
         ],
