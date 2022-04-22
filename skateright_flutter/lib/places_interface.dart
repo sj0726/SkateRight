@@ -10,7 +10,10 @@ class PlacesInterface {
 
   final Location location;
   LocationData? currentLocation;
-  final int searchRadius = 5000;
+  /// ATTN SANJOON:
+  /// future plans will have a variable/sliding searchRadius
+  ///   - define backend calls as dynamic in searchtem & radius (with cap)
+  final int searchRadius = 5000; 
   final String apiKey = "";
   final String exactSearchPostURL =
       "https://maps.googleapis.com/maps/api/place/findplacefromtext/json";

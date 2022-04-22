@@ -24,14 +24,15 @@ class SpotPopupCard extends StatelessWidget {
             onDismissed: (_) => Navigator.pop(context),
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                maxHeight: height * 0.8,
+                maxHeight: height * 0.75,
                 minHeight: height * 0.3,
               ),
               child: Material(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(12.0),
-                  topRight: Radius.circular(12.0),
-                ),
+                // No rounded border :(
+                // borderRadius: const BorderRadius.only(
+                  // topLeft: Radius.circular(12.0),
+                  // topRight: Radius.circular(12.0),
+                // ),
                 color: Theme.of(context).backgroundColor,
                 child: Padding(
                   padding: const EdgeInsets.only(
@@ -258,25 +259,28 @@ class _ToReviews extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.centerLeft,
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: 12,
+      //   child: Padding(
+      //     padding: EdgeInsets.only(
+      //       left: 12,
+      //     ),
+      child: ElevatedButton(
+        child: const Text(
+          "More Reviews",
+          // style: Theme.of(context)
+          // .textTheme
+          // .headline2!
+          // .copyWith(color: Theme.of(context).accentColor)
         ),
-        child: ElevatedButton(
-          child: Text("More Reviews",
-              style: Theme.of(context)
-                  .textTheme
-                  .headline2!
-                  .copyWith(color: Theme.of(context).accentColor)),
-          onPressed: () => {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ReviewsPage(spot: spot)),
-            )
-          },
-        ),
+        onPressed: () => {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ReviewsPage(spot: spot)),
+          )
+        },
       ),
     );
+    //   ),
+    // );
   }
 }
 
