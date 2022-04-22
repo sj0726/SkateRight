@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../spot.dart';
+import '../entities/spot.dart';
 
 class SpotFeed extends StatelessWidget {
   const SpotFeed({Key? key, required this.spot}) : super(key: key);

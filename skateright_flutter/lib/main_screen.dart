@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import "./map_page.dart";
+import 'map/map_page.dart';
 import "./cookie_clicker.dart";
 
 

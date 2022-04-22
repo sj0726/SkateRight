@@ -7,10 +7,10 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 
-import './spot.dart';
-import './fake_spot.dart';
-import './hero_dialog_route.dart';
-import 'spot_page/spot_popup_card.dart';
+import '../entities/spot.dart';
+import 'fake_spot.dart';
+import '../styles/hero_dialog_route.dart';
+import '../spot_page/spot_popup_card.dart';
 import 'search_bar.dart';
 
 void main() {
