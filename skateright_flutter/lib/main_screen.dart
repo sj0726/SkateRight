@@ -51,18 +51,21 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 );
               }
-            })
-        // body: pageList[_pageIndex],
-        // bottomNavigationBar: BottomNavigationBar(
-        //   type: BottomNavigationBarType.fixed,
-        //   currentIndex: _pageIndex,
-        //   selectedItemColor: Colors.purple[600],
-        //   onTap: _onNavigationTap,
-        //   items: const <BottomNavigationBarItem>[
-        //     BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Spots'),
-        //     BottomNavigationBarItem(icon: Icon(Icons.cookie), label: 'Clicker'),
-        //   ],
-        // ),
-        );
+            }));
+    //   resizeToAvoidBottomInset: false,
+    //   body: PageStorage(  /// Saves state of pages... no reload required
+    //     child: pageList[_pageIndex],
+    //     bucket: bucket,
+    //   ),
+    //   bottomNavigationBar: BottomNavigationBar(
+    //     // All styling info stored in skate_theme
+    //     currentIndex: _pageIndex,
+    //     onTap: (int index) => setState(() => _pageIndex = index),
+    //     items: const <BottomNavigationBarItem>[
+    //       BottomNavigationBarItem(icon: Icon(Icons.map_outlined), label: 'Spots'),
+    //       BottomNavigationBarItem(icon: Icon(Icons.cookie), label: 'Clicker'),
+    //     ],
+    //   ),
+    // );
   }
 }

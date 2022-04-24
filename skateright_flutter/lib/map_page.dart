@@ -5,13 +5,19 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:location/location.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import './spot.dart';
 import './fake_spot.dart';
 import './hero_dialog_route.dart';
 import 'spot_page/spot_popup_card.dart';
+import 'search_bar.dart';
 
-void main() {
+late GoogleMapController globalMapController;
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MapPage());
 }
 
@@ -44,21 +50,32 @@ class _MapScreenState extends State<MapScreen> {
   );
 
   bool _mapCreated = false;
-  late GoogleMapController _googleMapController;
+  late GoogleMapController googleMapController;
+  Location location = Location();
+  late LocationData _locationData;
+  late bool _locationServEnabled;
+  late PermissionStatus _locationPermEnabled;
+
   late BitmapDescriptor customMarker;
   late String _mapStyle;
   Set<Marker> _markers = {};
 
-  void setCustomMarker() async {
-    customMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 5.0), 'assets/map/map_pin.png');
-  }
-
   @override
   void initState() {
     super.initState();
-    // _setMapStyle();
     setCustomMarker();
+    DefaultAssetBundle.of(context)
+        .loadString('assets/map/map_style.json')
+        .then((asString) {
+      _mapStyle = asString;
+    }).catchError((error) {
+      log(error.toString());
+    });
+  }
+
+  void setCustomMarker() async {
+    customMarker = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 5.0), 'assets/map/map_pin.png');
   }
 
   _onMarkerTap(Spot spot) {
@@ -77,18 +94,46 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _onMapCreated(controller) async {
+    globalMapController = controller;
     // Set map controller
-    _googleMapController = controller;
     setState(() {
+      googleMapController = controller;
+      if (_mapStyle != null) {
+        googleMapController.setMapStyle(_mapStyle).then((value) {
+          log("Map Style set");
+        }).catchError(
+            (error) => log("Error setting map style:" + error.toString()));
+      } else {
+        log("GoogleMapView:_onMapCreated: Map style could not be loaded.");
+      }
+
       setMarkers();
-      // _googleMapController.setMapStyle(_mapStyle);
+      // _googleMapController.setMapStyle(_mapStyleString);
     });
+
+    _locationServEnabled = await location.serviceEnabled();
+    if (!_locationServEnabled) {
+      _locationServEnabled = await location.requestService();
+    }
+
+    _locationPermEnabled = await location.hasPermission();
+    if (_locationPermEnabled == PermissionStatus.denied) {
+      _locationPermEnabled = await location.requestPermission();
+    }
+
+    _locationData = await location.getLocation();
+    print(_locationData);
+
+    location.onLocationChanged.listen((newPos) {
+      _locationData = newPos;
+    });
+
     _mapCreated = true;
   }
 
   @override
   void dispose() {
-    _googleMapController.dispose();
+    googleMapController.dispose();
     super.dispose();
   }
 
@@ -101,9 +146,10 @@ class _MapScreenState extends State<MapScreen> {
         // icon: BitmapDescriptor.defaultMarkerWithHue(50),
         icon: customMarker,
         infoWindow: InfoWindow(
-            title: "George Sherman Union",
-            snippet: "more info...",
-            onTap: () => _onMarkerTap(fakeSpot1)),
+          title: "George Sherman Union",
+          snippet: "more info...",
+          onTap: () => _onMarkerTap(fakeSpot1),
+        ),
       ),
     );
     _markers.add(
@@ -117,12 +163,23 @@ class _MapScreenState extends State<MapScreen> {
     );
 
     _markers.add(
+      // body: pageList[_pageIndex],
+      // bottomNavigationBar: BottomNavigationBar(
+      //   type: BottomNavigationBarType.fixed,
+      //   currentIndex: _pageIndex,
+      //   selectedItemColor: Colors.purple[600],
+      //   onTap: _onNavigationTap,
+      //   items: const <BottomNavigationBarItem>[
+      //     BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Spots'),
+      //     BottomNavigationBarItem(icon: Icon(Icons.cookie), label: 'Clicker'),
+      //   ],
+      // ),
       Marker(
         markerId: MarkerId("Agganis Arena"),
         position: LatLng(42.35260646322381, -71.11782537730139),
         // icon: BitmapDescriptor.defaultMarkerWithHue(50),
         icon: customMarker,
-        onTap: _onMarkerTap(fakeSpot),
+        // onTap: _onMarkerTap(fakeSpot), /// Being called on build for some reason
         infoWindow: InfoWindow(
           title: "Agganis Arena INFO",
         ),
@@ -133,14 +190,32 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GoogleMap(
-        myLocationButtonEnabled: false,
-        zoomControlsEnabled: true,
-        initialCameraPosition: _initialCameraPosition,
-        onMapCreated: (controller) => _onMapCreated(controller),
-        markers: _markers,
+      resizeToAvoidBottomInset: false,
+      // floatingActionButton: !searching
+      //     ? FloatingActionButton(
+      //         child: const Icon(Icons.search),
+      //         onPressed: () => setState(() => searching = !searching)
+      //         )
+      //     : null,
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      body: Stack(
+        children: [
+          GoogleMap(
+            myLocationEnabled: true,
+            myLocationButtonEnabled: true,
+            zoomControlsEnabled: true,
+            initialCameraPosition: _initialCameraPosition,
+            onMapCreated: (controller) => _onMapCreated(controller),
+            markers: _markers,
+          ),
+          SearchBar(),
+        ],
       ),
     );
+  }
+
+  GoogleMapController getMapController() {
+    return googleMapController;
   }
 }
 

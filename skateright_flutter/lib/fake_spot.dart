@@ -28,10 +28,10 @@ final _comments = [
 ];
 
 final _picsGSU = [
-  'assets/images/gsu1',
-  'assets/images/gsu2',
-  'assets/images/gsu3',
-  'assets/images/gsu4',
+  'assets/images/gsu1.jpg',
+  'assets/images/gsu2.jpg',
+  'assets/images/gsu3.jpg',
+  'assets/images/gsu4.jpg',
   // 'https://www.bu.edu/meetatbu/files/2014/07/503678580503_0_bg.jpg',
   // 'https://www.bu.edu/files/2020/11/resized-20-1472-GSURRENO-074.jpg',
   // 'https://i0.wp.com/bunewsservice.com/wp-content/uploads/2019/01/shadow-boxes-Ann-9.jpg?resize=810%2C608',
@@ -45,6 +45,8 @@ final fakeSpot1 = Spot(
   comments: _comments,
   pictures: _picsGSU,
   obstacles: ["ramp", "rail", "bump", "flat"],
+  latitude: 42.35111488978059,
+  longitude: -71.10889075787007,
 );
 
 final fakeSpot = Spot(
@@ -54,6 +56,8 @@ final fakeSpot = Spot(
   comments: _comments,
   pictures: _picsLFS,
   obstacles: ["ramp", "rail", "bump", "flat"],
+  latitude: 42.350669405851505,
+  longitude: -71.11207366936073,
 );
 
 final _picsLFS = [
@@ -62,7 +66,7 @@ final _picsLFS = [
   'assets/images/lynch3.jpg',
   'assets/images/lynch4.jpg',
   'assets/images/lynch5.jpg',
-  
+
   // "https://345v4845f1o72rvbx12u5xsh-wpengine.netdna-ssl.com/wp-content/uploads/2016/07/0706PeoplePlace_LynchFamilySkateparkPC.jpg",
   // "https://i.pinimg.com/originals/c3/3e/9f/c33e9fe702f6ea33833539dea774b60f.jpg",
   // "https://i.ytimg.com/vi/JDfUfrI_EFI/maxresdefault.jpg",

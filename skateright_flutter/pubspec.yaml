@@ -44,8 +44,10 @@ dependencies:
   firebase_database: ^9.0.8
   cloud_functions: ^3.2.10
   cloud_firestore: ^3.1.11
+  location: ^4.2.0
   location_web: ^3.1.1
 
+  material_floating_search_bar: ^0.3.7
 
 dev_dependencies:
   flutter_test:

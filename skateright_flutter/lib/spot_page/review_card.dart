@@ -26,7 +26,12 @@ class _ReviewCardState extends State<ReviewCard> {
   bool expanded = false;
 
   final _random = new Random();
-  List<Color> colors = [sCream, sLightGreen, sYellow];
+  List<Color> colors = [
+    sCream,
+    sLightGreen,
+    sYellow,
+    sDarkGreen,
+  ];
   List<Image> profilePics = [];
 
   Color _chooseColor() {
@@ -72,6 +77,7 @@ class _ReviewCardState extends State<ReviewCard> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      tileColor: sBlack,
       leading: CircleAvatar(
         radius: _profileRadius,
         backgroundColor: _chooseColor(),

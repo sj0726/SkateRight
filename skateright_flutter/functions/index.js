@@ -49,7 +49,7 @@ exports.getGoogleNearby = functions.firestore.document('/Coordinates/{documentId
     const lat = snap.data().latitude;
     const long = snap.data().longitude;
     const radius = 1500;
-    const key = "x";
+    const key = "AIzaSyBedDUKU41U3bxNlZwOy7uqW9xyudEIr1w";
     var config = {
       method: 'get',
       url: `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat}%2C${long}&radius=${radius}&key=${key}`,
@@ -71,6 +71,55 @@ exports.getGoogleNearby = functions.firestore.document('/Coordinates/{documentId
       .catch(error => {
         console.log(error);
         return callback(new Error("Error getting google directions"))
+      });
+
+    // axios({
+    //   method: 'GET',
+    //   url: 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?', //https://maps.googleapis.com/maps/api/directions/json',
+    //   params: {
+    //     location: lat + "%" + long,
+    //     radius: "100",
+    //     key: ''
+    //   },
+    // })
+    //   .then(response => {
+    //     let legs = response.data.routes[0].legs[0];
+    //     return callback(legs);
+    //   })
+    //   .catch(error => {
+    //     console.log('Failed calling Nearby API');
+    //     return callback(new Error("Error getting Google Places Nearby Search"))
+    //   })
+  });
+
+  exports.getGoogleTextSearch = functions.firestore.document('/SearchQuery/{documentId}')
+  .onCreate((snap, context) => {
+    // const lat = snap.data().latitude;
+    // const long = snap.data().longitude;
+    // const radius = 1500;
+    const query = snap.data().query;
+    const key = "";
+    var config = {
+      method: 'get',
+      url: `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${key}`,
+      // params: {
+      //   location: lat + '%2C' + long,
+      //   radius: 1500,
+      //   key: 'x'
+      // },
+      headers: { }
+    };
+
+    return axios(config)
+      .then(response => {
+        const places = JSON.stringify(response.data);
+        console.log(places);
+        functions.logger.log('Places', context.params.documentId, places);
+        return snap.ref.set({ searchResult }, { merge: true });
+      })
+      .catch(error => {
+        console.log(error);
+        return callback(new Error("Error getting google search"))
       });
 
     // axios({

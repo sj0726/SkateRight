@@ -25,13 +25,13 @@ class HeroDialogRoute<T> extends PageRoute<T> {
   bool get opaque => false; // Allows background to be visible
 
   @override
-  bool get barrierDismissible => true;  // Tapping away from popup closes it
+  bool get barrierDismissible => true; // Tapping away from popup closes it
 
   @override
   Duration get transitionDuration => const Duration(milliseconds: 300);
 
   @override
-  bool get maintainState => false;   // ?:Keep popup state in memory
+  bool get maintainState => false; // ?:Keep popup state in memory
 
   @override
   Color get barrierColor => Colors.black54; // black54 = translucent black
@@ -41,7 +41,8 @@ class HeroDialogRoute<T> extends PageRoute<T> {
     -- Not needed due to hero widget use (simple return) */
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
-    return child; // adds no animation
+    return super.buildTransitions(context, animation, secondaryAnimation, child);
+    // return child; // adds no animation
   }
 
   @override

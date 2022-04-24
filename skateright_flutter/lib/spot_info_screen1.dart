@@ -23,7 +23,7 @@ class SpotInfoPage extends StatelessWidget {
                   Flexible(flex: 2, child: _SpotInfo(title: spot.title)),
                   Flexible(
                       flex: 1,
-                      child: Center(child: _SpotPhoto(pic: spot.pictures![0]))),
+                      child: Center(child: _SpotPhoto(pic: spot.pictures[0]))),
                 ],
               ),
               const SizedBox(height: 12),
@@ -46,33 +46,39 @@ class _SpotInfo extends StatelessWidget {
 
   final String title;
   final TextStyle style = const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-            color: Colors.white,
-            fontStyle: FontStyle.normal);
+      fontWeight: FontWeight.bold,
+      fontSize: 18,
+      color: Colors.white,
+      fontStyle: FontStyle.normal);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Align(
-          alignment: Alignment.topLeft,
-          child: Text(
+    return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+      Align(
+        alignment: Alignment.topLeft,
+        child: Text(
           title,
           style: this.style,
           textAlign: TextAlign.left,
         ),
+      ),
+      Align(
+        alignment: Alignment.topLeft,
+        child: Text(
+          'Type of location',
+          style: this.style,
+          textAlign: TextAlign.left,
         ),
-        Align(
-          alignment: Alignment.topLeft,
-        child: Text('Type of location', style: this.style, textAlign: TextAlign.left,),
+      ),
+      Align(
+        alignment: Alignment.topLeft,
+        child: Text(
+          "Address",
+          style: this.style,
+          textAlign: TextAlign.left,
         ),
-        Align(
-          alignment: Alignment.topLeft,
-          child:Text("Address", style: this.style, textAlign: TextAlign.left,),),
-      ]
-    );
+      ),
+    ]);
   }
 }
 
@@ -88,7 +94,7 @@ class _SpotPhoto extends StatelessWidget {
         child: Image(
           image: NetworkImage(pic!),
           fit: BoxFit.cover,
-          // height: 24, 
+          // height: 24,
           // width: 12,
 
           // fit: BoxFit.cover,
@@ -114,33 +120,35 @@ class _Obstacles extends StatelessWidget {
           ),
         ),
         Row(
-
           children: [
             const Icon(Icons.access_alarm, color: Colors.blueAccent),
-            const SizedBox(width:12),
-            const Icon(Icons.square_outlined, color: Colors.blueAccent,),
-            const SizedBox(width:12),
+            const SizedBox(width: 12),
+            const Icon(
+              Icons.square_outlined,
+              color: Colors.blueAccent,
+            ),
+            const SizedBox(width: 12),
             const Icon(Icons.circle_outlined, color: Colors.blueAccent)
-            ],
-          ),
+          ],
+        ),
       ],
     );
   }
 }
 
 class _SpotInteractions extends StatelessWidget {
-  const _SpotInteractions({ Key? key }) : super(key: key);
+  const _SpotInteractions({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         const Icon(Icons.favorite_border_outlined, color: Colors.red),
-        const SizedBox(width:12),
+        const SizedBox(width: 12),
         const Icon(Icons.star_border_outlined, color: Colors.green),
-        const SizedBox(width:12),
+        const SizedBox(width: 12),
         const Icon(Icons.photo_camera_outlined, color: Colors.grey)
-      ],      
+      ],
     );
   }
 }

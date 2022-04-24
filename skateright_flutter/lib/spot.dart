@@ -8,18 +8,24 @@ import 'package:firebase_core/firebase_core.dart';
 ///
 /// Used in building spot card popups in map icon onTap()
 class Spot {
-  const Spot(
-      {this.id = "0", // TODO: Set to required once infrastructure in place
-      required this.title,
-      // required this.address,
-
-      required this.pictures,
-      this.score,
-      required this.comments,
-      required this.obstacles});
+  const Spot({
+    this.id = "0", // TODO: Set to required once infrastructure in place
+    required this.title,
+    // required this.address,
+    required this.latitude,
+    required this.longitude,
+    this.isPark = true,
+    required this.pictures,
+    this.score,
+    required this.comments,
+    required this.obstacles,
+  });
 
   final String id;
   final String title;
+  final double latitude;
+  final double longitude;
+  final bool isPark;
 
   // final String address;
   final List<String> pictures;
@@ -43,6 +49,9 @@ class Spot {
     });
     return true;
   }
+  // List<Comment> getComments() {
+  //   return comments;
+  // }
 }
 
 /// An individual review model, used within a [Spot].
