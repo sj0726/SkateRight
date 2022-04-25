@@ -4,6 +4,12 @@ copy + paste into there
 
 # Photos
 
+## Sprint 5
+#### Goal: Add Search Functionality
+![mapPage](./screenshots/sprint5/map_page.jpg)
+![searchDisplay](./screenshots/sprint5/search_window.jpg)
+![searchOptions](./screenshots/sprint5/search_options.jpg)
+
 ## Sprint 4
 #### Goal: Create profile section and enhance app style
 ![spotPage](./screenshots/sprint4/infopage.jpg)

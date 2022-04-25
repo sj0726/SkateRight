@@ -1,5 +1,32 @@
 [
   {
+    "featureType": "poi",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+
+
+
+  {
     "elementType": "geometry",
     "stylers": [
       {
@@ -28,6 +55,7 @@
     "elementType": "geometry.stroke",
     "stylers": [
       {
+        "visibility": "on",
         "color": "#C9B2A6"
       }
     ]
@@ -37,6 +65,7 @@
     "elementType": "geometry.stroke",
     "stylers": [
       {
+        "visibility": "on",
         "color": "#DCD2BE"
       }
     ]
@@ -46,6 +75,7 @@
     "elementType": "labels.text.fill",
     "stylers": [
       {
+        "visibility": "on",
         "color": "#AE9E90"
       }
     ]
@@ -82,6 +112,7 @@
     "elementType": "geometry",
     "stylers": [
       {
+        "visibility": "on",
         "color": "#DFD2AE"
       }
     ]
@@ -91,6 +122,7 @@
     "elementType": "labels.text.fill",
     "stylers": [
       {
+        "visibility": "on",
         "color": "#93817C"
       }
     ]
@@ -100,6 +132,7 @@
     "elementType": "geometry.fill",
     "stylers": [
       {
+        "visibility": "on",
         "color": "#B2D33C"
       }
     ]
@@ -109,6 +142,7 @@
     "elementType": "labels.text.fill",
     "stylers": [
       {
+        "visibility": "on",
         "color": "#015C00"
       }
     ]
@@ -118,6 +152,7 @@
     "elementType": "labels.text.stroke",
     "stylers": [
       {
+        "visibility": "on",
         "color": "#F0E6D0"
       }
     ]
@@ -244,6 +279,7 @@
     "elementType": "geometry",
     "stylers": [
       {
+        "visibility": "on",
         "color": "#DFD2AE"
       }
     ]
@@ -253,6 +289,7 @@
     "elementType": "labels.text.fill",
     "stylers": [
       {
+        "visibility": "on",
         "color": "#8F7D77"
       }
     ]
@@ -262,6 +299,7 @@
     "elementType": "labels.text.stroke",
     "stylers": [
       {
+        "visibility": "on",
         "color": "#F0E6D0"
       }
     ]
@@ -271,6 +309,7 @@
     "elementType": "geometry",
     "stylers": [
       {
+        "visibility": "on",
         "color": "#DFD2AE"
       }
     ]

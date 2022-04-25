@@ -39,6 +39,7 @@ dependencies:
   flutter_polyline_points: ^0.2.6
   google_maps_flutter: ^2.1.1
   geolocator: ^8.2.0
+  http: ^0.13.4
   async: ^2.8.2
   firebase_core: ^1.13.1
   firebase_database: ^9.0.8
@@ -48,6 +49,7 @@ dependencies:
   location_web: ^3.1.1
 
   material_floating_search_bar: ^0.3.7
+  flutter_svg: ^1.0.3
 
 dev_dependencies:
   flutter_test:

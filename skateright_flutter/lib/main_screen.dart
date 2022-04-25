@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import "./map_page.dart";
+import 'map/map_page.dart';
 import "./cookie_clicker.dart";
 import 'package:firebase_core/firebase_core.dart';
 // import 'package:quotes_app/home.dart';
@@ -30,6 +30,7 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         body: FutureBuilder(
             future: _future,
             builder: (context, snapshot) {
@@ -37,6 +38,7 @@ class _MainScreenState extends State<MainScreen> {
                 return Text(snapshot.error.toString());
               } else {
                 return Scaffold(
+                  resizeToAvoidBottomInset: false,
                   body: pageList[_pageIndex],
                   bottomNavigationBar: BottomNavigationBar(
                     type: BottomNavigationBarType.fixed,

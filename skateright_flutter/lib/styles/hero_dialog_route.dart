@@ -37,11 +37,17 @@ class HeroDialogRoute<T> extends PageRoute<T> {
   Color get barrierColor => Colors.black54; // black54 = translucent black
 
   @override
-  /* Handles creation and dismissal transitions
-    -- Not needed due to hero widget use (simple return) */
+  /* Simple slide-up animation */
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
-    return super.buildTransitions(context, animation, secondaryAnimation, child);
+    return SlideTransition(
+      position: Tween<Offset>(
+        begin: const Offset(0.0, 1.0),
+        end: Offset.zero,
+      ).animate(animation),
+      child: child,
+    );
+    // return super.buildTransitions(context, animation, secondaryAnimation, child);
     // return child; // adds no animation
   }
 

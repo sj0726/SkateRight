@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import '/spot.dart';
+import 'package:skateright_flutter/entities/spot.dart';
 import './review_card.dart';
 
 class ReviewsPage extends StatefulWidget {

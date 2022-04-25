@@ -91,6 +91,7 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
 <<<<<<< HEAD
+<<<<<<< HEAD
             VALUE "FileDescription", "skateright_flutter" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "skateright_flutter" "\0"
@@ -99,12 +100,20 @@ BEGIN
             VALUE "ProductName", "skateright_flutter" "\0"
 =======
             VALUE "FileDescription", "map_app" "\0"
+=======
+            VALUE "FileDescription", "skateright_flutter" "\0"
+>>>>>>> origin/restructure
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "map_app" "\0"
+            VALUE "InternalName", "skateright_flutter" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2022 com.example. All rights reserved." "\0"
+<<<<<<< HEAD
             VALUE "OriginalFilename", "map_app.exe" "\0"
             VALUE "ProductName", "map_app" "\0"
 >>>>>>> dev
+=======
+            VALUE "OriginalFilename", "skateright_flutter.exe" "\0"
+            VALUE "ProductName", "skateright_flutter" "\0"
+>>>>>>> origin/restructure
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

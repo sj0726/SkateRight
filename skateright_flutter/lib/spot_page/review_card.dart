@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import '/styles/skate_theme.dart';
-import '../spot.dart';
+import 'package:skateright_flutter/styles/skate_theme.dart';
+import '../entities/spot.dart';
 
 int maxSize = 80; // Max char length of review text preview
 
