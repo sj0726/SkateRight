@@ -2,7 +2,7 @@ import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
 import '/styles/skate_theme.dart';
-import '../spot.dart';
+import '../entities/spot.dart';
 import 'review_card.dart';
 import 'reviews_page.dart';
 import 'spot_feed.dart';

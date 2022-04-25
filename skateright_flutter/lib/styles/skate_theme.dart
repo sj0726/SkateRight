@@ -9,7 +9,7 @@ const sYellow = Color(0xFFf1c200);
 const sYellow1 = Color.fromARGB(255, 206, 187, 19);
 
 final skateTheme = ThemeData(
-  // General values that can be aceessed by all inheritors of Theme (all pages)
+  // General values that can be aceessed by inheritors of Theme (all pages)
   backgroundColor: sBlack,
   accentColor: sLightGreen, // Controls the text cursor color
   secondaryHeaderColor: sYellow,

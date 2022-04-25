@@ -1,4 +1,4 @@
-import 'spot.dart';
+import '../entities/spot.dart';
 
 final _comments = [
   Comment(

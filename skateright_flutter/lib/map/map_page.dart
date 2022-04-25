@@ -7,10 +7,10 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 
-import './spot.dart';
-import './fake_spot.dart';
-import './hero_dialog_route.dart';
-import 'spot_page/spot_popup_card.dart';
+import '../entities/spot.dart';
+import 'fake_spot.dart';
+import '../styles/hero_dialog_route.dart';
+import '../spot_page/spot_popup_card.dart';
 import 'search_bar.dart';
 
 void main() {
@@ -200,6 +200,7 @@ class _MapScreenState extends State<MapScreen> {
       body: Stack(
         children: [
           GoogleMap(
+            onLongPress: _onMapPress,
             mapToolbarEnabled: false,
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
@@ -218,6 +219,25 @@ class _MapScreenState extends State<MapScreen> {
         ],
       ),
     );
+  }
+
+  /// Add new spot function
+  /// Handles long taps
+  _onMapPress(LatLng tappedPoint) {
+    Marker tempMarker = Marker(
+      markerId: MarkerId('TEMP'),
+      position: tappedPoint,
+      draggable: true,
+      // onDragEnd: ((newPos) => setState((() { 
+      // show_checkmark_at_top_left()
+      //   - on pressed, give confirm dialog ("Add spot at <address>?")
+      //     --> Navigator.of(context).push(submitSpotPage());
+      // }))
+    );
+
+    setState(() {
+      _markers.add(tempMarker);
+    });
   }
 
   /*  ----- Methods Utilized Externally -----  */

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:location/location.dart';
 
-import 'spot.dart';
+import '../entities/spot.dart';
 import 'places_interface.dart';
 
 import 'fake_spot.dart';
@@ -136,7 +136,7 @@ class _SearchBarState extends State<SearchBar> {
         makeAPICall = true;
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      transition: CircularFloatingSearchBarTransition(),
+      transition: SlideFadeFloatingSearchBarTransition(translation: -32),
       actions: [
         /* Advanced search menu */
         FloatingSearchBarAction(

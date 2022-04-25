@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:location/location.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
-import 'spot.dart';
+import '../entities/spot.dart';
 
 class PlacesInterface {
   PlacesInterface({required this.location});
@@ -33,8 +33,6 @@ class PlacesInterface {
         "&location=${currentLocation!.latitude},${currentLocation!.longitude}";
     call += "&radius=$searchRadius";
     call += "&key=$apiKey";
-
-    log(call);
 
     Response res = await get(Uri.parse(call));
     if (res.statusCode == 200) {

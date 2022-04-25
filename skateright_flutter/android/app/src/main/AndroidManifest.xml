@@ -1,10 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.map_app">
+    package="com.example.skateright_flutter">
     <!--Needed to get current location from user-->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
    <application
-        android:label="map_app"
+        android:label="skateright_flutter"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -1,6 +1,6 @@
 {
-    "name": "map_app",
-    "short_name": "map_app",
+    "name": "skateright_flutter",
+    "short_name": "skateright",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
