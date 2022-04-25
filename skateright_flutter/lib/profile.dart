@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:skateright_flutter/styles/skate_theme.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() {
   runApp(const ProfilePage());
@@ -32,7 +35,23 @@ class CreateProfileForm extends StatefulWidget {
 }
 
 class _CreateProfileForm extends State<CreateProfileForm> {
+  TextEditingController name = TextEditingController();
+  TextEditingController pronouns = TextEditingController();
+  TextEditingController otherGoal = TextEditingController();
+  TextEditingController aboutYourself = TextEditingController();
   List<bool> goalIsChecked = [false, false, false, false, false, false];
+  List<bool> skillLevel = [false, false, false, false, false];
+  List<bool> mostInterestedIn = [false, false, false, false, false, false];
+  final firestoreInstance = FirebaseFirestore.instance;
+
+  @override
+  void dispose() {
+    name.dispose();
+    pronouns.dispose();
+    otherGoal.dispose();
+    aboutYourself.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +60,15 @@ class _CreateProfileForm extends State<CreateProfileForm> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
           child: TextFormField(
+            controller: name,
+              cursorColor: const Color(0xFF94B321),
               decoration: const InputDecoration(
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFF94B321))
-              ),
+                  borderSide: BorderSide(color: Color(0xFFf0e6d0))
+                ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFF94B321))
+          ),
           border: OutlineInputBorder(),
                 labelText: "What's your name?",
                 labelStyle: TextStyle(
@@ -57,10 +81,15 @@ class _CreateProfileForm extends State<CreateProfileForm> {
         Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
           child: TextFormField(
+            controller: pronouns,
+            cursorColor: const Color(0xFF94B321),
             decoration: const InputDecoration(
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFF94B321))
+                borderSide: BorderSide(color: Color(0xFFf0e6d0))
               ),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF94B321))
+                ),
               border: OutlineInputBorder(),
               labelText: "Pronouns?",
               labelStyle: TextStyle(
@@ -282,6 +311,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
               ListTile(
                 title: const Text("Get on the board"),
                 leading: Checkbox(
+                  checkColor: const Color(0xFF141414),
                   side: const BorderSide(
                     color: Color(0xFF94B321),
                   ),
@@ -297,6 +327,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
               ListTile(
                 title: const Text("Gain confidence"),
                 leading: Checkbox(
+                  checkColor: const Color(0xFF141414),
                   side: const BorderSide(
                     color: Color(0xFF94B321),
                   ),
@@ -312,6 +343,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
               ListTile(
                 title: const Text("Meet new skaters"),
                 leading: Checkbox(
+                  checkColor: const Color(0xFF141414),
                   side: const BorderSide(
                     color: Color(0xFF94B321),
                   ),
@@ -327,6 +359,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
               ListTile(
                 title: const Text("Do an ollie"),
                 leading: Checkbox(
+                  checkColor: const Color(0xFF141414),
                   side: const BorderSide(
                     color: Color(0xFF94B321),
                   ),
@@ -342,6 +375,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
               ListTile(
                 title: const Text("Do a kickflip"),
                 leading: Checkbox(
+                  checkColor: const Color(0xFF141414),
                   side: const BorderSide(
                     color: Color(0xFF94B321),
                   ),
@@ -357,6 +391,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
               ListTile(
                 title: const Text("Find new skate spots"),
                 leading: Checkbox(
+                  checkColor: const Color(0xFF141414),
                   side: const BorderSide(
                     color: Color(0xFF94B321),
                   ),
@@ -375,9 +410,14 @@ class _CreateProfileForm extends State<CreateProfileForm> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
           child: TextFormField(
+            controller: otherGoal,
+            cursorColor: const Color(0xFF94B321),
             decoration: const InputDecoration(
                 enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF94B321))
+                    borderSide: BorderSide(color: Color(0xFFf0e6d0))
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF94B321))
                 ),
                 border: OutlineInputBorder(),
                 labelText: "Other goal:",
@@ -391,9 +431,14 @@ class _CreateProfileForm extends State<CreateProfileForm> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
           child: TextFormField(
+            controller: aboutYourself,
+            cursorColor: const Color(0xFF94B321),
             decoration: const InputDecoration(
                 enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF94B321))
+                    borderSide: BorderSide(color: Color(0xFFf0e6d0))
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF94B321))
                 ),
                 border: OutlineInputBorder(),
               labelText: "Tell us about yourself!",
@@ -418,49 +463,49 @@ class _CreateProfileForm extends State<CreateProfileForm> {
               ),
               ElevatedButton.icon(
                   onPressed: () {},
-                  icon: Image.asset('assets/figures/skater1-white.png'),
+                  icon: Image.asset('assets/figures/skater1-black.png'),
                   label: const Text(""),
                 style: ElevatedButton.styleFrom(
                   shape: const CircleBorder(),
-                  side: const BorderSide(
-                    color: Color(0xFFf0e6d0)
-                  ),
+                  // side: const BorderSide(
+                  //   color: Color(0xFFf0e6d0)
+                  // ),
                   primary: Colors.transparent
                 ),
               ),
               ElevatedButton.icon(
                 onPressed: () {},
-                icon: Image.asset('assets/figures/skater2-white.png'),
+                icon: Image.asset('assets/figures/skater2-black.png'),
                 label: const Text(""),
                 style: ElevatedButton.styleFrom(
                     shape: const CircleBorder(),
-                    side: const BorderSide(
-                        color: Color(0xFFf0e6d0)
-                    ),
+                    // side: const BorderSide(
+                    //     color: Color(0xFFf0e6d0)
+                    // ),
                     primary: Colors.transparent
                 ),
               ),
               ElevatedButton.icon(
                 onPressed: () {},
-                icon: Image.asset('assets/figures/skater3-white.png'),
+                icon: Image.asset('assets/figures/skater3-black.png'),
                 label: const Text(""),
                 style: ElevatedButton.styleFrom(
                     shape: const CircleBorder(),
-                    side: const BorderSide(
-                        color: Color(0xFFf0e6d0)
-                    ),
+                    // side: const BorderSide(
+                    //     color: Color(0xFFf0e6d0)
+                    // ),
                     primary: Colors.transparent
                 ),
               ),
               ElevatedButton.icon(
                 onPressed: () {},
-                icon: Image.asset('assets/figures/skater4-white.png'),
+                icon: Image.asset('assets/figures/skater4-black.png'),
                 label: const Text(""),
                 style: ElevatedButton.styleFrom(
                     shape: const CircleBorder(),
-                    side: const BorderSide(
-                        color: Color(0xFFf0e6d0)
-                    ),
+                    // side: const BorderSide(
+                    //     color: Color(0xFFf0e6d0)
+                    // ),
                     primary: Colors.transparent
                 ),
               ),
@@ -482,7 +527,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
               ),
               ElevatedButton.icon(
                 onPressed: () {},
-                icon: Image.asset('assets/backgrounds/background1.png'),
+                icon: Image.asset('assets/backgrounds/background1.png', width: 30),
                 label: const Text(""),
                 style: ElevatedButton.styleFrom(
                   shape: const RoundedRectangleBorder(),
@@ -491,7 +536,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
               ),
               ElevatedButton.icon(
                 onPressed: () {},
-                icon: Image.asset('assets/backgrounds/background2.png'),
+                icon: Image.asset('assets/backgrounds/background2.png', width: 30),
                 label: const Text(""),
                 style: ElevatedButton.styleFrom(
                     shape: const RoundedRectangleBorder(),
@@ -500,7 +545,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
               ),
               ElevatedButton.icon(
                 onPressed: () {},
-                icon: Image.asset('assets/backgrounds/background3.png'),
+                icon: Image.asset('assets/backgrounds/background3.png', width: 30),
                 label: const Text(""),
                 style: ElevatedButton.styleFrom(
                     shape: const RoundedRectangleBorder(),
@@ -509,7 +554,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
               ),
               ElevatedButton.icon(
                 onPressed: () {},
-                icon: Image.asset('assets/backgrounds/background4.png'),
+                icon: Image.asset('assets/backgrounds/background4.png', width: 30),
                 label: const Text(""),
                 style: ElevatedButton.styleFrom(
                     shape: const RoundedRectangleBorder(),
@@ -528,7 +573,22 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                 Directionality(
                     textDirection: TextDirection.rtl,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        DatabaseReference _ref =
+                            FirebaseDatabase.instance.ref().child("Profile");
+                        _ref.push().set({
+                          "Name": name.text,
+                          "Pronouns": pronouns.text,
+                          "Other Goals": otherGoal.text,
+                          "Background": aboutYourself.text
+                        });
+                        firestoreInstance.collection("Profile").add({
+                          "Name": name.text,
+                          "Pronouns": pronouns.text,
+                          "Other Goals": otherGoal.text,
+                          "Background": aboutYourself.text
+                        });
+                      },
                       child: const Text(
                           "Done",
                         style: TextStyle(color: Color(0xFF141414)),
