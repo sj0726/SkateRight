@@ -22,22 +22,22 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  final PageStorageBucket bucket = PageStorageBucket();
+  // final PageStorageBucket bucket = PageStorageBucket();
 
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: PageStorage(  /// Saves state of pages... no reload required
-        child: pageList[_pageIndex],
-        bucket: bucket,
+      body: IndexedStack(  /// Saves state of pages... no reload required
+        children: pageList,
+        index: _pageIndex,
       ),
       bottomNavigationBar: BottomNavigationBar(
         // All styling info stored in skate_theme
         currentIndex: _pageIndex,
         onTap: (int index) => setState(() => _pageIndex = index),
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.map_outlined), label: 'Spots'),
-          BottomNavigationBarItem(icon: Icon(Icons.cookie), label: 'Clicker'),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Spots'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_sharp), label: 'Clicker'),
         ],
       ),
     );
