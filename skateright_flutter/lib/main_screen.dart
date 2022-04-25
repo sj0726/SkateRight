@@ -13,9 +13,9 @@ class _MainScreenState extends State<MainScreen> {
   @override
   int _pageIndex = 0;
   List<Widget> pageList = <Widget>[
-    MapPage(key: PageStorageKey('Map')),
-    ClickerPage(key: PageStorageKey('Clicker')),
-    ProfilePage(key: PageStorageKey('Profile')),
+    const MapPage(key: PageStorageKey('Map')),
+    const ClickerPage(key: PageStorageKey('Clicker')),
+    const ProfilePage(key: PageStorageKey('Profile')),
   ];
 
   void _onNavigationTap(int index) {
@@ -26,6 +26,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final PageStorageBucket bucket = PageStorageBucket();
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageStorage(  /// Saves state of pages... no reload required
