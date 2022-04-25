@@ -8,10 +8,10 @@ import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import './entities/spot.dart';
+import '../entities/spot.dart';
 import '../map/fake_spot.dart';
 import '../styles/hero_dialog_route.dart';
-import 'spot_page/spot_popup_card.dart';
+import '/spot_page/spot_popup_card.dart';
 import 'search_bar.dart';
 
 late GoogleMapController globalMapController;

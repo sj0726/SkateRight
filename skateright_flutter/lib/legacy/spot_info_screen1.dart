@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './entities/spot.dart';
+import '../entities/spot.dart';
 
 class SpotInfoPage extends StatelessWidget {
   const SpotInfoPage({Key? key, required this.spot}) : super(key: key);

@@ -7,7 +7,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import './entities/spot.dart';
+import '../entities/spot.dart';
 import 'map_page.dart';
 
 import '../map/fake_spot.dart';

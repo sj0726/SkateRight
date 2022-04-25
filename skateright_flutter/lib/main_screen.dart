@@ -39,7 +39,7 @@ class _MainScreenState extends State<MainScreen> {
               } else {
                 return Scaffold(
                   resizeToAvoidBottomInset: false,
-                  body: pageList[_pageIndex],
+                  body: IndexedStack(children: pageList, index: _pageIndex),
                   bottomNavigationBar: BottomNavigationBar(
                     type: BottomNavigationBarType.fixed,
                     currentIndex: _pageIndex,
