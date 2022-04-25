@@ -39,16 +39,16 @@ final skateTheme = ThemeData(
     bodyText2: TextStyle(
         fontFamily: 'Karla', fontSize: 14, color: sCream), // Should be 12
   ),
-  listTileTheme: ListTileThemeData(
-    tileColor: sCream,
-    iconColor: sBlack,
-    textColor: sBlack,
+  listTileTheme: const ListTileThemeData(
+    tileColor: Colors.transparent,
+    iconColor: sCream,
+    textColor: sCream,
   ),
-
+  
   checkboxTheme: CheckboxThemeData(
     fillColor: MaterialStateColor.resolveWith((states) => sLightGreen),
     checkColor: MaterialStateColor.resolveWith((states) => sBlack),
-    overlayColor: MaterialStateColor.resolveWith((states) => sLightGreen),
+    overlayColor: MaterialStateColor.resolveWith((states) => sLightGreen ),    
   ),
 
   // Used in main_screen.dart
