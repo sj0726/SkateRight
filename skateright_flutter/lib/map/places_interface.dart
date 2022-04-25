@@ -15,7 +15,7 @@ class PlacesInterface {
   /// future plans will have a variable/sliding searchRadius
   ///   - define backend calls as dynamic in searchtem & radius (with cap)
   final int searchRadius = 5000;
-  final String apiKey = "AIzaSyDJjuSWJmZXh6XMuTFOLPe52G3VLfYUMiE";
+  final String apiKey = "";
   final String exactSearchPostURL =
       "https://maps.googleapis.com/maps/api/place/findplacefromtext/json";
   final String nearbyPostURL =
@@ -35,8 +35,6 @@ class PlacesInterface {
         "&location=${currentLocation!.latitude},${currentLocation!.longitude}";
     call += "&radius=$searchRadius";
     call += "&key=$apiKey";
-
-    log(call);
 
     Response res = await get(Uri.parse(call));
     if (res.statusCode == 200) {

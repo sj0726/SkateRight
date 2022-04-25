@@ -26,7 +26,7 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  final PageStorageBucket bucket = PageStorageBucket();
+  // final PageStorageBucket bucket = PageStorageBucket();
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +39,7 @@ class _MainScreenState extends State<MainScreen> {
               } else {
                 return Scaffold(
                   resizeToAvoidBottomInset: false,
-                  body: pageList[_pageIndex],
+                  body: IndexedStack(children: pageList, index: _pageIndex),
                   bottomNavigationBar: BottomNavigationBar(
                     type: BottomNavigationBarType.fixed,
                     currentIndex: _pageIndex,
