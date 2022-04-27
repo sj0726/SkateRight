@@ -29,31 +29,29 @@ class _MainScreenState extends State<MainScreen> {
   // final PageStorageBucket bucket = PageStorageBucket();
 
   Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: FutureBuilder(
-            future: _future,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Text(snapshot.error.toString());
-              } else {
-                return Scaffold(
-                  resizeToAvoidBottomInset: false,
-                  body: IndexedStack(children: pageList, index: _pageIndex),
-                  bottomNavigationBar: BottomNavigationBar(
-                    type: BottomNavigationBarType.fixed,
-                    currentIndex: _pageIndex,
-                    onTap: _onNavigationTap,
-                    items: const <BottomNavigationBarItem>[
-                      BottomNavigationBarItem(
-                          icon: Icon(Icons.map_outlined), label: 'Map'),
-                      BottomNavigationBarItem(
-                          icon: Icon(Icons.skateboarding), label: 'User'),
-                    ],
-                  ),
-                );
-              }
-            }));
+    return FutureBuilder(
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        } else {
+          return Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: IndexedStack(children: pageList, index: _pageIndex),
+            bottomNavigationBar: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              currentIndex: _pageIndex,
+              onTap: _onNavigationTap,
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Map'),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.person_sharp), label: 'User'),
+              ],
+            ),
+          );
+        }
+      },
+    );
     //   resizeToAvoidBottomInset: false,
     //   body: PageStorage(  /// Saves state of pages... no reload required
     //     child: pageList[_pageIndex],
