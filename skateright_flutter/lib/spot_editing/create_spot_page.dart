@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:skateright_flutter/map/search_bar.dart';
-import 'package:skateright_flutter/spot_page/submit_text_field.dart';
+import 'package:skateright_flutter/spot_editing/submit_text_field.dart';
 import 'package:skateright_flutter/entities/spot.dart';
 
 class CreateSpotPage extends StatefulWidget {
@@ -149,7 +149,7 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
 /* ------------- Obstacle grid builder --------------- */
 
 /* Should be stored in a config file which loads from db on app start, see search_bar.dart */
-final List<String> obstacles = ['Park', 'Street', 'Ramps', 'Flat', 'Rails'];
+final List<String> obstacles = ['Flat', 'Bowl', 'Ramp', 'Curb', 'Ledge', 'Flat Rail', 'Bank', 'Gap', 'Hand Rail', '1/4 Pipe', 'Full Pipe', 'Stairs'];
 final obSelects = {};
 
 class ObstacleSelection extends StatelessWidget {
@@ -180,6 +180,9 @@ class ObstacleSelection extends StatelessWidget {
       Icons.crop_square,
       Icons.texture_outlined,
       Icons.bar_chart_outlined,
+      Icons.stairs_outlined,
+      Icons.cloud_circle,
+      Icons.cloud_outlined,
     ];
     _initSelections();
     var size = MediaQuery.of(context).size;

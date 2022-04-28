@@ -2,6 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+/* *****************DEPRECATED*********************** */ 
+/* **     Moved to create_spot_page.dart           ** */
+/* ************************************************** */
+
 /* Should be stored in a config file which loads from db on app start, see search_bar.dart */
 final List<String> obstacles = ['Park', 'Street', 'Ramps', 'Flat', 'Rails'];
 final obSelects = {};
