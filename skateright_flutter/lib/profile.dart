@@ -40,6 +40,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
   TextEditingController aboutYourself = TextEditingController();
   List<String> whichSkater = [];
   List<String> background = [];
+
   final firestoreInstance = FirebaseFirestore.instance;
 
   @override
@@ -67,7 +68,9 @@ class _CreateProfileForm extends State<CreateProfileForm> {
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Color(0xFF94B321))
           ),
-          border: OutlineInputBorder(),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.zero)
+          ),
                 labelText: "What's your name?",
                 labelStyle: TextStyle(
                   color: Color(0xFFf0e6d0)
@@ -102,11 +105,15 @@ class _CreateProfileForm extends State<CreateProfileForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Text(
-                "Skill level?",
-                style: TextStyle(
-                    fontFamily: 'RobotoMono',
-                    fontSize: 18
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  // TODO: wrap in padding (option + return) or spacer widget
+                  "Skill level?",
+                  style: TextStyle(
+                      fontFamily: 'RobotoMono',
+                      fontSize: 18
+                  ),
                 ),
               ),
               ElevatedButton(
@@ -203,11 +210,14 @@ class _CreateProfileForm extends State<CreateProfileForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Text(
-                  "What are you most interested in?",
-                style: TextStyle(
-                    fontFamily: 'RobotoMono',
-                    fontSize: 18
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                    "What are you most interested in?",
+                  style: TextStyle(
+                      fontFamily: 'RobotoMono',
+                      fontSize: 18
+                  ),
                 ),
               ),
               ElevatedButton(
@@ -332,6 +342,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                 title: const Text("Get on the board"),
                 leading: Checkbox(
                   checkColor: const Color(0xFF141414),
+                  // TODO: figure out how to do fill color with type MaterialColor
                   side: const BorderSide(
                     color: Color(0xFF94B321),
                   ),
@@ -408,6 +419,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                 ),
               ),
 
+              // TODO fill color
               ListTile(
                 title: const Text("Find new skate spots"),
                 leading: Checkbox(
@@ -471,14 +483,18 @@ class _CreateProfileForm extends State<CreateProfileForm> {
 
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: Column(
+          child: Column( // TODO switch to grid view
             crossAxisAlignment: CrossAxisAlignment.start,
+            // gridDelegate: null,
             children: <Widget>[
-              const Text(
-                "Which skater are you?",
-                style: TextStyle(
-                  fontFamily: 'RobotoMono',
-                  fontSize: 18
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  "Which skater are you?",
+                  style: TextStyle(
+                    fontFamily: 'RobotoMono',
+                    fontSize: 18
+                  ),
                 ),
               ),
               ElevatedButton.icon(
@@ -545,11 +561,14 @@ class _CreateProfileForm extends State<CreateProfileForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Text(
-                "Choose your favorite pattern",
-                style: TextStyle(
-                  fontFamily: 'RobotoMono',
-                  fontSize: 18
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  "Choose your favorite pattern",
+                  style: TextStyle(
+                    fontFamily: 'RobotoMono',
+                    fontSize: 18
+                  ),
                 ),
               ),
               ElevatedButton.icon(
@@ -621,7 +640,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                           "About Yourself": aboutYourself.text,
                           "Which Skater": whichSkater,
                           "Background": background
-                        });
+                        }); // TODO: clear lists
                         firestoreInstance.collection("Profile").add({
                           "Name": name.text,
                           "Pronouns": pronouns.text,
@@ -632,7 +651,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                           "About Yourself": aboutYourself.text,
                           "Which Skater": whichSkater,
                           "Background": background
-                        });
+                        }); // TODO: clear lists
                       },
                       child: const Text(
                           "Done",
