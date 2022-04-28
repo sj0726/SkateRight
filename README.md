@@ -7,7 +7,8 @@ copy + paste into there
 ## Sprint 6
 #### Goal: Allow users to add custom skate spots
 ![addSpotToMap](./screenshots/sprint6/addSpotToMap.jpg)
-![addSpotForm](./screenshots/sprint6/addSpotForm.jpg)
+![addSpotForm1](./screenshots/sprint6/addSpotForm.jpg)
+![addSpotForm2](./screenshots/sprint6/addSpotForm_scrolled.jpg)
 ![confirmDialog](./screenshots/sprint6/confirmSpot.jpg)
 ![loadingScreen](./screenshots/sprint6/loadingScreen.jpg)
 
