@@ -25,7 +25,7 @@ class SearchBar extends StatefulWidget {
       {Key? key,
       required this.placeSpotMarker,
       required this.goToSpot,
-      required this.location})
+      required this.location,})
       : super(key: key);
   final placeSpotMarker;
   final goToSpot;
@@ -112,13 +112,13 @@ class _SearchBarState extends State<SearchBar> {
       backgroundColor: Theme.of(context).primaryColorDark,
       queryStyle: Theme.of(context).textTheme.subtitle1,
       borderRadius: BorderRadius.zero,
-
       controller: _controller,
       hint: 'Search...',
       hintStyle: Theme.of(context).textTheme.subtitle1!.copyWith(
           color:
               Theme.of(context).textTheme.subtitle1!.color!.withOpacity(0.75)),
       // scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
+      automaticallyImplyBackButton: false,
       transitionDuration: const Duration(milliseconds: 800),
       transitionCurve: Curves.easeInOut,
       physics: const BouncingScrollPhysics(),

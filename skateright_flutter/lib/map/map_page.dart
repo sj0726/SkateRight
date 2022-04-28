@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 
 import '../entities/spot.dart';
@@ -12,6 +11,7 @@ import 'fake_spot.dart';
 import '../styles/hero_dialog_route.dart';
 import '../spot_page/spot_popup_card.dart';
 import 'search_bar.dart';
+import '../spot_page/create_spot_page.dart';
 
 void main() {
   runApp(const MapPage());
@@ -79,6 +79,9 @@ class _MapScreenState extends State<MapScreen> {
         log(error.toString());
       },
     );
+
+    WidgetsBinding.instance!
+        .addPostFrameCallback((_) => _createAddSpotOverlay());
   }
 
   /// I think this is garbage collection on app closure/changing nav route stack
@@ -197,47 +200,166 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          GoogleMap(
-            onLongPress: _onMapPress,
-            mapToolbarEnabled: false,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-            zoomControlsEnabled: false,
-            initialCameraPosition: _initialCameraPosition,
-            onMapCreated: (controller) => _onMapCreated(controller),
-            markers: _markers,
-            buildingsEnabled: false,
-          ),
-          SearchBar(
-            placeSpotMarker: addSpotMarker,
-            goToSpot: goToSpot,
-            location: location,
-          ),
-          _myLocationButton(),
-        ],
+      body: WillPopScope(
+        onWillPop: () =>
+            (overlayBuilt) // Hids overlay instead of popping the kid
+                ? Future.value(_hideAddSpotOverlay())
+                : Future.value(true),
+        child: Stack(
+          children: [
+            GoogleMap(
+              onLongPress: _showAddSpotOverlay,
+              onCameraMove: _onCamMoved,
+              mapToolbarEnabled: false,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
+              zoomControlsEnabled: false,
+              initialCameraPosition: _initialCameraPosition,
+              onMapCreated: (controller) => _onMapCreated(controller),
+              markers: _markers,
+              buildingsEnabled: false,
+            ),
+            SearchBar(
+              placeSpotMarker: addSpotMarker,
+              goToSpot: goToSpot,
+              location: location,
+            ),
+            _myLocationButton(),
+          ],
+        ),
       ),
     );
   }
 
-  /// Add new spot function
-  /// Handles long taps
-  _onMapPress(LatLng tappedPoint) {
-    Marker tempMarker = Marker(
-      markerId: MarkerId('TEMP'),
-      position: tappedPoint,
-      draggable: true,
-      // onDragEnd: ((newPos) => setState((() { 
-      // show_checkmark_at_top_left()
-      //   - on pressed, give confirm dialog ("Add spot at <address>?")
-      //     --> Navigator.of(context).push(submitSpotPage());
-      // }))
+  /* Adding a spot to the map */
+  OverlayState? overlay;
+  OverlayEntry? topBarOverlay;
+  OverlayEntry? pinOverlay;
+  bool overlayBuilt = false;
+  CameraPosition currentCameraPos = _initialCameraPosition;
+
+  _createAddSpotOverlay() {
+    overlay = Overlay.of(context);
+
+    topBarOverlay = OverlayEntry(
+      builder: (context) => Align(
+        alignment: Alignment.topCenter,
+        child: _buildTopBarOverlay(),
+      ),
     );
 
+    pinOverlay = OverlayEntry(
+      builder: (context) => const Align(
+        alignment: Alignment.center,
+        child: Icon(
+          Icons.add_circle,
+          size: 50,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopBarOverlay() {
+    Color iconColor = Theme.of(context).primaryColorLight;
+    return Material(
+      elevation: 4,
+      color: Theme.of(context).primaryColorDark,
+      child: FractionallySizedBox(
+        heightFactor: .15,
+        widthFactor: 1,
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.02),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconButton(
+                    onPressed: (() => _hideAddSpotOverlay()),
+                    icon: Icon(
+                      Icons.clear_sharp,
+                      color: iconColor,
+                    )),
+                Text(
+                  'Done?',
+                  style: Theme.of(context).textTheme.headline2,
+                ),
+                IconButton(
+                  onPressed: () {
+                    _buildAddSpotPage();
+                    _hideAddSpotOverlay();
+                    setState(() => _markers.add(tempMarker!));
+                  },
+                  icon: Icon(
+                    Icons.check,
+                    color: iconColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  _showAddSpotOverlay(LatLng pos) {
+    googleMapController.animateCamera(CameraUpdate.newLatLng(pos));
+    if (!overlayBuilt) {
+      overlay!.insert(topBarOverlay!);
+      overlay!.insert(pinOverlay!);
+    }
+    overlayBuilt = true;
+  }
+
+  bool _hideAddSpotOverlay() {
+    topBarOverlay!.remove();
+    pinOverlay!.remove();
+
+    overlayBuilt = false;
+    return false; // For use in willPop(), don't worry about this for general use
+  }
+
+  Marker? tempMarker;
+
+  _buildAddSpotPage() {
+    LatLng cLatLng = currentCameraPos.target;
+    tempMarker = Marker(
+      markerId: const MarkerId('TEMP'),
+      position: currentCameraPos.target,
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => CreateSpotPage(
+            latitude: cLatLng.latitude,
+            longitude: cLatLng.longitude,
+          ),
+        ),
+      ),
+      // Delete when user holds down on pin
+      draggable: true,
+      onDragStart: (_) => (setState(() => _markers.removeWhere((element) => element.markerId.value == 'TEMP'),)),
+    );
+
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => CreateSpotPage(
+              latitude: cLatLng.latitude,
+              longitude: cLatLng.longitude,
+            )));
+
+    // NOTE: Current implementation only allows one custom marker on map at a time
+    //   will be fixed once end-to-end support implemented in create_spot_page.dart
     setState(() {
-      _markers.add(tempMarker);
+      _markers.removeWhere((element) => element.markerId.value == 'TEMP');
+      // _markers.add(tempMarker);
     });
+  }
+
+  /// Tracks where the center of the map is
+  _onCamMoved(CameraPosition position) {
+    if (overlayBuilt) {
+      currentCameraPos = position;
+    }
   }
 
   /*  ----- Methods Utilized Externally -----  */

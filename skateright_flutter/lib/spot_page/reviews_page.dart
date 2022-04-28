@@ -30,7 +30,6 @@ class _ReviewsPageState extends State<ReviewsPage> {
         title: Text(
           spot.title,
         ), //style: Theme.of(context).textTheme.headline1,),
-        backgroundColor: Theme.of(context).cardColor,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
       body: Padding(

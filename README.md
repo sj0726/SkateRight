@@ -4,6 +4,13 @@ copy + paste into there
 
 # Photos
 
+## Sprint 6
+#### Goal: Allow users to add custom skate spots
+![addSpotToMap](./screenshots/sprint6/addSpotToMap.jpg)
+![addSpotForm](./screenshots/sprint6/addSpotForm.jpg)
+![confirmDialog](./screenshots/sprint6/confirmSpot.jpg)
+![loadingScreen](./screenshots/sprint6/loadingScreen.jpg)
+
 ## Sprint 5
 #### Goal: Add Search Functionality
 ![mapPage](./screenshots/sprint5/map_page.jpg)
