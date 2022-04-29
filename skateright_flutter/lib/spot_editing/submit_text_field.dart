@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 
 class SubmitTextField extends StatelessWidget {
-  SubmitTextField({Key? key, required this.label, required this.controller}) : super(key: key);
+  SubmitTextField({Key? key, required this.label, required this.controller})
+      : super(key: key);
 
   final String label;
   final TextEditingController controller;
+
+  OutlineInputBorder _outlineBorderStyle({Color? borderColor}) {
+    return OutlineInputBorder(
+        borderRadius: BorderRadius.zero,
+        borderSide: BorderSide(color: borderColor ??= const Color(0xFF94B321)));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,12 +20,13 @@ class SubmitTextField extends StatelessWidget {
       textCapitalization: TextCapitalization.words,
       controller: controller,
       decoration: InputDecoration(
-        enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFF94B321))),
-        focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFF94B321))),
-        border: const OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFF94B321))),
+        border: _outlineBorderStyle(),
+        enabledBorder: _outlineBorderStyle(),
+        focusedBorder: _outlineBorderStyle(),
+        errorBorder: _outlineBorderStyle(borderColor: const Color(0xFFEB001B)),
+        focusedErrorBorder: _outlineBorderStyle(borderColor: const Color(0xFFEB001B)),
+        disabledBorder: _outlineBorderStyle(borderColor: Colors.grey[700]),
+
         labelText: label,
         labelStyle: const TextStyle(color: Color(0xFFf0e6d0)),
         suffixIcon: IconButton(

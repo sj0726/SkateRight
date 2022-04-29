@@ -57,9 +57,10 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
             ),
             child: ListView(
               children: [
-                SubmitTextField(
-                    label: 'Name of Spot', controller: nameController),
                 const SizedBox(height: 12),
+                SubmitTextField(
+                    label: 'Name of Spot', controller: nameController,),
+                const SizedBox(height: 20),
                 SubmitTextField(
                     label: 'Address', controller: addressController),
                 const SizedBox(
