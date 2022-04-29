@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 
@@ -69,6 +70,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
+    // Ideally we do the following asset loading in the splash loader
     loadCustomMarker();
     DefaultAssetBundle.of(context).loadString('assets/map/map_style.json').then(
       (asString) {
@@ -80,7 +82,8 @@ class _MapScreenState extends State<MapScreen> {
       },
     );
 
-    WidgetsBinding.instance!
+    // Overlay setup
+    WidgetsBinding.instance
         .addPostFrameCallback((_) => _createAddSpotOverlay());
   }
 
@@ -249,11 +252,16 @@ class _MapScreenState extends State<MapScreen> {
     );
 
     pinOverlay = OverlayEntry(
-      builder: (context) => const Align(
-        alignment: Alignment.center,
-        child: Icon(
-          Icons.add_circle,
-          size: 50,
+      builder: (context) => const Padding(
+        // Padding offsets pin so bottom of pin aligns with map placement
+        padding: EdgeInsets.only(bottom: 50),
+        child: Align(
+          alignment: Alignment.center,
+          child: Icon(
+            // Icons.add_circle,
+            Icons.location_pin,
+            size: 50,
+          ),
         ),
       ),
     );
@@ -338,7 +346,10 @@ class _MapScreenState extends State<MapScreen> {
       ),
       // Delete when user holds down on pin
       draggable: true,
-      onDragStart: (_) => (setState(() => _markers.removeWhere((element) => element.markerId.value == 'TEMP'),)),
+      onDragStart: (_) => (setState(
+        () =>
+            _markers.removeWhere((element) => element.markerId.value == 'TEMP'),
+      )),
     );
 
     Navigator.of(context).push(MaterialPageRoute(

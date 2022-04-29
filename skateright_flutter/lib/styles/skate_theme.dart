@@ -69,7 +69,11 @@ final skateTheme = ThemeData(
   textButtonTheme: TextButtonThemeData(
     style: ButtonStyle(
         foregroundColor:
-            MaterialStateColor.resolveWith((states) => sLightGreen)),
+            MaterialStateColor.resolveWith((states) => sLightGreen),
+            textStyle: MaterialStateTextStyle.resolveWith((states) => const TextStyle(color: sLightGreen,
+        fontFamily: 'RobotoMono',
+        fontSize: 17,
+        letterSpacing: 0),),)        
   ),
 
   // Used in main_screen.dart

@@ -2,7 +2,6 @@ import 'dart:developer' as dev;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:skateright_flutter/map/search_bar.dart';
 import 'package:skateright_flutter/spot_editing/submit_text_field.dart';
 import 'package:skateright_flutter/entities/spot.dart';
 
@@ -139,7 +138,7 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
       comments: [],
       obstacles: spotObstacles,
     );
-    // firebaseHandler.addSpotToDatabase(spot: toAdd);
+    // firebaseHandler.addSpotToDatabase(toAdd);
 
     Navigator.of(context).pop();
     // Play goofy little check mark animation?

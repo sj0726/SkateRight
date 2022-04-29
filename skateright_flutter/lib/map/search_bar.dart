@@ -21,12 +21,12 @@ Map<String, int> selections = {};
  */
 
 class SearchBar extends StatefulWidget {
-  const SearchBar(
-      {Key? key,
-      required this.placeSpotMarker,
-      required this.goToSpot,
-      required this.location,})
-      : super(key: key);
+  const SearchBar({
+    Key? key,
+    required this.placeSpotMarker,
+    required this.goToSpot,
+    required this.location,
+  }) : super(key: key);
   final placeSpotMarker;
   final goToSpot;
   final Location location;
@@ -55,7 +55,8 @@ class _SearchBarState extends State<SearchBar> {
     placeCaller = PlacesInterface(location: widget.location);
 
     for (String opt in options) {
-      selections[opt] = 1; // Note: eventually need to figure out a way to do staircount
+      selections[opt] =
+          1; // Note: eventually need to figure out a way to do staircount
     }
     selections['Park'] = 0; // Used for demo day 4/20 to showcase API calls
   }
@@ -126,10 +127,15 @@ class _SearchBarState extends State<SearchBar> {
       openAxisAlignment: 0.0,
       // width: isPortrait ? 600 : 500,
 
-      debounceDelay: const Duration(milliseconds: 1000),
+      // Wait for 2.5 seconds of inactivity before stating queryChanged
+      debounceDelay: const Duration(milliseconds: 2500),
       onQueryChanged: (input) {
         // Changing query calls builder which handles DB querying
-        setState(() => query = input);
+        if (input != query && input != query.substring(0, input.length))
+          setState(() {
+            makeAPICall = true;
+            query = input;
+          });
       },
       onSubmitted: (input) {
         query = input; // Not necesary due to onQueryChanged ?
@@ -150,12 +156,6 @@ class _SearchBarState extends State<SearchBar> {
             onPressed: () {
               showModalBottomSheet(
                 context: context,
-                // Removal of rounded edges
-                // shape: const RoundedRectangleBorder(
-                //   borderRadius: BorderRadius.only(
-                //       topLeft: Radius.circular(12.0),
-                //       topRight: Radius.circular(12.0)),
-                // ),
                 backgroundColor: Theme.of(context).primaryColorDark,
                 builder: (context) => _advSearchBuilder(),
               );
@@ -169,12 +169,7 @@ class _SearchBarState extends State<SearchBar> {
         ),
       ],
       builder: (context, transition) {
-        return
-            // Removal of rounded border
-            // ClipRRect(
-            //   borderRadius: BorderRadius.circular(16),
-            //   child:
-            Material(
+        return Material(
           color: Theme.of(context).primaryColorDark,
           elevation: 4.0,
           child: SizedBox(
@@ -217,6 +212,7 @@ class _SearchBarState extends State<SearchBar> {
     //     _getResultsFromQuery(query); // MUST COMPLETE BEFORE BUILDING
 
     Color backgroundColor = Theme.of(context).backgroundColor;
+    makeAPICall = false;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

@@ -29,8 +29,10 @@ class _ReviewsPageState extends State<ReviewsPage> {
       appBar: AppBar(
         title: Text(
           spot.title,
-        ), //style: Theme.of(context).textTheme.headline1,),
-      ),
+          textAlign: TextAlign.center,
+        ),
+      ), //style: Theme.of(context).textTheme.headline1,),
+
       backgroundColor: Theme.of(context).backgroundColor,
       body: Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 20),
