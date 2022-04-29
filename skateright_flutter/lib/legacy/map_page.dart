@@ -82,7 +82,6 @@ class _MapScreenState extends State<MapScreen> {
     Navigator.of(context).push(
       HeroDialogRoute(builder: (context) => SpotPopupCard(spot: spot)),
     );
-    fakeSpot.addToDatabase();
   }
 
   void _setMapStyle() {

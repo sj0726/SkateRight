@@ -44,7 +44,7 @@ class _ReviewCardState extends State<ReviewCard> {
 
   void _loadProfilePics() {
     profilePics.add(Image.asset(
-      'assets/figures/skater1.png',
+      'assets/figures/skater1-black.png',
       height: 28 * 1.5,
     ));
     profilePics.add(Image.asset('assets/figures/skater2.png',

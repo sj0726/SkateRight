@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'map/map_page.dart';
 import "./cookie_clicker.dart";
 import 'package:firebase_core/firebase_core.dart';
-// import 'package:quotes_app/home.dart';
-// import 'package:quotes_app/characters_page.dart';
-// import 'package:quotes_app/favorites.dart';
+import 'package:flutter/material.dart';
+import 'package:skateright_flutter/profile.dart';
+import './cookie_clicker.dart';
+import './profile.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -18,6 +19,7 @@ class _MainScreenState extends State<MainScreen> {
   List<Widget> pageList = <Widget>[
     MapPage(key: PageStorageKey('Map')),
     ClickerPage(key: PageStorageKey('Clicker')),
+    ProfilePage(key: PageStorageKey('Profile')),
   ];
 
   void _onNavigationTap(int index) {
@@ -46,6 +48,8 @@ class _MainScreenState extends State<MainScreen> {
                 BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Map'),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.person_sharp), label: 'User'),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.search), label: 'Profile'),
               ],
             ),
           );

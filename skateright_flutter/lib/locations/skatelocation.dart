@@ -9,14 +9,9 @@ class SkateLocation extends StatefulWidget {
 }
 
 class _SkateLocationState extends State<SkateLocation> {
-  TextEditingController latController = TextEditingController();
-  TextEditingController longController = TextEditingController();
-  String displayText = "";
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Skate Locations'),
       ),
