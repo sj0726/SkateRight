@@ -70,6 +70,7 @@ class _CreateReviewForm extends State<CreateReviewForm>{
               ),
               RatingBar(
                 onRatingUpdate: (double value) {
+                  difficulty.clear();
                   difficulty.add(value);
                 },
                 allowHalfRating: false,
@@ -94,6 +95,7 @@ class _CreateReviewForm extends State<CreateReviewForm>{
               ),
               RatingBar(
                 onRatingUpdate: (double value) {
+                  safety.clear();
                   safety.add(value);
                 },
                 allowHalfRating: false,
@@ -118,6 +120,7 @@ class _CreateReviewForm extends State<CreateReviewForm>{
               ),
               RatingBar(
                 onRatingUpdate: (double value) {
+                  quality.clear();
                   quality.add(value);
                 },
                 allowHalfRating: false,
@@ -142,6 +145,7 @@ class _CreateReviewForm extends State<CreateReviewForm>{
               ),
               RatingBar(
                 onRatingUpdate: (double value) {
+                  friendliness.clear();
                   friendliness.add(value);
                 },
                 allowHalfRating: false,
@@ -166,6 +170,7 @@ class _CreateReviewForm extends State<CreateReviewForm>{
               ),
               RatingBar(
                 onRatingUpdate: (double value) {
+                  crowdLevel.clear();
                   crowdLevel.add(value);
                 },
                 allowHalfRating: false,
@@ -188,18 +193,17 @@ class _CreateReviewForm extends State<CreateReviewForm>{
                   ),
                 ),
               ),
-              TextFormField(
+              TextFormField( // TODO: sharp corners
                 controller: addReview,
                 cursorColor: const Color(0xFF94B321),
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFFf0e6d0))
+                        borderSide: BorderSide(color: Color(0xFFf0e6d0)),
                     ),
                     focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF94B321))
+                        borderSide: BorderSide(color: Color(0xFF94B321)),
                     ),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.zero)
                     ),
                     labelText: "Review",
                     labelStyle: TextStyle(
@@ -226,7 +230,7 @@ class _CreateReviewForm extends State<CreateReviewForm>{
                               "Friendliness": friendliness,
                               "Crowd Level": crowdLevel,
                               "Review": addReview.text
-                            }); // TODO: clear lists
+                            });
                             firestoreInstance.collection("Ratings").add({
                               "Difficulty": difficulty,
                               "Safety": safety,
@@ -234,7 +238,7 @@ class _CreateReviewForm extends State<CreateReviewForm>{
                               "Friendliness": friendliness,
                               "Crowd Level": crowdLevel,
                               "Review": addReview.text
-                            }); // TODO: clear lists
+                            });
                           },
                           child: const Text(
                             "Done",
