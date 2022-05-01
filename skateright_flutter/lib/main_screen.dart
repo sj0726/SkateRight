@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:skateright_flutter/profile.dart';
+import 'package:skateright_flutter/onboarding/onboarding.dart';
+import 'package:skateright_flutter/onboarding/onboarding_pg3.dart';
 import './map_page.dart';
 import './cookie_clicker.dart';
-import './profile.dart';
+
 
 class MainScreen extends StatefulWidget {
   @override
@@ -15,7 +16,8 @@ class _MainScreenState extends State<MainScreen> {
   List<Widget> pageList = <Widget>[
     const MapPage(key: PageStorageKey('Map')),
     const ClickerPage(key: PageStorageKey('Clicker')),
-    const ProfilePage(key: PageStorageKey('Profile')),
+   
+    const onBoarding(key: PageStorageKey('Profile')),
   ];
 
   void _onNavigationTap(int index) {

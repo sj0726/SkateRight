@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:skateright_flutter/styles/skate_theme.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 void main() {
   runApp(const ProfilePage());
@@ -24,9 +23,6 @@ class ProfilePage extends StatelessWidget {
   }
 }
 
-// enum SkillLevel {beginner, intermediate, advanced, pro}
-// enum MostInterestedIn {streetSkating, learningTricks, justHangingOut, vibes}
-
 class CreateProfileForm extends StatefulWidget {
   const CreateProfileForm({Key? key}) : super(key: key);
 
@@ -37,11 +33,14 @@ class CreateProfileForm extends StatefulWidget {
 class _CreateProfileForm extends State<CreateProfileForm> {
   TextEditingController name = TextEditingController();
   TextEditingController pronouns = TextEditingController();
+  List<String> skillLevel = [];
+  List<String> mostInterestedIn = [];
+  List<bool> goalIsChecked = [false, false, false, false, false, false];
   TextEditingController otherGoal = TextEditingController();
   TextEditingController aboutYourself = TextEditingController();
-  List<bool> goalIsChecked = [false, false, false, false, false, false];
-  List<bool> skillLevel = [false, false, false, false, false];
-  List<bool> mostInterestedIn = [false, false, false, false, false, false];
+  List<String> whichSkater = [];
+  List<String> background = [];
+
   final firestoreInstance = FirebaseFirestore.instance;
 
   @override
@@ -69,7 +68,9 @@ class _CreateProfileForm extends State<CreateProfileForm> {
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Color(0xFF94B321))
           ),
-          border: OutlineInputBorder(),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.zero)
+          ),
                 labelText: "What's your name?",
                 labelStyle: TextStyle(
                   color: Color(0xFFf0e6d0)
@@ -104,15 +105,21 @@ class _CreateProfileForm extends State<CreateProfileForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Text(
-                "Skill level?",
-                style: TextStyle(
-                    fontFamily: 'RobotoMono',
-                    fontSize: 18
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  // TODO: wrap in padding (option + return) or spacer widget
+                  "Skill level?",
+                  style: TextStyle(
+                      fontFamily: 'RobotoMono',
+                      fontSize: 18
+                  ),
                 ),
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  skillLevel.add("I'm new here");
+                },
                 child: const Text(
                     "I'm new here",
                   style: TextStyle(color: Color(0xFF94B321)),
@@ -127,7 +134,9 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                 ) // style
               ),
               ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    skillLevel.add("Beginner");
+                  },
                   child: const Text(
                     "Beginner",
                     style: TextStyle(color: Color(0xFF94B321)),
@@ -142,7 +151,9 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                   ) // style
               ),
               ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    skillLevel.add("Intermediate");
+                  },
                   child: const Text(
                     "Intermediate",
                     style: TextStyle(color: Color(0xFF94B321)),
@@ -157,7 +168,9 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                   ) // style
               ),
               ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    skillLevel.add("Advanced");
+                  },
                   child: const Text(
                     "Advanced",
                     style: TextStyle(color: Color(0xFF94B321)),
@@ -172,7 +185,9 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                   ) // style
               ),
               ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    skillLevel.add("Basically a pro");
+                  },
                   child: const Text(
                     "Basically a pro",
                     style: TextStyle(color: Color(0xFF94B321)),
@@ -195,15 +210,20 @@ class _CreateProfileForm extends State<CreateProfileForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Text(
-                  "What are you most interested in?",
-                style: TextStyle(
-                    fontFamily: 'RobotoMono',
-                    fontSize: 18
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                    "What are you most interested in?",
+                  style: TextStyle(
+                      fontFamily: 'RobotoMono',
+                      fontSize: 18
+                  ),
                 ),
               ),
               ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    mostInterestedIn.add("Street skating");
+                  },
                   child: const Text(
                     "Street skating",
                     style: TextStyle(color: Color(0xFF94B321)),
@@ -218,7 +238,9 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                   ) // style
               ),
               ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    mostInterestedIn.add("Skating for transportation");
+                  },
                   child: const Text(
                     "Skating for transportation",
                     style: TextStyle(color: Color(0xFF94B321)),
@@ -233,7 +255,9 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                   ) // style
               ),
               ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    mostInterestedIn.add("Learning new tricks");
+                  },
                   child: const Text(
                     "Learning new tricks",
                     style: TextStyle(color: Color(0xFF94B321)),
@@ -248,7 +272,9 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                   ) // style
               ),
               ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    mostInterestedIn.add("Fun skate session");
+                  },
                   child: const Text(
                     "Fun skate session",
                     style: TextStyle(color: Color(0xFF94B321)),
@@ -263,7 +289,9 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                   ) // style
               ),
               ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    mostInterestedIn.add("Meeting new people");
+                  },
                   child: const Text(
                     "Meeting new people",
                     style: TextStyle(color: Color(0xFF94B321)),
@@ -278,7 +306,9 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                   ) // style
               ),
               ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    mostInterestedIn.add("Hanging out with friends");
+                  },
                   child: const Text(
                     "Hanging out with friends",
                     style: TextStyle(color: Color(0xFF94B321)),
@@ -312,6 +342,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                 title: const Text("Get on the board"),
                 leading: Checkbox(
                   checkColor: const Color(0xFF141414),
+                  // TODO: figure out how to do fill color with type MaterialColor
                   side: const BorderSide(
                     color: Color(0xFF94B321),
                   ),
@@ -388,6 +419,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                 ),
               ),
 
+              // TODO fill color
               ListTile(
                 title: const Text("Find new skate spots"),
                 leading: Checkbox(
@@ -451,61 +483,72 @@ class _CreateProfileForm extends State<CreateProfileForm> {
 
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: Column(
+          child: Column( // TODO switch to grid view
             crossAxisAlignment: CrossAxisAlignment.start,
+            // gridDelegate: null,
             children: <Widget>[
-              const Text(
-                "Which skater are you?",
-                style: TextStyle(
-                  fontFamily: 'RobotoMono',
-                  fontSize: 18
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  "Which skater are you?",
+                  style: TextStyle(
+                    fontFamily: 'RobotoMono',
+                    fontSize: 18
+                  ),
                 ),
               ),
               ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: Image.asset('assets/figures/skater1-black.png'),
+                  onPressed: () {
+                    whichSkater.add("Skater 1");
+                  },
+                  icon: Image.asset('assets/figures/skater1-cream.png'),
                   label: const Text(""),
                 style: ElevatedButton.styleFrom(
                   shape: const CircleBorder(),
-                  // side: const BorderSide(
-                  //   color: Color(0xFFf0e6d0)
-                  // ),
                   primary: Colors.transparent
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: () {},
-                icon: Image.asset('assets/figures/skater2-black.png'),
+                onPressed: () {
+                  whichSkater.add("Skater 2");
+                },
+                icon: Image.asset('assets/figures/skater2-cream.png'),
                 label: const Text(""),
                 style: ElevatedButton.styleFrom(
                     shape: const CircleBorder(),
-                    // side: const BorderSide(
-                    //     color: Color(0xFFf0e6d0)
-                    // ),
                     primary: Colors.transparent
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: () {},
-                icon: Image.asset('assets/figures/skater3-black.png'),
+                onPressed: () {
+                  whichSkater.add("Skater 3");
+                },
+                icon: Image.asset('assets/figures/skater3-cream.png'),
                 label: const Text(""),
                 style: ElevatedButton.styleFrom(
                     shape: const CircleBorder(),
-                    // side: const BorderSide(
-                    //     color: Color(0xFFf0e6d0)
-                    // ),
                     primary: Colors.transparent
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: () {},
-                icon: Image.asset('assets/figures/skater4-black.png'),
+                onPressed: () {
+                  whichSkater.add("Skater 4");
+                },
+                icon: Image.asset('assets/figures/skater4-cream.png'),
                 label: const Text(""),
                 style: ElevatedButton.styleFrom(
                     shape: const CircleBorder(),
-                    // side: const BorderSide(
-                    //     color: Color(0xFFf0e6d0)
-                    // ),
+                    primary: Colors.transparent
+                ),
+              ),
+              ElevatedButton.icon(
+                onPressed: () {
+                  whichSkater.add("Skater 5");
+                },
+                icon: Image.asset('assets/figures/user_profile.png'),
+                label: const Text(""),
+                style: ElevatedButton.styleFrom(
+                    shape: const CircleBorder(),
                     primary: Colors.transparent
                 ),
               ),
@@ -518,16 +561,21 @@ class _CreateProfileForm extends State<CreateProfileForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Text(
-                "Choose your favorite pattern",
-                style: TextStyle(
-                  fontFamily: 'RobotoMono',
-                  fontSize: 18
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  "Choose your favorite pattern",
+                  style: TextStyle(
+                    fontFamily: 'RobotoMono',
+                    fontSize: 18
+                  ),
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: () {},
-                icon: Image.asset('assets/backgrounds/background1.png', width: 30),
+                onPressed: () {
+                  background.add("background 1");
+                },
+                icon: Image.asset('assets/backgrounds/background1.png', width: 50),
                 label: const Text(""),
                 style: ElevatedButton.styleFrom(
                   shape: const RoundedRectangleBorder(),
@@ -535,8 +583,10 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: () {},
-                icon: Image.asset('assets/backgrounds/background2.png', width: 30),
+                onPressed: () {
+                  background.add("background 2");
+                },
+                icon: Image.asset('assets/backgrounds/background2.png', width: 50),
                 label: const Text(""),
                 style: ElevatedButton.styleFrom(
                     shape: const RoundedRectangleBorder(),
@@ -544,8 +594,10 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: () {},
-                icon: Image.asset('assets/backgrounds/background3.png', width: 30),
+                onPressed: () {
+                  background.add("background 3");
+                },
+                icon: Image.asset('assets/backgrounds/background3.png', width: 50),
                 label: const Text(""),
                 style: ElevatedButton.styleFrom(
                     shape: const RoundedRectangleBorder(),
@@ -553,8 +605,10 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: () {},
-                icon: Image.asset('assets/backgrounds/background4.png', width: 30),
+                onPressed: () {
+                  background.add("background 4");
+                },
+                icon: Image.asset('assets/backgrounds/background4.png', width: 50),
                 label: const Text(""),
                 style: ElevatedButton.styleFrom(
                     shape: const RoundedRectangleBorder(),
@@ -579,15 +633,25 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                         _ref.push().set({
                           "Name": name.text,
                           "Pronouns": pronouns.text,
+                          "Skill Level": skillLevel,
+                          "Most Interested In": mostInterestedIn,
+                          "Goals": goalIsChecked,
                           "Other Goals": otherGoal.text,
-                          "Background": aboutYourself.text
-                        });
+                          "About Yourself": aboutYourself.text,
+                          "Which Skater": whichSkater,
+                          "Background": background
+                        }); // TODO: clear lists
                         firestoreInstance.collection("Profile").add({
                           "Name": name.text,
                           "Pronouns": pronouns.text,
+                          "Skill Level": skillLevel,
+                          "Most Interested In": mostInterestedIn,
+                          "Goals": goalIsChecked,
                           "Other Goals": otherGoal.text,
-                          "Background": aboutYourself.text
-                        });
+                          "About Yourself": aboutYourself.text,
+                          "Which Skater": whichSkater,
+                          "Background": background
+                        }); // TODO: clear lists
                       },
                       child: const Text(
                           "Done",
@@ -607,19 +671,3 @@ class _CreateProfileForm extends State<CreateProfileForm> {
     );
   }
 }
-
-// ElevatedButton(
-// onPressed: () {},
-// child: const Text(
-// "Meeting new people",
-// style: TextStyle(color: Color(0xFF94B321)),
-// ),
-// style: ElevatedButton.styleFrom(
-// shape: const StadiumBorder(),
-// side: const BorderSide(color: Color(0xFF94B321)),
-// primary: Colors.transparent,
-// textStyle: const TextStyle(
-// fontFamily: 'Karla'
-// )
-// ) // style
-// )

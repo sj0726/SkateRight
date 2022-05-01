@@ -3,4 +3,8 @@ framework module google_maps_flutter {
 
   export *
   module * { export * }
+
+  explicit module Test {
+    header "GoogleMapController_Test.h"
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:skateright_flutter/onboarding/onboarding.dart';
 import 'main_screen.dart';
 import 'styles/skate_theme.dart';
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       // theme: ThemeData.light(),
       theme: skateTheme,
-      home: MainScreen(),
+      home: onBoarding(),
       debugShowCheckedModeBanner: false,
     );
   }

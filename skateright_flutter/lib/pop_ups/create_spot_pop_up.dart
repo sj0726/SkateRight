@@ -2,8 +2,6 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:skateright_flutter/main_screen.dart';
-import 'package:skateright_flutter/styles/skate_theme.dart';
 
 void main(){
   runApp(const CreateSpotPopUp());

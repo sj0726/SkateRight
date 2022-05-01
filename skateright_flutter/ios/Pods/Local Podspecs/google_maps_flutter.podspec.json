@@ -12,11 +12,12 @@
     "Flutter Dev Team": "flutter-dev@googlegroups.com"
   },
   "source": {
-    "http": "https://github.com/flutter/plugins/tree/master/packages/google_maps_flutter/google_maps_flutter"
+    "http": "https://github.com/flutter/plugins/tree/main/packages/google_maps_flutter/google_maps_flutter"
   },
   "documentation_url": "https://pub.dev/packages/google_maps_flutter",
-  "source_files": "Classes/**/*",
+  "source_files": "Classes/**/*.{h,m}",
   "public_header_files": "Classes/**/*.h",
+  "module_map": "Classes/google_maps_flutter.modulemap",
   "dependencies": {
     "Flutter": [
 
