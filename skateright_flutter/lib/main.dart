@@ -91,17 +91,18 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
           if (snapshot.hasError) {
             return Center(
                 child: Text('An Error Has Occurred ${snapshot.error}'));
-          } 
-          else if (snapshot.connectionState == ConnectionState.done &&
+          } else if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
             String mapStyle = snapshot.data[0];
             BitmapDescriptor customMarker = snapshot.data[1];
-            var mainScreen = MainScreen(mapStyle: mapStyle, markerIcon: customMarker);
-            MaterialPageRoute mainScreenPageRoute = MaterialPageRoute(builder: (context) => mainScreen);
-
+            var mainScreen =
+                MainScreen(mapStyle: mapStyle, markerIcon: customMarker);
+            MaterialPageRoute mainScreenPageRoute =
+                MaterialPageRoute(builder: (context) => mainScreen);
 
             _buildChild =
-                OnBoardPage(nextRoute: mainScreenPageRoute,);
+                // OnBoardPage(nextRoute: mainScreenPageRoute,);
+                mainScreen;
           }
 
           return AnimatedSwitcher(
