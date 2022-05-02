@@ -108,7 +108,7 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
             transitionBuilder: (child, animation) {
               return FadeTransition(opacity: animation, child: child);
             },
-            duration: const Duration(milliseconds: 2000),
+            duration: const Duration(milliseconds: 1250),
             child: _buildChild,
           );
         },

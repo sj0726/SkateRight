@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 import 'package:location/location.dart';
@@ -134,7 +135,9 @@ class _MapScreenState extends State<MapScreen> {
         alignment: Alignment.bottomRight,
         child: FloatingActionButton(
           heroTag: 'myLocal',
-          onPressed: _goToCurrentLocation,
+          onPressed: () {
+            _goToCurrentLocation();
+          },
           child: const Icon(
               Icons.my_location), //alt: my_location, memory, control_camera
           // Note: pin_drop seems good for placing spot button
@@ -143,27 +146,27 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
+  Widget _buildLogo() {
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.only(top: 15, left: 15),
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: ColorFiltered(
+            colorFilter: ColorFilter.mode(
+                Theme.of(context).primaryColorDark, BlendMode.srcATop),
+            child: Image.asset('assets/logo/logoCircle.png'),
+          ),
+        ),
+      ),
+    );
+  }
+
   /// Called from [_onMapCreated]
   /// TODO: Delete after database connection set up
-  void setDummyMarkers() {
-    // _markers.clear();
-
+  void setDummyMarkers() async {
     addSpotMarker(buBeach);
     addSpotMarker(booth);
-    // addSpotMarker(fakeSpot);
-    // addSpotMarker(fakeSpot1);
-
-    /* Not deleted just to serve as prototype */
-    // _markers.add(
-    //   Marker(
-    //     markerId: MarkerId("Agganis Arena"),
-    //     position: LatLng(42.35260646322381, -71.11782537730139),
-    //     icon: customMarker,
-    //     infoWindow: InfoWindow(
-    //       title: "Agganis Arena INFO",
-    //     ),
-    //   ),
-    // );
   }
 
   void _onMapCreated(controller) async {
@@ -178,8 +181,6 @@ class _MapScreenState extends State<MapScreen> {
         } else {
           log("GoogleMapView:_onMapCreated: Map style could not be loaded.");
         }
-
-        setDummyMarkers();
       },
     );
 
@@ -188,10 +189,12 @@ class _MapScreenState extends State<MapScreen> {
       if (enabled) {
         _currentLocation = await location.getLocation();
 
+
         location.onLocationChanged
             .listen((newPos) => _currentLocation = newPos);
       }
     });
+    setDummyMarkers();
 
     _mapCreated = true;
   }
@@ -225,6 +228,7 @@ class _MapScreenState extends State<MapScreen> {
               location: location,
             ),
             _myLocationButton(),
+            // _buildLogo(),
           ],
         ),
       ),
@@ -412,5 +416,23 @@ class _MapScreenState extends State<MapScreen> {
     } else {
       log("marker already exists");
     }
+  }
+
+  addSpotMarkersFromList(List<Spot> spots) {
+    List<Marker> markerList = [];
+    for (Spot spot in spots) {
+      markerList.add(
+        Marker(
+            markerId: MarkerId(spot.id),
+            position: LatLng(spot.latitude, spot.longitude),
+            icon: customMarker!,
+            onTap: () => _onMarkerTap(spot)),
+      );
+    }
+    setState(() {
+      for (Marker marker in markerList) {
+        if (!_markers.contains(marker)) _markers.add(marker);
+      }
+    });
   }
 }

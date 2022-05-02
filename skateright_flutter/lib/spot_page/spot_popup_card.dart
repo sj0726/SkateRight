@@ -7,6 +7,7 @@ import '../entities/spot.dart';
 import 'review_card.dart';
 import '../spot_page/reviews_page.dart';
 import '../spot_page/spot_feed.dart';
+import 'obstacles.dart';
 
 class SpotPopupCard extends StatelessWidget {
   const SpotPopupCard({Key? key, required this.spot}) : super(key: key);
@@ -49,10 +50,10 @@ class SpotPopupCard extends StatelessWidget {
                       _DetailsAndPhoto(spot: spot),
                       const SizedBox(height: 10),
 
-                      const _Interactions(),
-                      const SizedBox(height: 24),
+                      // const _Interactions(),
+                      // const SizedBox(height: 24),
 
-                      _Obstacles(), // Call with spot
+                      _DisplayObstacles(obstacles: spot.obstacles), // Call with spot
                       const SizedBox(height: 24),
 
                       _SpotReviews(reviews: spot.comments),
@@ -80,7 +81,8 @@ class _DetailsAndPhoto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Center( child: Row(
+    return Center(
+        child: Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Flexible(
@@ -93,8 +95,7 @@ class _DetailsAndPhoto extends StatelessWidget {
           Flexible(flex: 1, child: Container()),
           Flexible(
             flex: 4,
-            child: 
-            Align(
+            child: Align(
               alignment: Alignment.centerRight,
               child: _SpotPhoto(spot: spot),
             ),
@@ -164,33 +165,31 @@ class _SpotPhoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-        Align(
-        alignment: Alignment.centerRight,
-        child:
-        ClipRect(
-      child: Container(
-        width: MediaQuery.of(context).size.width / 3,
-        child: GestureDetector(
-          child: spot.isPark
-              ? Image.network(
-                  spot.pictures[0],
-                  fit: BoxFit.cover,
-                )
-              : Image.asset(
-                  // image: NetworkImage(spot.pictures![0]),
-                  spot.pictures[0],
-                  width: MediaQuery.of(context).size.width,
-                  fit: BoxFit.cover,
-                ),
-          onTap: () => {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SpotFeed(spot: spot)),
-            )
-          },
+    return Align(
+      alignment: Alignment.centerRight,
+      child: ClipRect(
+        child: Container(
+          width: MediaQuery.of(context).size.width / 3,
+          child: GestureDetector(
+            child: spot.isPark
+                ? Image.network(
+                    spot.pictures[0],
+                    fit: BoxFit.cover,
+                  )
+                : Image.asset(
+                    // image: NetworkImage(spot.pictures![0]),
+                    spot.pictures[0],
+                    width: MediaQuery.of(context).size.width,
+                    fit: BoxFit.cover,
+                  ),
+            onTap: () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SpotFeed(spot: spot)),
+              )
+            },
+          ),
         ),
-      ),
       ),
     );
   }
@@ -225,13 +224,23 @@ class _Interactions extends StatelessWidget {
   }
 }
 
-class _Obstacles extends StatelessWidget {
-  const _Obstacles({Key? key}) : super(key: key);
+class _DisplayObstacles extends StatelessWidget {
+  const _DisplayObstacles({Key? key, required this.obstacles})
+      : super(key: key);
 
-  // final List<String> obstacles;
+  final List<String> obstacles;
 
   @override
   Widget build(BuildContext context) {
+    Obstacles obby = Obstacles();
+    List<Widget> obbyList = [];
+    for (String obstacle in obstacles) {
+      Widget? temp = obby.loadObstacle(obstacle);
+      if (temp != null) {
+        obbyList.add(temp);
+      }
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -240,27 +249,27 @@ class _Obstacles extends StatelessWidget {
           style: Theme.of(context).textTheme.headline2,
         ),
         const SizedBox(height: 8),
-        Row(
-          children: const [
-            Icon(
-              Icons.landscape_outlined,
-              color: Colors.blueAccent,
-              size: 30,
+        Row(children: obbyList
+            // children: const [
+            //   Icon(
+            //     Icons.landscape_outlined,
+            //     color: Colors.blueAccent,
+            //     size: 30,
+            //   ),
+            //   SizedBox(width: 12),
+            //   Icon(
+            //     Icons.square_outlined,
+            //     color: Colors.blueAccent,
+            //     size: 30,
+            //   ),
+            //   SizedBox(width: 12),
+            //   Icon(
+            //     Icons.circle_outlined,
+            //     color: Colors.blueAccent,
+            //     size: 30,
+            //   )
+            // ],
             ),
-            SizedBox(width: 12),
-            Icon(
-              Icons.square_outlined,
-              color: Colors.blueAccent,
-              size: 30,
-            ),
-            SizedBox(width: 12),
-            Icon(
-              Icons.circle_outlined,
-              color: Colors.blueAccent,
-              size: 30,
-            )
-          ],
-        ),
       ],
     );
   }

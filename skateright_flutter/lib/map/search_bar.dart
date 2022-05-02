@@ -46,6 +46,16 @@ class _SearchBarState extends State<SearchBar> {
   String query = '';
   bool makeAPICall = false;
 
+  void _loadAroundUser() async {
+    List<Spot> nearbySpots = await placeCaller.nearbySearch(searchRadius: 5000);
+    log('Spots = ' + nearbySpots.toString());
+
+    for (Spot spot in nearbySpots) {
+      log('adding (${spot.title})');
+      addSpotMarker(spot);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -59,6 +69,8 @@ class _SearchBarState extends State<SearchBar> {
           1; // Note: eventually need to figure out a way to do staircount
     }
     selections['Park'] = 0; // Used for demo day 4/20 to showcase API calls
+
+    //  _loadAroundUser();
   }
 
   StatefulBuilder _advSearchBuilder() {
@@ -108,8 +120,6 @@ class _SearchBarState extends State<SearchBar> {
         MediaQuery.of(context).orientation == Orientation.portrait;
 
     return FloatingSearchBar(
-      /* color styling */
-      // backgroundColor: Colors.grey[200],
       backgroundColor: Theme.of(context).primaryColorDark,
       queryStyle: Theme.of(context).textTheme.subtitle1,
       borderRadius: BorderRadius.zero,
@@ -126,6 +136,8 @@ class _SearchBarState extends State<SearchBar> {
       axisAlignment: isPortrait ? 0.0 : -1.0,
       openAxisAlignment: 0.0,
       // width: isPortrait ? 600 : 500,
+      // width: MediaQuery.of(context).size.width * 8/10,
+      // margins: EdgeInsets.only(left: 80, top: MediaQuery.of(context).viewPadding.top + 12),
 
       // Wait for 2.5 seconds of inactivity before stating queryChanged
       debounceDelay: const Duration(milliseconds: 2500),
@@ -254,7 +266,7 @@ class _SearchBarState extends State<SearchBar> {
       }
       return res;
     } else {
-      return placeCaller.nearbySearch(query);
+      return placeCaller.nearbySearch(keyword: query);
     }
   }
 }

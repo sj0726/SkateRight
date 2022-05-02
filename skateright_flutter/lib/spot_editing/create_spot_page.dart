@@ -4,6 +4,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:skateright_flutter/spot_editing/submit_text_field.dart';
 import 'package:skateright_flutter/entities/spot.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+
 
 class CreateSpotPage extends StatefulWidget {
   const CreateSpotPage(
@@ -130,6 +133,8 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
   /// Called from submit button
   /// Sends user-entered info to backend for further processing + db submit
   void _submitSpot() {
+    final firestoreInstance = FirebaseFirestore.instance;
+    
     String? addressText =
         (addressController.text.isEmpty) ? null : addressController.text;
 
@@ -151,6 +156,15 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
       obstacles: spotObstacles,
     );
     // firebaseHandler.addSpotToDatabase(toAdd);
+
+    firestoreInstance.collection('Coordinates').add({
+       "latitude": toAdd.latitude,
+      "longitude": toAdd.longitude,
+      "name": toAdd.title,
+      "pictures": toAdd.pictures,
+      "comments": toAdd.comments,
+      "obstacles": toAdd.obstacles,
+    }).then(((value) => firestoreInstance.collection('Coordinates').doc(value.id).update({'id': value.id})));
 
     Navigator.of(context).pop();
     // Play goofy little check mark animation?

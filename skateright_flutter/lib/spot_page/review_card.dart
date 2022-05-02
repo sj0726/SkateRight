@@ -79,10 +79,12 @@ class _ReviewCardState extends State<ReviewCard> {
     return ListTile(
       tileColor: sBlack,
       leading: CircleAvatar(
+        
         radius: _profileRadius,
         backgroundColor: _chooseColor(),
-        child: ClipOval(
-          child: _chooseProfilePic(),
+        child: ClipOval(child: Padding(
+          padding: EdgeInsets.all(5),
+          child: _chooseProfilePic(),)
         ),
       ),
       title: Text(

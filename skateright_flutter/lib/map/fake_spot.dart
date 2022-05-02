@@ -7,7 +7,7 @@ final booth = Spot(
   address: '820 Commonwealth Avenue',
   latitude: 42.35044728773325,
   longitude: -71.11247537573053,
-  obstacles: ['flat', 'rail', 'stairs', 'ramp', 'ledge'],
+  obstacles: ['flat', 'rail', 'stairs', 'bank', 'ledge'],
   pictures: _picsBooth,
   comments: _comments,
 );
