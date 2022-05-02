@@ -1,24 +1,39 @@
 import 'package:flutter/material.dart';
-import 'map/map_page.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import "./cookie_clicker.dart";
+import 'package:skateright_flutter/profile/profile_page.dart';
+import 'map/map_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-// import 'package:quotes_app/home.dart';
-// import 'package:quotes_app/characters_page.dart';
-// import 'package:quotes_app/favorites.dart';
 
 class MainScreen extends StatefulWidget {
+  const MainScreen({Key? key, required this.markerIcon, required this.mapStyle})
+      : super(key: key);
+  final BitmapDescriptor markerIcon;
+  final String mapStyle;
+
   @override
   _MainScreenState createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
   final Future<FirebaseApp> _future = Firebase.initializeApp();
+  late List<Widget> pageList;
+
   @override
+  void initState() {
+    super.initState();
+    pageList = <Widget>[
+      MapScreen(
+        key: PageStorageKey('Map'),
+        customMarker: widget.markerIcon,
+        mapStyle: widget.mapStyle,
+      ),
+      ProfilePage(),
+      // ClickerPage(key: PageStorageKey('Clicker')),
+    ];
+  }
+
   int _pageIndex = 0;
-  List<Widget> pageList = <Widget>[
-    MapPage(key: PageStorageKey('Map')),
-    ClickerPage(key: PageStorageKey('Clicker')),
-  ];
 
   void _onNavigationTap(int index) {
     setState(() {

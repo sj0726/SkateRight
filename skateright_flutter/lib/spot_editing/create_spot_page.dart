@@ -59,14 +59,16 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
               children: [
                 const SizedBox(height: 12),
                 SubmitTextField(
-                    label: 'Name of Spot', controller: nameController,),
+                  label: 'Name of Spot',
+                  controller: nameController,
+                ),
                 const SizedBox(height: 20),
                 SubmitTextField(
                     label: 'Address', controller: addressController),
                 const SizedBox(
                   height: 60,
                 ),
-                ObstacleSelection(),
+                const ObstacleSelection(),
 
                 /*  ---------- Last Item ----------  */
                 const SizedBox(height: 24),
@@ -93,17 +95,26 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
           backgroundColor: Theme.of(context).backgroundColor,
           actionsAlignment: MainAxisAlignment.spaceAround,
 
-          title: Text('Confirm Spot \"${nameController.text}\"?', textAlign: TextAlign.center,),
+          title: Text(
+            'Confirm Spot \"${nameController.text}\"?',
+            textAlign: TextAlign.center,
+          ),
           // content: Text('', textAlign: TextAlign.center),
           actions: <Widget>[
             TextButton(
-              child: Text('Go Back', textAlign: TextAlign.center,),
+              child: Text(
+                'Go Back',
+                textAlign: TextAlign.center,
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Ok', textAlign: TextAlign.center,),
+              child: Text(
+                'Ok',
+                textAlign: TextAlign.center,
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
                 _submitSpot();
@@ -149,7 +160,20 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
 /* ------------- Obstacle grid builder --------------- */
 
 /* Should be stored in a config file which loads from db on app start, see search_bar.dart */
-final List<String> obstacles = ['Flat', 'Bowl', 'Ramp', 'Curb', 'Ledge', 'Flat Rail', 'Bank', 'Gap', 'Hand Rail', '1/4 Pipe', 'Full Pipe', 'Stairs'];
+final List<String> obstacles = [
+  'Flat',
+  'Bowl',
+  'Ramp',
+  'Curb',
+  'Ledge',
+  'Flat Rail',
+  'Bank',
+  'Gap',
+  'Hand Rail',
+  '1/4 Pipe',
+  'Full Pipe',
+  'Stairs'
+];
 final obSelects = {};
 
 class ObstacleSelection extends StatelessWidget {

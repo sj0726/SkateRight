@@ -1,12 +1,18 @@
+import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
 import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:skateright_flutter/onboarding/onboarding.dart';
+
 import 'package:skateright_flutter/splash_screen.dart';
 import 'main_screen.dart';
 import 'styles/skate_theme.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 // void main() => runApp(MyApp());
 void main() async {
@@ -14,8 +20,10 @@ void main() async {
   await Firebase.initializeApp();
 
   // Delete once google Places calls are made from firebase
-  ByteData data = await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
-  SecurityContext.defaultContext.setTrustedCertificatesBytes(data.buffer.asUint8List());
+  ByteData data =
+      await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
+  SecurityContext.defaultContext
+      .setTrustedCertificatesBytes(data.buffer.asUint8List());
   runApp(MyApp());
 }
 
@@ -28,7 +36,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
   Widget? _buildChild;
-  // late final AnimationController _controller;
 
   @override
   void initState() {
@@ -38,26 +45,68 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
     //     AnimationController(vsync: this, duration: const Duration(seconds: 1));
   }
 
+  Future<String> _loadMapStyle() {
+    Future<String> asString =
+        DefaultAssetBundle.of(context).loadString('assets/map/map_style.json');
+    // .then(
+    //   (asString) {
+    //     mapStyle = asString;
+    //   },
+    // ).catchError(
+    //   (error) {
+    //     log(error.toString());
+    //   },
+    // );
+    return asString;
+  }
+
+  Future<BitmapDescriptor> _loadCustomMarker() async {
+    String path = 'assets/map/map_pin.png';
+    int width = 70;
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    Uint8List byteMarker =
+        (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+            .buffer
+            .asUint8List();
+    return BitmapDescriptor.fromBytes(byteMarker);
+    // return Future.value(true);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: skateTheme,
       home: FutureBuilder(
-        future: Future<String>.delayed(
-            const Duration(seconds: 3), () => 'Data Loaded'),
+        future: Future.wait([
+          _loadMapStyle(),
+          _loadCustomMarker(),
+          Future.delayed(const Duration(milliseconds: 3000))
+        ]),
         builder: (context, AsyncSnapshot snapshot) {
           /* Loading screen / future error handling */
           if (snapshot.hasError) {
             return Center(
                 child: Text('An Error Has Occurred ${snapshot.error}'));
-          } else if (snapshot.connectionState == ConnectionState.done) {
-            _buildChild = MainScreen();
+          } 
+          else if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData) {
+            String mapStyle = snapshot.data[0];
+            BitmapDescriptor customMarker = snapshot.data[1];
+            var mainScreen = MainScreen(mapStyle: mapStyle, markerIcon: customMarker);
+            MaterialPageRoute mainScreenPageRoute = MaterialPageRoute(builder: (context) => mainScreen);
+
+
+            _buildChild =
+                OnBoardPage(nextRoute: mainScreenPageRoute,);
           }
 
           return AnimatedSwitcher(
             transitionBuilder: (child, animation) {
-                return FadeTransition(opacity: animation, child: child);
+              return FadeTransition(opacity: animation, child: child);
             },
             duration: const Duration(milliseconds: 2000),
             child: _buildChild,

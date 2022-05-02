@@ -1,4 +1,5 @@
 import 'dart:developer' as dev;
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import '/styles/skate_theme.dart';
@@ -78,26 +79,29 @@ class _DetailsAndPhoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    var size = MediaQuery.of(context).size;
+    return Center( child: Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Flexible(
-            child: _SpotTitle(
-              spot: spot,
-            ),
-            flex: 3),
-        if (spot.pictures.isNotEmpty) ...[
-          Flexible(
-            flex: 2,
-            // child: Padding(
-            // Consider changing padding scheme to flexible + middle child in row
-            // padding: const EdgeInsets.only(left: 32),
-            child: _SpotPhoto(spot: spot),
+          flex: 5,
+          child: _SpotTitle(
+            spot: spot,
           ),
-          // ),
+        ),
+        if (spot.pictures.isNotEmpty) ...[
+          Flexible(flex: 1, child: Container()),
+          Flexible(
+            flex: 4,
+            child: 
+            Align(
+              alignment: Alignment.centerRight,
+              child: _SpotPhoto(spot: spot),
+            ),
+          ),
         ],
       ],
-    );
+    ));
   }
 }
 
@@ -134,7 +138,7 @@ class _SpotTitle extends StatelessWidget {
         RichText(
             text: TextSpan(
           children: [
-            WidgetSpan(
+            const WidgetSpan(
               child: Icon(
                 Icons.location_pin,
                 color: Colors.grey,
@@ -160,23 +164,34 @@ class _SpotPhoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: spot.isPark
-          ? Image.network(
-              spot.pictures[0],
-              fit: BoxFit.cover,
+    return
+        Align(
+        alignment: Alignment.centerRight,
+        child:
+        ClipRect(
+      child: Container(
+        width: MediaQuery.of(context).size.width / 3,
+        child: GestureDetector(
+          child: spot.isPark
+              ? Image.network(
+                  spot.pictures[0],
+                  fit: BoxFit.cover,
+                )
+              : Image.asset(
+                  // image: NetworkImage(spot.pictures![0]),
+                  spot.pictures[0],
+                  width: MediaQuery.of(context).size.width,
+                  fit: BoxFit.cover,
+                ),
+          onTap: () => {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SpotFeed(spot: spot)),
             )
-          : Image.asset(
-              // image: NetworkImage(spot.pictures![0]),
-              spot.pictures[0],
-              fit: BoxFit.cover,
-            ),
-      onTap: () => {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SpotFeed(spot: spot)),
-        )
-      },
+          },
+        ),
+      ),
+      ),
     );
   }
 }

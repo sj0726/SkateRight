@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:skateright_flutter/entities/spot.dart';
 import './review_card.dart';
+import 'package:skateright_flutter/spot_editing/create_review.dart';
 
 class ReviewsPage extends StatefulWidget {
   const ReviewsPage({Key? key, required this.spot}) : super(key: key);
@@ -40,6 +41,15 @@ class _ReviewsPageState extends State<ReviewsPage> {
         child: ListView(
           children: [
             Text("Reviews", style: Theme.of(context).textTheme.headline1),
+            SizedBox(height: 12),
+            ListTile(
+              leading: const Icon(Icons.add),
+              title: Text("Add a Review", style: Theme.of(context).textTheme.subtitle1,),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => CreateReviewForm(spotName: spot.title),)
+              ),
+            ),
+
             SizedBox(height: 12),
             for (final review in spot.comments) ReviewCard(review: review)
           ],

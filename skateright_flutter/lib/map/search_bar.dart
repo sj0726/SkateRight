@@ -244,11 +244,15 @@ class _SearchBarState extends State<SearchBar> {
   }
 
   Future<List<Spot>> _getResultsFromQuery(String query) async {
-    /// ATTENTION SANJOON
-    /// Compile database/API calls into list and return as spots
+    query = query.toLowerCase();
 
+    List<Spot> spots = [booth, buBeach, fakeSpot, fakeSpot1];
+    List<Spot> res = [];
     if (selections['Park'] == 0 || makeAPICall == false) {
-      return [fakeSpot, fakeSpot1];
+      for (Spot spot in spots) {
+        if (spot.title.toLowerCase().contains(query)) res.add(spot);
+      }
+      return res;
     } else {
       return placeCaller.nearbySearch(query);
     }

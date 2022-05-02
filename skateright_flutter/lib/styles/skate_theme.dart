@@ -15,6 +15,7 @@ final skateTheme = ThemeData(
   secondaryHeaderColor: sYellow,
   cardColor: sCream,
   splashColor: sDarkGreen,
+  primaryColor: sBlack,
   primaryColorLight: sCream,
   primaryColorDark: sBlack,
   // unselectedWidgetColor: sDarkGreen,

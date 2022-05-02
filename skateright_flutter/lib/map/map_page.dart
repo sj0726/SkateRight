@@ -1,10 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
-
 import 'package:location/location.dart';
 
 import '../entities/spot.dart';
@@ -14,27 +12,11 @@ import '../spot_page/spot_popup_card.dart';
 import 'search_bar.dart';
 import '../spot_editing/create_spot_page.dart';
 
-void main() {
-  runApp(const MapPage());
-}
-
-class MapPage extends StatelessWidget {
-  const MapPage({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Maps Demo',
-      debugShowCheckedModeBanner: false,
-      theme: Theme.of(context),
-      home: MapScreen(),
-    );
-  }
-}
-
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+  const MapScreen({Key? key, this.mapStyle, required this.customMarker})
+      : super(key: key);
+  final String? mapStyle;
+  final BitmapDescriptor customMarker;
 
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -55,36 +37,46 @@ class _MapScreenState extends State<MapScreen> {
   late bool _locationServEnabled;
   late PermissionStatus _locationPermEnabled;
 
-  late BitmapDescriptor customMarker;
-  late String _mapStyle;
+  BitmapDescriptor? customMarker;
+  String? _mapStyle;
   Set<Marker> _markers = {};
 
   /*  ----- Init state methods -----   */
 
   /// Called from [initState]
-  void loadCustomMarker() async {
+  /// Initiallizes marker icons
+  // loadCustomMarker() async {
+  //   String path = 'assets/map/map_pin';
+  //   int width = 70;
+  //   ByteData data = await rootBundle.load(path);
+  //   ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+  //       targetWidth: width);
+  //   ui.FrameInfo fi = await codec.getNextFrame();
+  //   Uint8List byteMarker =
+  //       (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+  //           .buffer
+  //           .asUint8List();
+  //   customMarker = BitmapDescriptor.fromBytes(byteMarker);
+  // }
+
+  /// Old version of loading asset, no option to change size
+  void loadCustomMarker1() async {
     customMarker = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 20.0), 'assets/map/map_pin.png');
+        ImageConfiguration(
+            devicePixelRatio: MediaQuery.of(context).devicePixelRatio),
+        'assets/map/map_pin.png');
   }
 
   @override
   void initState() {
     super.initState();
     // Ideally we do the following asset loading in the splash loader
-    loadCustomMarker();
-    DefaultAssetBundle.of(context).loadString('assets/map/map_style.json').then(
-      (asString) {
-        _mapStyle = asString;
-      },
-    ).catchError(
-      (error) {
-        log(error.toString());
-      },
-    );
+    customMarker = widget.customMarker;
+    _mapStyle = widget.mapStyle;
 
     // Overlay setup
     WidgetsBinding.instance
-        .addPostFrameCallback((_) => _createAddSpotOverlay());
+        .addPostFrameCallback((duration) => _createAddSpotOverlay());
   }
 
   /// I think this is garbage collection on app closure/changing nav route stack
@@ -141,6 +133,7 @@ class _MapScreenState extends State<MapScreen> {
       child: Align(
         alignment: Alignment.bottomRight,
         child: FloatingActionButton(
+          heroTag: 'myLocal',
           onPressed: _goToCurrentLocation,
           child: const Icon(
               Icons.my_location), //alt: my_location, memory, control_camera
@@ -153,20 +146,24 @@ class _MapScreenState extends State<MapScreen> {
   /// Called from [_onMapCreated]
   /// TODO: Delete after database connection set up
   void setDummyMarkers() {
-    _markers.clear();
-    addSpotMarker(fakeSpot);
+    // _markers.clear();
+
+    addSpotMarker(buBeach);
+    addSpotMarker(booth);
+    // addSpotMarker(fakeSpot);
     // addSpotMarker(fakeSpot1);
 
-    _markers.add(
-      Marker(
-        markerId: MarkerId("Agganis Arena"),
-        position: LatLng(42.35260646322381, -71.11782537730139),
-        icon: customMarker,
-        infoWindow: InfoWindow(
-          title: "Agganis Arena INFO",
-        ),
-      ),
-    );
+    /* Not deleted just to serve as prototype */
+    // _markers.add(
+    //   Marker(
+    //     markerId: MarkerId("Agganis Arena"),
+    //     position: LatLng(42.35260646322381, -71.11782537730139),
+    //     icon: customMarker,
+    //     infoWindow: InfoWindow(
+    //       title: "Agganis Arena INFO",
+    //     ),
+    //   ),
+    // );
   }
 
   void _onMapCreated(controller) async {
@@ -205,7 +202,7 @@ class _MapScreenState extends State<MapScreen> {
       resizeToAvoidBottomInset: false,
       body: WillPopScope(
         onWillPop: () =>
-            (overlayBuilt) // Hids overlay instead of popping the kid
+            (overlayBuilt) // Hides overlay instead of popping the kid
                 ? Future.value(_hideAddSpotOverlay())
                 : Future.value(true),
         child: Stack(
@@ -322,9 +319,10 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   bool _hideAddSpotOverlay() {
-    topBarOverlay!.remove();
-    pinOverlay!.remove();
-
+    if (overlayBuilt == true) {
+      topBarOverlay!.remove();
+      pinOverlay!.remove();
+    }
     overlayBuilt = false;
     return false; // For use in willPop(), don't worry about this for general use
   }
@@ -376,6 +374,7 @@ class _MapScreenState extends State<MapScreen> {
   /*  ----- Methods Utilized Externally -----  */
 
   _onMarkerTap(Spot spot) {
+    _hideAddSpotOverlay();
     Navigator.of(context).push(
       HeroDialogRoute(builder: (context) => SpotPopupCard(spot: spot)),
     );
@@ -404,12 +403,14 @@ class _MapScreenState extends State<MapScreen> {
     Marker newMarker = Marker(
       markerId: MarkerId(spot.id),
       position: LatLng(spot.latitude, spot.longitude),
-      icon: customMarker,
+      icon: customMarker!,
       onTap: () => _onMarkerTap(spot),
     );
 
     if (!_markers.contains(newMarker)) {
       setState(() => _markers.add(newMarker));
+    } else {
+      log("marker already exists");
     }
   }
 }
