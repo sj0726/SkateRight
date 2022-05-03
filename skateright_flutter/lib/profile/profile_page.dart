@@ -587,7 +587,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                 onPressed: () {
                   background.add("background 2");
                 },
-                icon: Image.asset('assets/backgrounds/background2.png', width: 50),
+                icon: Image.asset('assets/backgrounds/bg2.png', width: 50),
                 label: const Text(""),
                 style: ElevatedButton.styleFrom(
                     shape: const RoundedRectangleBorder(),
@@ -598,7 +598,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                 onPressed: () {
                   background.add("background 3");
                 },
-                icon: Image.asset('assets/backgrounds/background3.png', width: 50),
+                icon: Image.asset('assets/backgrounds/bg3.png', width: 50),
                 label: const Text(""),
                 style: ElevatedButton.styleFrom(
                     shape: const RoundedRectangleBorder(),
@@ -609,7 +609,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                 onPressed: () {
                   background.add("background 4");
                 },
-                icon: Image.asset('assets/backgrounds/background4.png', width: 50),
+                icon: Image.asset('assets/backgrounds/bg4.png', width: 50),
                 label: const Text(""),
                 style: ElevatedButton.styleFrom(
                     shape: const RoundedRectangleBorder(),

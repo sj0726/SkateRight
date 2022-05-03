@@ -7,7 +7,7 @@ import '../entities/spot.dart';
 import 'review_card.dart';
 import '../spot_page/reviews_page.dart';
 import '../spot_page/spot_feed.dart';
-import 'obstacles.dart';
+import '../entities/obstacles.dart';
 
 class SpotPopupCard extends StatelessWidget {
   const SpotPopupCard({Key? key, required this.spot}) : super(key: key);
@@ -53,7 +53,8 @@ class SpotPopupCard extends StatelessWidget {
                       // const _Interactions(),
                       // const SizedBox(height: 24),
 
-                      _DisplayObstacles(obstacles: spot.obstacles), // Call with spot
+                      _DisplayObstacles(
+                          obstacles: spot.obstacles), // Call with spot
                       const SizedBox(height: 24),
 
                       _SpotReviews(reviews: spot.comments),
@@ -81,6 +82,31 @@ class _DetailsAndPhoto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    return Container(
+        alignment: Alignment.topLeft,
+        height: size.height / 6,
+        child: Stack(
+          children: [
+            // Container(
+            //     width: size.width / 2,
+            //     height: double.infinity,
+            OverflowBox(
+                alignment: Alignment.centerLeft,
+                minHeight: size.height / 7,
+                maxHeight: size.height / 4,
+                maxWidth: size.width / 2,
+                minWidth: size.width / 2,
+                child: _SpotTitle(spot: spot)),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                  width: size.width * 2,
+                  height: double.infinity,
+                  child: _SpotPhoto(spot: spot)),
+            ),
+          ],
+        ));
+
     return Center(
         child: Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -119,8 +145,12 @@ class _SpotTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
+    return
+        // FittedBox(
+        //   fit: BoxFit.fitHeight,
+        //   child:
+        Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -154,6 +184,7 @@ class _SpotTitle extends StatelessWidget {
           ],
         ))
       ],
+      // )
     );
   }
 }
@@ -180,7 +211,7 @@ class _SpotPhoto extends StatelessWidget {
                     // image: NetworkImage(spot.pictures![0]),
                     spot.pictures[0],
                     width: MediaQuery.of(context).size.width,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fitWidth,
                   ),
             onTap: () => {
               Navigator.push(

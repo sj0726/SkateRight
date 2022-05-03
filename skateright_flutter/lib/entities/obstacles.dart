@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Obstacles {
-  List<String> validObstacles = [
+List<String> validObstacles = [
     'bank',
     'bowl',
     'bump',
@@ -15,6 +14,9 @@ class Obstacles {
     'spine',
     'stairs'
   ];
+
+class Obstacles {
+  
   String path = 'assets/obstacles/';
   Widget? loadObstacle(String obstacle) {
     if (!validObstacles.contains(obstacle)) return null;

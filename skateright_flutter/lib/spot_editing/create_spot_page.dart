@@ -2,11 +2,11 @@ import 'dart:developer' as dev;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:skateright_flutter/spot_editing/obstacle_selection.dart';
 import 'package:skateright_flutter/spot_editing/submit_text_field.dart';
 import 'package:skateright_flutter/entities/spot.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-
+import 'package:skateright_flutter/entities/obstacles.dart';
 
 class CreateSpotPage extends StatefulWidget {
   const CreateSpotPage(
@@ -134,7 +134,7 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
   /// Sends user-entered info to backend for further processing + db submit
   void _submitSpot() {
     final firestoreInstance = FirebaseFirestore.instance;
-    
+
     String? addressText =
         (addressController.text.isEmpty) ? null : addressController.text;
 
@@ -158,13 +158,16 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
     // firebaseHandler.addSpotToDatabase(toAdd);
 
     firestoreInstance.collection('Coordinates').add({
-       "latitude": toAdd.latitude,
+      "latitude": toAdd.latitude,
       "longitude": toAdd.longitude,
       "name": toAdd.title,
       "pictures": toAdd.pictures,
       "comments": toAdd.comments,
       "obstacles": toAdd.obstacles,
-    }).then(((value) => firestoreInstance.collection('Coordinates').doc(value.id).update({'id': value.id})));
+    }).then(((value) => firestoreInstance
+        .collection('Coordinates')
+        .doc(value.id)
+        .update({'id': value.id})));
 
     Navigator.of(context).pop();
     // Play goofy little check mark animation?
@@ -174,20 +177,20 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
 /* ------------- Obstacle grid builder --------------- */
 
 /* Should be stored in a config file which loads from db on app start, see search_bar.dart */
-final List<String> obstacles = [
-  'Flat',
-  'Bowl',
-  'Ramp',
-  'Curb',
-  'Ledge',
-  'Flat Rail',
-  'Bank',
-  'Gap',
-  'Hand Rail',
-  '1/4 Pipe',
-  'Full Pipe',
-  'Stairs'
-];
+// final List<String> obstacles = [
+//   'Flat',
+//   'Bowl',
+//   'Ramp',
+//   'Curb',
+//   'Ledge',
+//   'Flat Rail',
+//   'Bank',
+//   'Gap',
+//   'Hand Rail',
+//   '1/4 Pipe',
+//   'Full Pipe',
+//   'Stairs'
+// ];
 final obSelects = {};
 
 class ObstacleSelection extends StatelessWidget {
@@ -200,7 +203,7 @@ class ObstacleSelection extends StatelessWidget {
   void _initSelections() {
     // obSelects ??= {};
 
-    for (var opt in obstacles) {
+    for (var opt in validObstacles) {
       if (!obSelects.containsKey(opt)) {
         obSelects[opt] = 0;
       }
@@ -209,25 +212,27 @@ class ObstacleSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Random random = Random();
-    List<IconData> iconics = [
-      Icons.square_outlined,
-      Icons.circle_outlined,
-      Icons.polyline,
-      Icons.landscape_outlined,
-      Icons.crop_square,
-      Icons.texture_outlined,
-      Icons.bar_chart_outlined,
-      Icons.stairs_outlined,
-      Icons.cloud_circle,
-      Icons.cloud_outlined,
-    ];
+    Obstacles obby = Obstacles();
+    // Random random = Random();
+    // List<IconData> iconics = [
+    //   Icons.square_outlined,
+    //   Icons.circle_outlined,
+    //   Icons.polyline,
+    //   Icons.landscape_outlined,
+    //   Icons.crop_square,
+    //   Icons.texture_outlined,
+    //   Icons.bar_chart_outlined,
+    //   Icons.stairs_outlined,
+    //   Icons.cloud_circle,
+    //   Icons.cloud_outlined,
+    // ];
     _initSelections();
     var size = MediaQuery.of(context).size;
     return StatefulBuilder(
       builder: ((context, setState) {
         return GridView.count(
-          // mainAxisSpacing: size.height / 20,
+          // childAspectRatio: MediaQuery.of(context).size.width /
+          //     (MediaQuery.of(context).size.height),
           crossAxisCount: 3,
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -241,8 +246,11 @@ class ObstacleSelection extends StatelessWidget {
                   style: Theme.of(context).textTheme.subtitle1,
                 ),
                 IconButton(
-                  icon: Icon(iconics[random.nextInt(iconics.length)],
-                      size: 30, color: Colors.white),
+                  // icon: Icon(iconics[random.nextInt(iconics.length)],
+                  // size: 30, color: Colors.white),
+                  icon: obby.loadObstacle(key)!,
+
+                  // size: 30, color: Colors.white),
                   onPressed: () => setState(() => (obSelects[key] == 1)
                       ? obSelects[key] = 0
                       : obSelects[key] = 1),
