@@ -3,6 +3,9 @@
     <!--Needed to get current location from user-->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.android.permission.INTERNET"/>    <!--Delete once we get the places api calls thru firebase -->
+
+
    <application
         android:label="skateright_flutter"
         android:name="${applicationName}"
