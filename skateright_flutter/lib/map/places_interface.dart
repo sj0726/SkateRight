@@ -8,6 +8,7 @@ import '../entities/spot.dart';
 /* ----------------- THIS FILE TO BE REPLACED BY FIREBACE INSTANCE ---------------- */
 /*                     IF MUST BE USED REPLACE [apiKey] with key                    */
 
+/// WILL NOT BE USED IN FINAL BUILD
 class PlacesInterface {
   PlacesInterface({required this.location});
 
