@@ -5,6 +5,9 @@ import 'package:http/http.dart';
 import 'dart:convert';
 import '../entities/spot.dart';
 
+/* ----------------- THIS FILE TO BE REPLACED BY FIREBACE INSTANCE ---------------- */
+/*                     IF MUST BE USED REPLACE [apiKey] with key                    */
+
 class PlacesInterface {
   PlacesInterface({required this.location});
 
@@ -25,21 +28,21 @@ class PlacesInterface {
   final String photoPostURL =
       "https://maps.googleapis.com/maps/api/place/photo";
 
-  Future<List<Spot>> nearbySearch(String keyword) async {
+  Future<List<Spot>> nearbySearch({String? keyword,
+      int? searchRadius = 5000}) async {
     // Optimization tweak cuz otherwise FSB makes like 3 calls per submit
-    if (keyword == prevQuery) {
+    if (prevResult != null && keyword == prevQuery) {
       return prevResult!;
     }
 
     currentLocation ??= await location.getLocation();
     log("getLocation() obtained");
 
-    String call = nearbyPostURL + "?keyword=$keyword%22skatepark";
+    String call = nearbyPostURL + ((keyword != null) ? "?keyword=$keyword%22skatepark" : '?keyword=skatepark');
     call +=
         "&location=${currentLocation!.latitude},${currentLocation!.longitude}";
     call += "&radius=$searchRadius";
     call += "&key=$apiKey";
-
     log('call: $call');
 
     Response res = await get(Uri.parse(call));
