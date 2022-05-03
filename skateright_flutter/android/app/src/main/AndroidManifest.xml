@@ -41,3 +41,7 @@
             android:value="" /> <!-- INSERT API KEY-->
     </application>
 </manifest>
+<!-- After making any changes to config run (from /skateright_flutter):
+        - flutter clean
+        - flutter run
+ -->
