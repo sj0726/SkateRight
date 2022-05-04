@@ -36,13 +36,13 @@ class SpotPopupCard extends StatelessWidget {
               // topRight: Radius.circular(12.0),
               // ),
               color: Theme.of(context).backgroundColor,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 20.0,
-                  left: 16.0,
-                  right: 16.0,
-                ),
-                child: SingleChildScrollView(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20.0,
+                    left: 16.0,
+                    right: 16.0,
+                  ),
                   child: Column(
                     // Begin Spot info widgets
                     mainAxisSize: MainAxisSize.min,
@@ -53,12 +53,16 @@ class SpotPopupCard extends StatelessWidget {
                       // const _Interactions(),
                       // const SizedBox(height: 24),
 
-                      _DisplayObstacles(
-                          obstacles: spot.obstacles), // Call with spot
-                      const SizedBox(height: 24),
+                      if (spot.obstacles.isNotEmpty) ...[
+                        _DisplayObstacles(
+                            obstacles: spot.obstacles), // Call with spot
+                        const SizedBox(height: 24)
+                      ],
 
-                      _SpotReviews(reviews: spot.comments),
-                      const SizedBox(height: 12),
+                      if (spot.comments.isNotEmpty) ...[
+                        _SpotReviews(reviews: spot.comments),
+                        const SizedBox(height: 12),
+                      ],
 
                       _ToReviews(spot: spot),
                       const SizedBox(height: 12),
@@ -92,18 +96,20 @@ class _DetailsAndPhoto extends StatelessWidget {
             //     height: double.infinity,
             OverflowBox(
                 alignment: Alignment.centerLeft,
-                minHeight: size.height / 7,
+                minHeight: size.height / 8,
                 maxHeight: size.height / 4,
                 maxWidth: size.width / 2,
                 minWidth: size.width / 2,
                 child: _SpotTitle(spot: spot)),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                  width: size.width * 2,
-                  height: double.infinity,
-                  child: _SpotPhoto(spot: spot)),
-            ),
+            if (spot.pictures.isNotEmpty) ...[
+              Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                    width: size.width * 2,
+                    height: double.infinity,
+                    child: _SpotPhoto(spot: spot)),
+              ),
+            ]
           ],
         ));
 
@@ -280,27 +286,7 @@ class _DisplayObstacles extends StatelessWidget {
           style: Theme.of(context).textTheme.headline2,
         ),
         const SizedBox(height: 8),
-        Row(children: obbyList
-            // children: const [
-            //   Icon(
-            //     Icons.landscape_outlined,
-            //     color: Colors.blueAccent,
-            //     size: 30,
-            //   ),
-            //   SizedBox(width: 12),
-            //   Icon(
-            //     Icons.square_outlined,
-            //     color: Colors.blueAccent,
-            //     size: 30,
-            //   ),
-            //   SizedBox(width: 12),
-            //   Icon(
-            //     Icons.circle_outlined,
-            //     color: Colors.blueAccent,
-            //     size: 30,
-            //   )
-            // ],
-            ),
+        Row(children: obbyList),
       ],
     );
   }
@@ -314,14 +300,14 @@ class _ToReviews extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: Alignment.bottomCenter,
       //   child: Padding(
       //     padding: EdgeInsets.only(
       //       left: 12,
       //     ),
       child: ElevatedButton(
-        child: const Text(
-          "More Reviews",
+        child: Text(
+          (spot.comments.isNotEmpty) ? "More Reviews" : "Add A Review",
           // style: Theme.of(context)
           // .textTheme
           // .headline2!

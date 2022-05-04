@@ -1,11 +1,14 @@
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:location/location.dart';
 
 import '../entities/spot.dart';
-import 'places_interface.dart';
+// import 'places_interface.dart';
 
 import 'fake_spot.dart';
 
@@ -40,21 +43,24 @@ class _SearchBarState extends State<SearchBar> {
   // functions from [map_page]
   late final addSpotMarker;
   late final goToSpot;
-  late final PlacesInterface
-      placeCaller; // ATTN Sanjoon: this is the object that makes the API calls
+  late final HttpsCallable firebaseCaller;
+  late final Location location;
+  LocationData? _locationData;
+  // late final PlacesInterface
+  // placeCaller; // ATTN Sanjoon: this is the object that makes the API calls
 
   String query = '';
   bool makeAPICall = false;
 
-  void _loadAroundUser() async {
-    List<Spot> nearbySpots = await placeCaller.nearbySearch(searchRadius: 5000);
-    log('Spots = ' + nearbySpots.toString());
+  // void _loadAroundUser() async {
+  //   // List<Spot> nearbySpots = await placeCaller.nearbySearch(searchRadius: 5000);
+  //   log('Spots = ' + nearbySpots.toString());
 
-    for (Spot spot in nearbySpots) {
-      log('adding (${spot.title})');
-      addSpotMarker(spot);
-    }
-  }
+  //   for (Spot spot in nearbySpots) {
+  //     log('adding (${spot.title})');
+  //     addSpotMarker(spot);
+  //   }
+  // }
 
   @override
   void initState() {
@@ -62,7 +68,11 @@ class _SearchBarState extends State<SearchBar> {
     _controller = FloatingSearchBarController();
     addSpotMarker = widget.placeSpotMarker;
     goToSpot = widget.goToSpot;
-    placeCaller = PlacesInterface(location: widget.location);
+    firebaseCaller =
+        FirebaseFunctions.instance.httpsCallable('getGoogleNearbyOnCall');
+    location = Location();
+
+    // placeCaller = PlacesInterface(location: widget.location);
 
     for (String opt in options) {
       selections[opt] =
@@ -149,7 +159,7 @@ class _SearchBarState extends State<SearchBar> {
             query = input;
           });
       },
-      onSubmitted: (input) {
+      onSubmitted: (input) async {
         query = input; // Not necesary due to onQueryChanged ?
         makeAPICall = true;
         FocusManager.instance.primaryFocus?.unfocus();
@@ -256,17 +266,41 @@ class _SearchBarState extends State<SearchBar> {
   }
 
   Future<List<Spot>> _getResultsFromQuery(String query) async {
+    _locationData = await location.getLocation();
     query = query.toLowerCase();
 
     List<Spot> spots = [booth, buBeach, fakeSpot, fakeSpot1];
     List<Spot> res = [];
     if (selections['Park'] == 0 || makeAPICall == false) {
-      for (Spot spot in spots) {
-        if (spot.title.toLowerCase().contains(query)) res.add(spot);
-      }
+      res.addAll(
+          spots.where((spot) => spot.title.toLowerCase().contains(query)));
       return res;
+    } else if (makeAPICall == true) {
+      log('(${_locationData!.latitude!}, ${_locationData!.longitude!})');
+      var call = await firebaseCaller.call(<String, double>{
+        'latitude': _locationData!.latitude!,
+        'longitude': _locationData!.longitude!,
+      });
+
+      // Response response = await get(Uri.parse(call.data));
+      // if (response.statusCode == 200) {
+      // Map<String, dynamic> decoded = jsonDecode(call.data); //response.body);
+      log('${call.data.toString()}');
+      List<dynamic> body = call.data['results'];
+      log('${body.toString()}');
+
+      List<Spot> spots = body.map(
+        (item) {
+          return Spot.fromJson(item, 'AIzaSyBHbE8gY1lkShRnfptN5wLNJgB06qgFNvg');
+        },
+      ).toList();
+
+      res.addAll(spots);
     } else {
-      return placeCaller.nearbySearch(keyword: query);
+      throw "Unable to retrieve posts";
     }
+    // return placeCaller.nearbySearch(keyword: query);
+
+    return res;
   }
 }

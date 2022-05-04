@@ -14,10 +14,15 @@ import 'search_bar.dart';
 import '../spot_editing/create_spot_page.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key, this.mapStyle, required this.customMarker})
+  const MapScreen(
+      {Key? key,
+      this.mapStyle,
+      required this.customMarker,
+      this.initialSpots})
       : super(key: key);
   final String? mapStyle;
   final BitmapDescriptor customMarker;
+  final List<Spot>? initialSpots;
 
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -189,7 +194,6 @@ class _MapScreenState extends State<MapScreen> {
       if (enabled) {
         _currentLocation = await location.getLocation();
 
-
         location.onLocationChanged
             .listen((newPos) => _currentLocation = newPos);
       }
@@ -335,37 +339,31 @@ class _MapScreenState extends State<MapScreen> {
 
   _buildAddSpotPage() {
     LatLng cLatLng = currentCameraPos.target;
-    tempMarker = Marker(
-      markerId: const MarkerId('TEMP'),
-      position: currentCameraPos.target,
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => CreateSpotPage(
-            latitude: cLatLng.latitude,
-            longitude: cLatLng.longitude,
-          ),
-        ),
-      ),
-      // Delete when user holds down on pin
-      draggable: true,
-      onDragStart: (_) => (setState(
-        () =>
-            _markers.removeWhere((element) => element.markerId.value == 'TEMP'),
-      )),
-    );
+    // tempMarker = Marker(
+    //   markerId: const MarkerId('TEMP'),
+    //   position: currentCameraPos.target,
+    //   onTap: () => Navigator.of(context).push(
+    //     MaterialPageRoute(
+    //       builder: (context) => CreateSpotPage(
+    //         latitude: cLatLng.latitude,
+    //         longitude: cLatLng.longitude,
+    //       ),
+    //     ),
+    //   ),
+    //   // Delete when user holds down on pin
+    //   draggable: true,
+    //   onDragStart: (_) => (setState(
+    //     () =>
+    //         _markers.removeWhere((element) => element.markerId.value == 'TEMP'),
+    //   )),
+    // );
 
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => CreateSpotPage(
               latitude: cLatLng.latitude,
               longitude: cLatLng.longitude,
+              addSpotToMap: addSpotMarker,
             )));
-
-    // NOTE: Current implementation only allows one custom marker on map at a time
-    //   will be fixed once end-to-end support implemented in create_spot_page.dart
-    setState(() {
-      _markers.removeWhere((element) => element.markerId.value == 'TEMP');
-      // _markers.add(tempMarker);
-    });
   }
 
   /// Tracks where the center of the map is
@@ -384,7 +382,7 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  /// Called from [SearchBar]
+  /// Called from [SearchBar], [CreateSpotPage]
   /// Centers camera on given spot
   void goToSpot(Spot spot) {
     // Add spot marker to map if not there already

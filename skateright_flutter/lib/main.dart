@@ -1,6 +1,9 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -48,15 +51,6 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
   Future<String> _loadMapStyle() {
     Future<String> asString =
         DefaultAssetBundle.of(context).loadString('assets/map/map_style.json');
-    // .then(
-    //   (asString) {
-    //     mapStyle = asString;
-    //   },
-    // ).catchError(
-    //   (error) {
-    //     log(error.toString());
-    //   },
-    // );
     return asString;
   }
 
@@ -73,6 +67,16 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
             .asUint8List();
     return BitmapDescriptor.fromBytes(byteMarker);
     // return Future.value(true);
+  }
+
+  Future<dynamic> _getFirebaseInstance(double latitude, double longitude) async {
+    HttpsCallable callable =
+        FirebaseFunctions.instance.httpsCallable('getGoogleNearby');
+    var resp = await callable.call(<String, double>{
+      'latitude': latitude,
+      'longitude': longitude,
+    });
+    print(resp.data);
   }
 
   @override
@@ -100,9 +104,10 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
             MaterialPageRoute mainScreenPageRoute =
                 MaterialPageRoute(builder: (context) => mainScreen);
 
-            _buildChild =
-                OnBoardPage(nextRoute: mainScreenPageRoute,); //  TODO: Switch line comments to not deal with unnecessary loading
-                // mainScreen;  // See above... uncomment to not deal with loading
+            _buildChild = OnBoardPage(
+              nextRoute: mainScreenPageRoute,
+            ); //  TODO: Switch line comments to not deal with unnecessary loading
+            // mainScreen;  // See above... uncomment to not deal with loading
           }
 
           return AnimatedSwitcher(

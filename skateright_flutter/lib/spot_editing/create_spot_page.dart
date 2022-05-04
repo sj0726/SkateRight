@@ -10,11 +10,15 @@ import 'package:skateright_flutter/entities/obstacles.dart';
 
 class CreateSpotPage extends StatefulWidget {
   const CreateSpotPage(
-      {Key? key, required this.latitude, required this.longitude})
+      {Key? key,
+      required this.latitude,
+      required this.longitude,
+      required this.addSpotToMap})
       : super(key: key);
 
   final double latitude;
   final double longitude;
+  final addSpotToMap;
 
   @override
   State<CreateSpotPage> createState() => _CreateSpotPageState();
@@ -119,8 +123,12 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
                 textAlign: TextAlign.center,
               ),
               onPressed: () {
-                Navigator.of(context).pop();
-                _submitSpot();
+                if (nameController.text.isNotEmpty) {
+                  Navigator.of(context).pop();
+                  _submitSpot();
+                } else{
+                  
+                }
               },
             ),
           ],
@@ -169,8 +177,9 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
         .doc(value.id)
         .update({'id': value.id})));
 
+    widget.addSpotToMap(toAdd);
+
     Navigator.of(context).pop();
-    // Play goofy little check mark animation?
   }
 }
 
@@ -213,59 +222,40 @@ class ObstacleSelection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Obstacles obby = Obstacles();
-    // Random random = Random();
-    // List<IconData> iconics = [
-    //   Icons.square_outlined,
-    //   Icons.circle_outlined,
-    //   Icons.polyline,
-    //   Icons.landscape_outlined,
-    //   Icons.crop_square,
-    //   Icons.texture_outlined,
-    //   Icons.bar_chart_outlined,
-    //   Icons.stairs_outlined,
-    //   Icons.cloud_circle,
-    //   Icons.cloud_outlined,
-    // ];
     _initSelections();
     var size = MediaQuery.of(context).size;
+
     return StatefulBuilder(
       builder: ((context, setState) {
         return GridView.count(
-          // childAspectRatio: MediaQuery.of(context).size.width /
-          //     (MediaQuery.of(context).size.height),
+          childAspectRatio: MediaQuery.of(context).size.width /
+              (MediaQuery.of(context).size.height / 1.8),
+          mainAxisSpacing: 30,
           crossAxisCount: 3,
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           children: obSelects.keys.map((key) {
-            return Column(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  key,
-                  style: Theme.of(context).textTheme.subtitle1,
+            return GestureDetector(
+              onTap: () =>
+                  setState(() => obSelects[key] = ((obSelects[key] + 1) % 2)),
+              child: Container(
+                width: size.width / 7,
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: obby.loadObstacle(key)!,
+                    ),
+                    Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Icon(
+                            (obSelects[key] == 0)
+                                ? Icons.circle_outlined
+                                : Icons.circle,
+                            color: Theme.of(context).accentColor))
+                  ],
                 ),
-                IconButton(
-                  // icon: Icon(iconics[random.nextInt(iconics.length)],
-                  // size: 30, color: Colors.white),
-                  icon: obby.loadObstacle(key)!,
-
-                  // size: 30, color: Colors.white),
-                  onPressed: () => setState(() => (obSelects[key] == 1)
-                      ? obSelects[key] = 0
-                      : obSelects[key] = 1),
-                ),
-                Checkbox(
-                  value: obSelects[key] == 1 ? true : false,
-                  shape: CircleBorder(side: BorderSide(color: Colors.white)),
-                  checkColor: Colors.transparent,
-                  onChanged: (flag) {
-                    setState(
-                      () => obSelects[key] = flag! ? 1 : 0,
-                    );
-                  },
-                ),
-              ],
+              ),
             );
           }).toList(),
         );

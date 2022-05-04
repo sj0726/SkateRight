@@ -21,7 +21,7 @@ class Obstacles {
   Widget? loadObstacle(String obstacle) {
     if (!validObstacles.contains(obstacle)) return null;
     return Column(children:[ Image.asset(path + obstacle + '.png'), 
-      Text(obstacle[0].toUpperCase() + obstacle.substring(1).toLowerCase())
+      Text(obstacle[0].toUpperCase() + obstacle.replaceAll('_', ' ').substring(1).toLowerCase(),)
     ]);
   }
 }
