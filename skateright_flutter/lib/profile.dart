@@ -1,673 +1,259 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:skateright_flutter/profile_form.dart';
 import 'package:skateright_flutter/styles/skate_theme.dart';
 
-void main() {
-  runApp(const ProfilePage());
+class CompletedProfile extends StatefulWidget {
+  const CompletedProfile({Key? key,
+  this.name,
+  this.username,
+  this.pronouns,
+  this.skillLevel,
+  this.mostInterestedIn,
+  this.goals,
+  this.otherGoals,
+  this.aboutYourself,
+  this.skaterIcon,
+  this.background}) : super(key: key);
+
+  final String?
+      name,
+      username,
+      pronouns,
+      skillLevel,
+      mostInterestedIn,
+      goals,
+      otherGoals,
+      aboutYourself,
+      skaterIcon,
+      background;
+
+  @override
+  State<CompletedProfile> createState() => _CompletedProfile();
 }
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+class _CompletedProfile extends State<CompletedProfile> {
+  String? name, username, pronouns, skillLevel, mostInterestedIn, goals, otherGoals, aboutYourself, skaterIcon, background;
+  String bg1 = "assets/backgrounds/bg1-rectangle.png";
+  String bg2 = "assets/backgrounds/bg2-rectangle.png";
+  String bg3 = "assets/backgrounds/bg3-rectangle.png";
+  String bg4 = "assets/backgrounds/bg4-rectangle.png";
+  String figure1 = "assets/figures/skater1-profile.png";
+  String figure2 = "assets/figures/skater2-profile.png";
+  String figure3 = "assets/figures/skater3-profile.png";
+  String figure4 = "assets/figures/skater4-profile.png";
+  String figure5 = "assets/figures/user_profile.png";
+
+  @override
+  void initState() {
+    super.initState();
+    name = widget.name;
+    username = widget.username;
+    pronouns = widget.pronouns;
+    skillLevel = widget.skillLevel;
+    mostInterestedIn = widget.mostInterestedIn;
+    goals = widget.goals;
+    otherGoals = widget.otherGoals;
+    aboutYourself = widget.aboutYourself;
+    skaterIcon = widget.skaterIcon;
+    background = widget.background;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Make New Profile',
-      theme: skateTheme,
-      home: const Scaffold(
-        body: CreateProfileForm(),
-        backgroundColor: Color(0xFF141414), // skate_theme.dart sBlack
-      ),
-    );
-  }
-}
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      body: Material(
+        color: Theme.of(context).backgroundColor,
+        child: ListView(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              child: Image.asset(
+                bg1,
+                width: double.infinity,
+              ),
+            ),
 
-class CreateProfileForm extends StatefulWidget {
-  const CreateProfileForm({Key? key}) : super(key: key);
-
-  @override
-  State<CreateProfileForm> createState() => _CreateProfileForm();
-}
-
-class _CreateProfileForm extends State<CreateProfileForm> {
-  TextEditingController name = TextEditingController();
-  TextEditingController pronouns = TextEditingController();
-  List<String> skillLevel = [];
-  List<String> mostInterestedIn = [];
-  List<bool> goalIsChecked = [false, false, false, false, false, false];
-  TextEditingController otherGoal = TextEditingController();
-  TextEditingController aboutYourself = TextEditingController();
-  List<String> whichSkater = [];
-  List<String> background = [];
-
-  final firestoreInstance = FirebaseFirestore.instance;
-
-  @override
-  void dispose() {
-    name.dispose();
-    pronouns.dispose();
-    otherGoal.dispose();
-    aboutYourself.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: TextFormField(
-            controller: name,
-              cursorColor: const Color(0xFF94B321),
-              decoration: const InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFFf0e6d0))
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              child: Text(
+                "@$username",
+                textAlign: TextAlign.left,
+                style: const TextStyle(
+                  fontSize: 18.0,
+                    fontFamily: 'RobotoMono',
+                    color: Color(0xFFf0e6d0)
                 ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Color(0xFF94B321))
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.zero)
-          ),
-                labelText: "What's your name?",
-                labelStyle: TextStyle(
+              ),
+            ),
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              child: Text(
+                "$name",
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 30.0,
+                    fontFamily: 'RobotoMono',
+                    color: Color(0xFFf0e6d0)
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+              child: Text(
+                "$pronouns",
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 18.0, fontFamily: 'RobotoMono', color: Color(0xFF94B321)),),
+            ),
+
+            Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                                "Skill Level",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(fontFamily: 'Karla', color: Color(0xFFEB001B), fontSize: 17.0),
+                            ),
+                        ),
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              "$skillLevel",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(fontFamily: 'Roboto Mono', color: Color(0xFFf1c200), fontSize: 18.0),
+                            ),
+                          ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            "Interests",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(fontFamily: 'Karla', color: Color(0xFFEB001B), fontSize: 17.0),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            "  $mostInterestedIn",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(fontFamily: 'Roboto Mono', color: Color(0xFFf1c200), fontSize: 18.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            "My goals",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(fontFamily: 'Karla', color: Color(0xFFEB001B), fontSize: 17.0),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text( // TODO
+                            "  Gain confidence\n  Skate in the bowl\n  $otherGoals",
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(fontFamily: 'Roboto Mono', color: Color(0xFFf1c200), fontSize: 18.0),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+            ),
+
+            const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              child: Text(
+                "About me",
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontFamily: 'Roboto Mono',
                   color: Color(0xFFf0e6d0)
                 ),
-              )
-          ),
-        ),
-
-        Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: TextFormField(
-            controller: pronouns,
-            cursorColor: const Color(0xFF94B321),
-            decoration: const InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Color(0xFFf0e6d0))
               ),
-                focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF94B321))
-                ),
-              border: OutlineInputBorder(),
-              labelText: "Pronouns?",
-              labelStyle: TextStyle(
-                color: Color(0xFFf0e6d0)
-              )
             ),
-          ),
-        ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  // TODO: wrap in padding (option + return) or spacer widget
-                  "Skill level?",
-                  style: TextStyle(
-                      fontFamily: 'RobotoMono',
-                      fontSize: 18
-                  ),
+            Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              child: Text(
+                "$aboutYourself",
+                style: const TextStyle(
+                  fontSize: 17.0,
+                  fontFamily: 'Karla',
+                  color: Color(0xFFf0e6d0)
                 ),
               ),
-              ElevatedButton(
+            ),
+
+            Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+              child: ElevatedButton(
                 onPressed: () {
-                  skillLevel.add("I'm new here");
+                  // TODO: make this functionality work
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const CreateProfileForm()));
                 },
                 child: const Text(
-                    "I'm new here",
-                  style: TextStyle(color: Color(0xFF94B321)),
+                  "Edit Profile",
+                  style: TextStyle(
+                    fontFamily: 'Roboto Mono',
+                    fontSize: 17.0,
+                    color: Color(0xFF94B321),
+                  ),
                 ),
                 style: ElevatedButton.styleFrom(
-                    shape: const StadiumBorder(),
-                    side: const BorderSide(color: Color(0xFF94B321)),
-                    primary: Colors.transparent,
-                    textStyle: const TextStyle(
-                    fontFamily: 'Karla'
-                  )
-                ) // style
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    skillLevel.add("Beginner");
-                  },
-                  child: const Text(
-                    "Beginner",
-                    style: TextStyle(color: Color(0xFF94B321)),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                      side: const BorderSide(color: Color(0xFF94B321)),
-                      primary: Colors.transparent,
-                      textStyle: const TextStyle(
-                          fontFamily: 'Karla'
-                      )
-                  ) // style
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    skillLevel.add("Intermediate");
-                  },
-                  child: const Text(
-                    "Intermediate",
-                    style: TextStyle(color: Color(0xFF94B321)),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                      side: const BorderSide(color: Color(0xFF94B321)),
-                      primary: Colors.transparent,
-                      textStyle: const TextStyle(
-                          fontFamily: 'Karla'
-                      )
-                  ) // style
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    skillLevel.add("Advanced");
-                  },
-                  child: const Text(
-                    "Advanced",
-                    style: TextStyle(color: Color(0xFF94B321)),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                      side: const BorderSide(color: Color(0xFF94B321)),
-                      primary: Colors.transparent,
-                      textStyle: const TextStyle(
-                          fontFamily: 'Karla'
-                      )
-                  ) // style
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    skillLevel.add("Basically a pro");
-                  },
-                  child: const Text(
-                    "Basically a pro",
-                    style: TextStyle(color: Color(0xFF94B321)),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                      side: const BorderSide(color: Color(0xFF94B321)),
-                      primary: Colors.transparent,
-                      textStyle: const TextStyle(
-                          fontFamily: 'Karla'
-                      )
-                  ) // style
-              ),
-            ],
-          ),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                    "What are you most interested in?",
-                  style: TextStyle(
-                      fontFamily: 'RobotoMono',
-                      fontSize: 18
-                  ),
+                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                  primary: Color(0xFF141414),
+                  textStyle: const TextStyle(fontFamily: 'Roboto Mono'),
+                  alignment: Alignment.centerRight
                 ),
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    mostInterestedIn.add("Street skating");
-                  },
-                  child: const Text(
-                    "Street skating",
-                    style: TextStyle(color: Color(0xFF94B321)),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                      side: const BorderSide(color: Color(0xFF94B321)),
-                      primary: Colors.transparent,
-                      textStyle: const TextStyle(
-                          fontFamily: 'Karla'
-                      )
-                  ) // style
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    mostInterestedIn.add("Skating for transportation");
-                  },
-                  child: const Text(
-                    "Skating for transportation",
-                    style: TextStyle(color: Color(0xFF94B321)),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                      side: const BorderSide(color: Color(0xFF94B321)),
-                      primary: Colors.transparent,
-                      textStyle: const TextStyle(
-                          fontFamily: 'Karla'
-                      )
-                  ) // style
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    mostInterestedIn.add("Learning new tricks");
-                  },
-                  child: const Text(
-                    "Learning new tricks",
-                    style: TextStyle(color: Color(0xFF94B321)),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                      side: const BorderSide(color: Color(0xFF94B321)),
-                      primary: Colors.transparent,
-                      textStyle: const TextStyle(
-                          fontFamily: 'Karla'
-                      )
-                  ) // style
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    mostInterestedIn.add("Fun skate session");
-                  },
-                  child: const Text(
-                    "Fun skate session",
-                    style: TextStyle(color: Color(0xFF94B321)),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                      side: const BorderSide(color: Color(0xFF94B321)),
-                      primary: Colors.transparent,
-                      textStyle: const TextStyle(
-                          fontFamily: 'Karla'
-                      )
-                  ) // style
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    mostInterestedIn.add("Meeting new people");
-                  },
-                  child: const Text(
-                    "Meeting new people",
-                    style: TextStyle(color: Color(0xFF94B321)),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                      side: const BorderSide(color: Color(0xFF94B321)),
-                      primary: Colors.transparent,
-                      textStyle: const TextStyle(
-                          fontFamily: 'Karla'
-                      )
-                  ) // style
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    mostInterestedIn.add("Hanging out with friends");
-                  },
-                  child: const Text(
-                    "Hanging out with friends",
-                    style: TextStyle(color: Color(0xFF94B321)),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                      side: const BorderSide(color: Color(0xFF94B321)),
-                      primary: Colors.transparent,
-                      textStyle: const TextStyle(
-                          fontFamily: 'Karla'
-                      )
-                  ) // style
-              ),
-            ],
-          ),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const Text(
-                  "What are your goals?",
-                style: TextStyle(
-                    fontFamily: 'RobotoMono',
-                    fontSize: 18
-                ),
-              ),
-              ListTile(
-                title: const Text("Get on the board"),
-                leading: Checkbox(
-                  checkColor: const Color(0xFF141414),
-                  // TODO: figure out how to do fill color with type MaterialColor
-                  side: const BorderSide(
-                    color: Color(0xFF94B321),
-                  ),
-                  value: goalIsChecked[0],
-                  onChanged: (bool? value) {
-                    setState(() {
-                      goalIsChecked[0] = value!;
-                    });
-                  },
-                ),
-              ),
-
-              ListTile(
-                title: const Text("Gain confidence"),
-                leading: Checkbox(
-                  checkColor: const Color(0xFF141414),
-                  side: const BorderSide(
-                    color: Color(0xFF94B321),
-                  ),
-                  value: goalIsChecked[1],
-                  onChanged: (bool? value) {
-                    setState(() {
-                      goalIsChecked[1] = value!;
-                    });
-                  },
-                ),
-              ),
-
-              ListTile(
-                title: const Text("Meet new skaters"),
-                leading: Checkbox(
-                  checkColor: const Color(0xFF141414),
-                  side: const BorderSide(
-                    color: Color(0xFF94B321),
-                  ),
-                  value: goalIsChecked[2],
-                  onChanged: (bool? value) {
-                    setState(() {
-                      goalIsChecked[2] = value!;
-                    });
-                  },
-                ),
-              ),
-
-              ListTile(
-                title: const Text("Do an ollie"),
-                leading: Checkbox(
-                  checkColor: const Color(0xFF141414),
-                  side: const BorderSide(
-                    color: Color(0xFF94B321),
-                  ),
-                  value: goalIsChecked[3],
-                  onChanged: (bool? value) {
-                    setState(() {
-                      goalIsChecked[3] = value!;
-                    });
-                  },
-                ),
-              ),
-
-              ListTile(
-                title: const Text("Do a kickflip"),
-                leading: Checkbox(
-                  checkColor: const Color(0xFF141414),
-                  side: const BorderSide(
-                    color: Color(0xFF94B321),
-                  ),
-                  value: goalIsChecked[4],
-                  onChanged: (bool? value) {
-                    setState(() {
-                      goalIsChecked[4] = value!;
-                    });
-                  },
-                ),
-              ),
-
-              // TODO fill color
-              ListTile(
-                title: const Text("Find new skate spots"),
-                leading: Checkbox(
-                  checkColor: const Color(0xFF141414),
-                  side: const BorderSide(
-                    color: Color(0xFF94B321),
-                  ),
-                  value: goalIsChecked[5],
-                  onChanged: (bool? value) {
-                    setState(() {
-                      goalIsChecked[5] = value!;
-                    });
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: TextFormField(
-            controller: otherGoal,
-            cursorColor: const Color(0xFF94B321),
-            decoration: const InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFf0e6d0))
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFF94B321))
-                ),
-                border: OutlineInputBorder(),
-                labelText: "Other goal:",
-                labelStyle: TextStyle(
-                    color: Color(0xFFf0e6d0)
-                )
             ),
-          ),
-        ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: TextFormField(
-            controller: aboutYourself,
-            cursorColor: const Color(0xFF94B321),
-            decoration: const InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFFf0e6d0))
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xFF94B321))
-                ),
-                border: OutlineInputBorder(),
-              labelText: "Tell us about yourself!",
-              labelStyle: TextStyle(
-                color: Color(0xFFf0e6d0)
-              )
-            ),
-          ),
-        ),
+            // Activity Section
+            // Padding(
+            //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            //   child: Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: <Widget>[
+            //       Row(
+            //         crossAxisAlignment: CrossAxisAlignment.start,
+            //         children: <Widget>[
+            //           Padding(
+            //               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            //             child: Text(
+            //               "Reviews",
+            //               style: TextStyle(fontFamily: 'Karla', fontSize: 17.0, color: Color(0xFFf0e6d0)),
+            //             ),
+            //           )
+            //         ],
+            //       )
+            //     ],
+            //   ),
+            // )
 
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: Column( // TODO switch to grid view
-            crossAxisAlignment: CrossAxisAlignment.start,
-            // gridDelegate: null,
-            children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  "Which skater are you?",
-                  style: TextStyle(
-                    fontFamily: 'RobotoMono',
-                    fontSize: 18
-                  ),
-                ),
-              ),
-              ElevatedButton.icon(
-                  onPressed: () {
-                    whichSkater.add("Skater 1");
-                  },
-                  icon: Image.asset('assets/figures/skater1-cream.png'),
-                  label: const Text(""),
-                style: ElevatedButton.styleFrom(
-                  shape: const CircleBorder(),
-                  primary: Colors.transparent
-                ),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  whichSkater.add("Skater 2");
-                },
-                icon: Image.asset('assets/figures/skater2-cream.png'),
-                label: const Text(""),
-                style: ElevatedButton.styleFrom(
-                    shape: const CircleBorder(),
-                    primary: Colors.transparent
-                ),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  whichSkater.add("Skater 3");
-                },
-                icon: Image.asset('assets/figures/skater3-cream.png'),
-                label: const Text(""),
-                style: ElevatedButton.styleFrom(
-                    shape: const CircleBorder(),
-                    primary: Colors.transparent
-                ),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  whichSkater.add("Skater 4");
-                },
-                icon: Image.asset('assets/figures/skater4-cream.png'),
-                label: const Text(""),
-                style: ElevatedButton.styleFrom(
-                    shape: const CircleBorder(),
-                    primary: Colors.transparent
-                ),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  whichSkater.add("Skater 5");
-                },
-                icon: Image.asset('assets/figures/user_profile.png'),
-                label: const Text(""),
-                style: ElevatedButton.styleFrom(
-                    shape: const CircleBorder(),
-                    primary: Colors.transparent
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  "Choose your favorite pattern",
-                  style: TextStyle(
-                    fontFamily: 'RobotoMono',
-                    fontSize: 18
-                  ),
-                ),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  background.add("background 1");
-                },
-                icon: Image.asset('assets/backgrounds/background1.png', width: 50),
-                label: const Text(""),
-                style: ElevatedButton.styleFrom(
-                  shape: const RoundedRectangleBorder(),
-                    primary: Colors.transparent
-                ),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  background.add("background 2");
-                },
-                icon: Image.asset('assets/backgrounds/background2.png', width: 50),
-                label: const Text(""),
-                style: ElevatedButton.styleFrom(
-                    shape: const RoundedRectangleBorder(),
-                    primary: Colors.transparent
-                ),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  background.add("background 3");
-                },
-                icon: Image.asset('assets/backgrounds/background3.png', width: 50),
-                label: const Text(""),
-                style: ElevatedButton.styleFrom(
-                    shape: const RoundedRectangleBorder(),
-                    primary: Colors.transparent
-                ),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  background.add("background 4");
-                },
-                icon: Image.asset('assets/backgrounds/background4.png', width: 50),
-                label: const Text(""),
-                style: ElevatedButton.styleFrom(
-                    shape: const RoundedRectangleBorder(),
-                    primary: Colors.transparent
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        DatabaseReference _ref =
-                            FirebaseDatabase.instance.ref().child("Profile");
-                        _ref.push().set({
-                          "Name": name.text,
-                          "Pronouns": pronouns.text,
-                          "Skill Level": skillLevel,
-                          "Most Interested In": mostInterestedIn,
-                          "Goals": goalIsChecked,
-                          "Other Goals": otherGoal.text,
-                          "About Yourself": aboutYourself.text,
-                          "Which Skater": whichSkater,
-                          "Background": background
-                        }); // TODO: clear lists
-                        firestoreInstance.collection("Profile").add({
-                          "Name": name.text,
-                          "Pronouns": pronouns.text,
-                          "Skill Level": skillLevel,
-                          "Most Interested In": mostInterestedIn,
-                          "Goals": goalIsChecked,
-                          "Other Goals": otherGoal.text,
-                          "About Yourself": aboutYourself.text,
-                          "Which Skater": whichSkater,
-                          "Background": background
-                        }); // TODO: clear lists
-                      },
-                      child: const Text(
-                          "Done",
-                        style: TextStyle(color: Color(0xFF141414)),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: const Color(0xFFf1c200),
-                        textStyle: const TextStyle(fontFamily: 'Karla')
-                      ),
-                    )
-                )
-              ]
-          ),
+          ],
         )
-
-      ]
+      )
     );
   }
 }
