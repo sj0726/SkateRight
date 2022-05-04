@@ -3,6 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:skateright_flutter/profile_form.dart';
 import 'package:skateright_flutter/styles/skate_theme.dart';
 
+whichBackground(String backgroundChoice) {
+  String bg1 = "assets/backgrounds/bg1-rectangle.png";
+  String bg2 = "assets/backgrounds/bg2-rectangle.png";
+  String bg3 = "assets/backgrounds/bg3-rectangle.png";
+  String bg4 = "assets/backgrounds/bg4-rectangle.png";
+  if (backgroundChoice == "background 1") {
+    return bg1;
+  }
+  if (backgroundChoice == "background 2") {
+    return bg2;
+  }
+  if (backgroundChoice == "background 3") {
+    return bg3;
+  }
+  if (backgroundChoice == "background 1") {
+    return bg4;
+  }
+  else {return bg1;}
+}
+
 class CompletedProfile extends StatefulWidget {
   const CompletedProfile({Key? key,
   this.name,
@@ -34,10 +54,10 @@ class CompletedProfile extends StatefulWidget {
 
 class _CompletedProfile extends State<CompletedProfile> {
   String? name, username, pronouns, skillLevel, mostInterestedIn, goals, otherGoals, aboutYourself, skaterIcon, background;
-  String bg1 = "assets/backgrounds/bg1-rectangle.png";
-  String bg2 = "assets/backgrounds/bg2-rectangle.png";
-  String bg3 = "assets/backgrounds/bg3-rectangle.png";
-  String bg4 = "assets/backgrounds/bg4-rectangle.png";
+  // String bg1 = "assets/backgrounds/bg1-rectangle.png";
+  // String bg2 = "assets/backgrounds/bg2-rectangle.png";
+  // String bg3 = "assets/backgrounds/bg3-rectangle.png";
+  // String bg4 = "assets/backgrounds/bg4-rectangle.png";
   String figure1 = "assets/figures/skater1-profile.png";
   String figure2 = "assets/figures/skater2-profile.png";
   String figure3 = "assets/figures/skater3-profile.png";
@@ -70,7 +90,7 @@ class _CompletedProfile extends State<CompletedProfile> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
               child: Image.asset(
-                bg1,
+                  (whichBackground("$background"!)),
                 width: double.infinity,
               ),
             ),

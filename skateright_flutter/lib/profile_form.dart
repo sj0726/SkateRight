@@ -798,7 +798,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                           otherGoals: otherGoal.text,
                           aboutYourself: aboutYourself.text,
                           // TODO: whichSkater
-                          // TODO: background
+                          background: background[0],
                         )));
                         DatabaseReference _ref =
                             FirebaseDatabase.instance.ref().child("Profile");
