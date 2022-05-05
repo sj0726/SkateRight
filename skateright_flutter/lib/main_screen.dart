@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:skateright_flutter/profile/profile_page.dart';
+import 'package:skateright_flutter/profile/profile_form.dart';
+
 import 'map/map_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:skateright_flutter/entities/spot.dart';
@@ -33,7 +35,7 @@ class _MainScreenState extends State<MainScreen> {
         customMarker: widget.markerIcon,
         mapStyle: widget.mapStyle,
       ),
-      ProfilePage(),
+      ProfileForm(),
       // ClickerPage(key: PageStorageKey('Clicker')),
     ];
   }

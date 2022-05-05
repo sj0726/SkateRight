@@ -4,21 +4,41 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:skateright_flutter/styles/skate_theme.dart';
 
-// class ReviewsPage extends StatelessWidget {
-//   const ReviewsPage({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Create review',
-//       theme: skateTheme,
-//       home: const Scaffold(
-//         body: CreateReviewForm(),
-//         backgroundColor: Color(0xFF141414),
-//       ),
-//     );
-//   }
-// }
+alertDialog(BuildContext context) {
+  // This is the ok button
+  Widget ok = ElevatedButton(
+    child: const Text(
+        "Okay",
+      style: TextStyle(color: Color(0xFF141414)),
+    ),
+    style: ElevatedButton.styleFrom(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.zero
+      ),
+        primary: const Color.fromARGB(255, 206, 187, 19),
+        textStyle: const TextStyle(fontFamily: 'Karla')
+    ),
+    onPressed: () {Navigator.of(context).pop();},
+  );
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero
+        ),
+        title: const Text(
+            "Great!",
+          style: TextStyle(color: Color(0xFFf0e6d0)),
+        ),
+        content: const Text("Your review and rating have been saved. Can't wait for your next review!"),
+        actions: [ok],
+        elevation: 5,
+        backgroundColor: const Color(0xFF141414),
+      );
+    },
+  );
+}
 
 class CreateReviewForm extends StatefulWidget {
   const CreateReviewForm({Key? key, this.spotName}) : super(key: key);
@@ -56,7 +76,7 @@ class _CreateReviewForm extends State<CreateReviewForm> {
           children: <Widget>[
             Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -73,7 +93,7 @@ class _CreateReviewForm extends State<CreateReviewForm> {
                       child: Text(
                         "Difficulty",
                         style:
-                            TextStyle(fontFamily: 'RobotoMono', fontSize: 18),
+                        TextStyle(fontFamily: 'RobotoMono', fontSize: 18),
                       ),
                     ),
                     RatingBar(
@@ -86,19 +106,16 @@ class _CreateReviewForm extends State<CreateReviewForm> {
                       direction: Axis.horizontal,
                       itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                       ratingWidget: RatingWidget(
-                          full: Image.asset(
-                              'assets/icons/starburst_no_outline.png'),
-                          half: Image.asset(
-                              'assets/icons/starburst_no_outline.png'),
-                          empty: Image.asset(
-                              'assets/icons/starbusrt_onlyoutline.png')),
+                          full: Image.asset('assets/icons/starburst_no_outline.png'),
+                          half: Image.asset('assets/icons/starburst_no_outline.png'),
+                          empty: Image.asset('assets/icons/starbusrt_onlyoutline.png')),
                     ),
                     const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
                         "Safety",
                         style:
-                            TextStyle(fontFamily: 'RobotoMono', fontSize: 18),
+                        TextStyle(fontFamily: 'RobotoMono', fontSize: 18),
                       ),
                     ),
                     RatingBar(
@@ -111,19 +128,16 @@ class _CreateReviewForm extends State<CreateReviewForm> {
                       direction: Axis.horizontal,
                       itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                       ratingWidget: RatingWidget(
-                          full: Image.asset(
-                              'assets/icons/starburst_no_outline.png'),
-                          half: Image.asset(
-                              'assets/icons/starburst_no_outline.png'),
-                          empty: Image.asset(
-                              'assets/icons/starbusrt_onlyoutline.png')),
+                          full: Image.asset('assets/icons/starburst_no_outline.png'),
+                          half: Image.asset('assets/icons/starburst_no_outline.png'),
+                          empty: Image.asset('assets/icons/starbusrt_onlyoutline.png')),
                     ),
                     const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
                         "Quality",
                         style:
-                            TextStyle(fontFamily: 'RobotoMono', fontSize: 18),
+                        TextStyle(fontFamily: 'RobotoMono', fontSize: 18),
                       ),
                     ),
                     RatingBar(
@@ -136,19 +150,16 @@ class _CreateReviewForm extends State<CreateReviewForm> {
                       direction: Axis.horizontal,
                       itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                       ratingWidget: RatingWidget(
-                          full: Image.asset(
-                              'assets/icons/starburst_no_outline.png'),
-                          half: Image.asset(
-                              'assets/icons/starburst_no_outline.png'),
-                          empty: Image.asset(
-                              'assets/icons/starbusrt_onlyoutline.png')),
+                          full: Image.asset('assets/icons/starburst_no_outline.png'),
+                          half: Image.asset('assets/icons/starburst_no_outline.png'),
+                          empty: Image.asset('assets/icons/starbusrt_onlyoutline.png')),
                     ),
                     const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
                         "Friendliness",
                         style:
-                            TextStyle(fontFamily: 'RobotoMono', fontSize: 18),
+                        TextStyle(fontFamily: 'RobotoMono', fontSize: 18),
                       ),
                     ),
                     RatingBar(
@@ -161,19 +172,16 @@ class _CreateReviewForm extends State<CreateReviewForm> {
                       direction: Axis.horizontal,
                       itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                       ratingWidget: RatingWidget(
-                          full: Image.asset(
-                              'assets/icons/starburst_no_outline.png'),
-                          half: Image.asset(
-                              'assets/icons/starburst_no_outline.png'),
-                          empty: Image.asset(
-                              'assets/icons/starbusrt_onlyoutline.png')),
+                          full: Image.asset('assets/icons/starburst_no_outline.png'),
+                          half: Image.asset('assets/icons/starburst_no_outline.png'),
+                          empty: Image.asset('assets/icons/starbusrt_onlyoutline.png')),
                     ),
                     const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
                         "Crowd Level",
                         style:
-                            TextStyle(fontFamily: 'RobotoMono', fontSize: 18),
+                        TextStyle(fontFamily: 'RobotoMono', fontSize: 18),
                       ),
                     ),
                     RatingBar(
@@ -186,12 +194,9 @@ class _CreateReviewForm extends State<CreateReviewForm> {
                       direction: Axis.horizontal,
                       itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                       ratingWidget: RatingWidget(
-                          full: Image.asset(
-                              'assets/icons/starburst_no_outline.png'),
-                          half: Image.asset(
-                              'assets/icons/starburst_no_outline.png'),
-                          empty: Image.asset(
-                              'assets/icons/starbusrt_onlyoutline.png')),
+                          full: Image.asset('assets/icons/starburst_no_outline.png'),
+                          half: Image.asset('assets/icons/starburst_no_outline.png'),
+                          empty: Image.asset('assets/icons/starbusrt_onlyoutline.png')),
                     ),
                     const SizedBox(height: 20,),
                     const Padding(
@@ -199,11 +204,11 @@ class _CreateReviewForm extends State<CreateReviewForm> {
                       child: Text(
                         "Add a review!",
                         style:
-                            TextStyle(fontFamily: 'RobotoMono', fontSize: 18),
+                        TextStyle(fontFamily: 'RobotoMono', fontSize: 18),
                       ),
                     ),
                     TextFormField(
-                        // TODO: sharp corners
+                      // TODO: sharp corners
                         controller: addReview,
                         cursorColor: const Color(0xFF94B321),
                         decoration: const InputDecoration(
@@ -212,6 +217,7 @@ class _CreateReviewForm extends State<CreateReviewForm> {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Color(0xFF94B321)),
+                            borderRadius: BorderRadius.zero
                           ),
                           border: OutlineInputBorder(),
                           labelText: "Review",
@@ -229,6 +235,7 @@ class _CreateReviewForm extends State<CreateReviewForm> {
                             textDirection: TextDirection.rtl,
                             child: ElevatedButton(
                               onPressed: () {
+                                alertDialog(context);
                                 DatabaseReference _ref = FirebaseDatabase
                                     .instance
                                     .ref()
@@ -255,9 +262,11 @@ class _CreateReviewForm extends State<CreateReviewForm> {
                                 style: TextStyle(color: Color(0xFF141414)),
                               ),
                               style: ElevatedButton.styleFrom(
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.zero
+                                  ),
                                   primary: const Color(0xFFf1c200),
-                                  textStyle:
-                                      const TextStyle(fontFamily: 'Karla')),
+                                  textStyle: const TextStyle(fontFamily: 'Karla')),
                             ),
                           )
                         ],

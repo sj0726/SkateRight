@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:skateright_flutter/profile/profile_page.dart';
 import 'package:skateright_flutter/styles/skate_theme.dart';
 
 void main() {
@@ -516,6 +517,7 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Color(0xFF94B321)),
+                  borderRadius: BorderRadius.zero
                 ),
                 border: OutlineInputBorder(
                 ),
@@ -786,6 +788,18 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                     textDirection: TextDirection.rtl,
                     child: ElevatedButton(
                       onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>CompletedProfile(
+                          name: name.text,
+                          username: username.text,
+                          pronouns: pronouns.text,
+                          skillLevel: skillLevel[0],
+                          mostInterestedIn: mostInterestedIn[0],
+                          // TODO: goal checklist
+                          otherGoals: otherGoal.text,
+                          aboutYourself: aboutYourself.text,
+                          // TODO: whichSkater
+                          background: background[0],
+                        )));
                         DatabaseReference _ref =
                             FirebaseDatabase.instance.ref().child("Profile");
                         _ref.push().set({
@@ -824,6 +838,9 @@ class _CreateProfileForm extends State<CreateProfileForm> {
                         style: TextStyle(color: Color(0xFF141414)),
                       ),
                       style: ElevatedButton.styleFrom(
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero
+                        ),
                         primary: const Color(0xFFf1c200),
                         textStyle: const TextStyle(fontFamily: 'Karla')
                       ),
