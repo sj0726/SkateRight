@@ -46,7 +46,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
               leading: const Icon(Icons.add),
               title: Text("Add a Review", style: Theme.of(context).textTheme.subtitle1,),
               onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => CreateReviewForm(spotName: spot.title),)
+                MaterialPageRoute(builder: (context) => CreateReviewForm(spot: spot),)
               ),
             ),
 
