@@ -71,7 +71,7 @@ class _SearchBarState extends State<SearchBar> {
     firebaseCaller =
         FirebaseFunctions.instance.httpsCallable('getGoogleNearbyOnCall');
     location = Location();
-
+    _getResultsFromQuery(' ');
     // placeCaller = PlacesInterface(location: widget.location);
 
     for (String opt in options) {

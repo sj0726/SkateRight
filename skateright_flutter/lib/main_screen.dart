@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:skateright_flutter/profile/profile_page.dart';
-import 'package:skateright_flutter/profile/profile_form.dart';
+import 'package:skateright_flutter/profile/load_profile_page.dart';
+import 'package:skateright_flutter/profile/profile_form1.dart';
 
 import 'map/map_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -25,10 +25,15 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final Future<FirebaseApp> _future = Firebase.initializeApp();
   late List<Widget> pageList;
+  late final ImageIcon profileIcon;
+  late final ImageIcon searchIcon;
 
   @override
   void initState() {
     super.initState();
+    profileIcon = const ImageIcon(AssetImage('assets/icons/profile_icon.png'));
+    searchIcon = const  ImageIcon(AssetImage("assets/icons/search.png"));
+
     pageList = <Widget>[
       MapScreen(
         key: PageStorageKey('Map'),
@@ -65,10 +70,28 @@ class _MainScreenState extends State<MainScreen> {
               type: BottomNavigationBarType.fixed,
               currentIndex: _pageIndex,
               onTap: _onNavigationTap,
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Map'),
+              items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.person_sharp), label: 'User'),
+                  icon: searchIcon,
+                  activeIcon: ColorFiltered(
+                      colorFilter: ColorFilter.mode(
+                          Theme.of(context).accentColor,
+                          BlendMode.srcATop),
+                      child: searchIcon),
+                      label: ''
+                ),
+                BottomNavigationBarItem(
+                  icon: profileIcon,
+                  activeIcon: ColorFiltered(
+                      colorFilter: ColorFilter.mode(
+                          Theme.of(context).accentColor,
+                          BlendMode.srcATop),
+                      child: profileIcon),
+                      label: ''
+                ),
+                // BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Map'),
+                // BottomNavigationBarItem(
+                //     icon: Icon(Icons.person_sharp), label: 'User'),
               ],
             ),
           );

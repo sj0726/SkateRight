@@ -40,7 +40,7 @@
             android:value="2" />
         <!--SKATERIGHT-->
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="" /> <!-- INSERT API KEY-->
+            android:value="AIzaSyBHbE8gY1lkShRnfptN5wLNJgB06qgFNvg" /> <!-- INSERT API KEY-->
     </application>
 </manifest>
 <!-- After making any changes to config run (from /skateright_flutter):

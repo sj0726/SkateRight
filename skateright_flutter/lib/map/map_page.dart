@@ -15,10 +15,7 @@ import '../spot_editing/create_spot_page.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen(
-      {Key? key,
-      this.mapStyle,
-      required this.customMarker,
-      this.initialSpots})
+      {Key? key, this.mapStyle, required this.customMarker, this.initialSpots})
       : super(key: key);
   final String? mapStyle;
   final BitmapDescriptor customMarker;
@@ -79,6 +76,9 @@ class _MapScreenState extends State<MapScreen> {
     // Ideally we do the following asset loading in the splash loader
     customMarker = widget.customMarker;
     _mapStyle = widget.mapStyle;
+    _checkLocationPerms();
+    location.requestPermission();
+    location.requestService();
 
     // Overlay setup
     WidgetsBinding.instance

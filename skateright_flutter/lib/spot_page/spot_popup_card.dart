@@ -58,7 +58,6 @@ class SpotPopupCard extends StatelessWidget {
                             obstacles: spot.obstacles), // Call with spot
                         const SizedBox(height: 24)
                       ],
-
                       if (spot.comments.isNotEmpty) ...[
                         _SpotReviews(reviews: spot.comments),
                         const SizedBox(height: 12),

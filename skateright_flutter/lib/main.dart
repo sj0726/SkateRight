@@ -11,6 +11,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:skateright_flutter/onboarding/onboarding.dart';
 
 import 'package:skateright_flutter/splash_screen.dart';
@@ -39,11 +40,15 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
   Widget? _buildChild;
+  late var _locationServEnabled;
+  late var _locationPermEnabled;
+  late Location location;
 
   @override
   void initState() {
     super.initState();
     _buildChild = SplashScreen();
+    location = Location();
     // _controller =
     //     AnimationController(vsync: this, duration: const Duration(seconds: 1));
   }
@@ -69,18 +74,33 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
     // return Future.value(true);
   }
 
-  Future<dynamic> _getFirebaseInstance(double latitude, double longitude) async {
-    HttpsCallable callable =
-        FirebaseFunctions.instance.httpsCallable('getGoogleNearby');
-    var resp = await callable.call(<String, double>{
-      'latitude': latitude,
-      'longitude': longitude,
-    });
-    print(resp.data);
+
+  Future<bool> _checkLocationPerms() async {
+    _locationServEnabled = await location.serviceEnabled();
+    if (!_locationServEnabled) {
+      _locationServEnabled = await location.requestService();
+
+      // If denied -> no point in continuing
+      if (!_locationServEnabled) {
+        return false;
+      }
+    }
+
+    _locationPermEnabled = await location.hasPermission();
+    if (_locationPermEnabled == PermissionStatus.denied) {
+      _locationPermEnabled = await location.requestPermission();
+
+      if (_locationPermEnabled == PermissionStatus.denied) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
+    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: skateTheme,

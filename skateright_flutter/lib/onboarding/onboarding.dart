@@ -140,6 +140,22 @@ class _Page3 extends StatelessWidget {
             onPressed: () => Navigator.of(context).pushReplacement(nextPageRoute!),
           ),
         ),
+
+        Padding(padding: EdgeInsets.only(bottom: 15,), child:
+        Align(
+          alignment: Alignment.bottomRight,
+          child: 
+          ElevatedButton(
+            child: Text("Go!", style: Theme.of(context).textTheme.headline2!.copyWith(color: Theme.of(context).backgroundColor),),
+            onPressed: () => Navigator.of(context).pushReplacement(nextPageRoute!),
+            style: ButtonStyle(
+              backgroundColor: MaterialStateColor.resolveWith((states) => Theme.of(context).secondaryHeaderColor),
+              fixedSize:
+          MaterialStateProperty.resolveWith((states) => const Size(120, 38)),              
+            ),
+          )
+        )
+        )
       ],
     );
   }
