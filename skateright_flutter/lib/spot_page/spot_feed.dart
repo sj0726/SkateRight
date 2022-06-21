@@ -11,6 +11,7 @@ class SpotFeed extends StatelessWidget {
   Widget build(BuildContext context) {
     List<String>? pictures = spot.pictures;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text(

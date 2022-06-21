@@ -124,10 +124,11 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
             MaterialPageRoute mainScreenPageRoute =
                 MaterialPageRoute(builder: (context) => mainScreen);
 
-            _buildChild = OnBoardPage(
-              nextRoute: mainScreenPageRoute,
-            ); //  TODO: Switch line comments to not deal with unnecessary loading
-            // mainScreen;  // See above... uncomment to not deal with loading
+            _buildChild = 
+            // OnBoardPage(
+              // nextRoute: mainScreenPageRoute,
+            // ); //  TODO: Switch line comments to not deal with unnecessary loading
+            mainScreen;  // See above... uncomment to not deal with loading
           }
 
           return AnimatedSwitcher(

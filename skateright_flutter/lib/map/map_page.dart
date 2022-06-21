@@ -302,7 +302,6 @@ class _MapScreenState extends State<MapScreen> {
                   onPressed: () {
                     _buildAddSpotPage();
                     _hideAddSpotOverlay();
-                    setState(() => _markers.add(tempMarker!));
                   },
                   icon: Icon(
                     Icons.check,
@@ -335,29 +334,9 @@ class _MapScreenState extends State<MapScreen> {
     return false; // For use in willPop(), don't worry about this for general use
   }
 
-  Marker? tempMarker;
-
   _buildAddSpotPage() {
     LatLng cLatLng = currentCameraPos.target;
-    // tempMarker = Marker(
-    //   markerId: const MarkerId('TEMP'),
-    //   position: currentCameraPos.target,
-    //   onTap: () => Navigator.of(context).push(
-    //     MaterialPageRoute(
-    //       builder: (context) => CreateSpotPage(
-    //         latitude: cLatLng.latitude,
-    //         longitude: cLatLng.longitude,
-    //       ),
-    //     ),
-    //   ),
-    //   // Delete when user holds down on pin
-    //   draggable: true,
-    //   onDragStart: (_) => (setState(
-    //     () =>
-    //         _markers.removeWhere((element) => element.markerId.value == 'TEMP'),
-    //   )),
-    // );
-
+    
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => CreateSpotPage(
               latitude: cLatLng.latitude,
