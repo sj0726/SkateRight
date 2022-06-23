@@ -41,6 +41,7 @@ class _MainScreenState extends State<MainScreen> {
             resizeToAvoidBottomInset: false,
             body: IndexedStack(children: pageList, index: _pageIndex),
             bottomNavigationBar: BottomNavigationBar(
+              backgroundColor: Theme.of(context).primaryColorDark,
               type: BottomNavigationBarType.fixed,
               currentIndex: _pageIndex,
               onTap: _onNavigationTap,

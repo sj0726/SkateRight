@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
 class SkateLocation extends StatefulWidget {
   @override
@@ -49,6 +50,38 @@ class MyCustomFormState extends State<MyCustomForm> {
       return false;
     }
     return double.tryParse(s) != null;
+  }
+
+  Future<void> nearbyCall(double lat, double long, int radius) async {
+    HttpsCallable callable =
+        FirebaseFunctions.instance.httpsCallable('getGoogleNearbyOnCall');
+    final resp = await callable.call(<String, dynamic>{
+      'latitude': lat,
+      'longitude': long,
+      'keyword': 'skate',
+      // 'radius': 5000,
+    });
+    print(
+        "nearby result: ${resp.data['results'][0]['photos'][0]['photo_reference']}");
+  }
+
+  Future<void> textCall(String query) async {
+    HttpsCallable callable =
+        FirebaseFunctions.instance.httpsCallable('getGoogleTextSearchOnCall');
+    final resp = await callable.call(<String, dynamic>{
+      'query': query,
+    });
+    print("text result: ${resp.data}");
+  }
+
+  Future<void> photoCall(String photo_reference) async {
+    HttpsCallable callable =
+        FirebaseFunctions.instance.httpsCallable('getGooglePlacePhotosOnCall');
+    final resp = await callable.call(<String, dynamic>{
+      'maxwidth': 400,
+      'photo_reference': photo_reference,
+    });
+    print("photo result: ${resp.data}");
   }
 
   @override
@@ -110,18 +143,30 @@ class MyCustomFormState extends State<MyCustomForm> {
                     const SnackBar(
                         content: Text('Processing Data to Firebase..')),
                   );
-                  DatabaseReference _ref =
-                      FirebaseDatabase.instance.ref().child("Spots");
-                  _ref.push().set({
-                    "latitude": double.parse(latController.text),
-                    "longitude": double.parse(longController.text),
-                    "name": nameController.text
-                  });
-                  firestoreInstance.collection("Coordinates").add({
-                    "latitude": double.parse(latController.text),
-                    "longitude": double.parse(longController.text),
-                    "name": nameController.text
-                  });
+                  // DatabaseReference _ref =
+                  //     FirebaseDatabase.instance.ref().child("Spots");
+                  // _ref.push().set({
+                  //   "latitude": double.parse(latController.text),
+                  //   "longitude": double.parse(longController.text),
+                  //   "name": nameController.text
+                  // });
+                  // firestoreInstance.collection("Coordinates").add({
+                  //   "latitude": double.parse(latController.text),
+                  //   "longitude": double.parse(longController.text),
+                  //   "name": nameController.text
+                  // }).then((value) => firestoreInstance
+                  //     .collection("Coordinates")
+                  //     .doc(value.id)
+                  //     .update({"id": value.id}));
+
+                  // firestoreInstance.collection("Coordinates").doc(ref2).update({
+                  //   "id": ref2,
+                  // });
+                  nearbyCall(double.parse(latController.text),
+                      double.parse(longController.text), 1500);
+                  // textCall(nameController.text);
+                  photoCall(
+                      'Aap_uEC8mJ-0ljVlzu7qtj7183b76-XLYV8nO_QRKIR9xnjVa-D2l7BQfrSbPENyp_UvDWF8JeAaFPStTZ3STTKbPH6nOXsZHV098i_kmp3GAql6lO-C_X6dOBUSWZUvV9w-YI8ovymRcki4D1BjAatkftNOGrty7eEuWKS8aeW8Y9iNp-UM');
                 }
               },
               child: const Text('Submit'),

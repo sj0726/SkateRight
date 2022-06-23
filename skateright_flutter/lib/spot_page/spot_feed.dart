@@ -15,7 +15,6 @@ class SpotFeed extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           spot.title,
-          style: Theme.of(context).appBarTheme.titleTextStyle,
         ),
       ),
       body: Padding(

@@ -15,58 +15,59 @@ class SpotPopupCard extends StatelessWidget {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     return Hero(
-        tag: spot.id,
-        child: Container(
-          alignment: Alignment.bottomCenter,
-          child: Dismissible(
-            key: Key('spotPage'),
-            direction: DismissDirection.down,
-            onDismissed: (_) => Navigator.pop(context),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: height * 0.75,
-                minHeight: height * 0.3,
-              ),
-              child: Material(
-                // No rounded border :(
-                // borderRadius: const BorderRadius.only(
-                // topLeft: Radius.circular(12.0),
-                // topRight: Radius.circular(12.0),
-                // ),
-                color: Theme.of(context).backgroundColor,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 20.0,
-                    left: 16.0,
-                    right: 16.0,
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      // Begin Spot info widgets
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _DetailsAndPhoto(spot: spot),
-                        const SizedBox(height: 10),
+      tag: spot.id,
+      child: Container(
+        alignment: Alignment.bottomCenter,
+        child: Dismissible(
+          key: Key('spotPage'),
+          direction: DismissDirection.down,
+          onDismissed: (_) => Navigator.pop(context),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: height * 0.75,
+              minHeight: height * 0.3,
+            ),
+            child: Material(
+              // No rounded border :(
+              // borderRadius: const BorderRadius.only(
+              // topLeft: Radius.circular(12.0),
+              // topRight: Radius.circular(12.0),
+              // ),
+              color: Theme.of(context).backgroundColor,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 20.0,
+                  left: 16.0,
+                  right: 16.0,
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    // Begin Spot info widgets
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _DetailsAndPhoto(spot: spot),
+                      const SizedBox(height: 10),
 
-                        const _Interactions(),
-                        const SizedBox(height: 24),
+                      const _Interactions(),
+                      const SizedBox(height: 24),
 
-                        _Obstacles(), // Call with spot
-                        const SizedBox(height: 24),
+                      _Obstacles(), // Call with spot
+                      const SizedBox(height: 24),
 
-                        _SpotReviews(reviews: spot.comments),
-                        const SizedBox(height: 12),
+                      _SpotReviews(reviews: spot.comments),
+                      const SizedBox(height: 12),
 
-                        _ToReviews(spot: spot),
-                        const SizedBox(height: 12),
-                      ],
-                    ),
+                      _ToReviews(spot: spot),
+                      const SizedBox(height: 12),
+                    ],
                   ),
                 ),
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 
