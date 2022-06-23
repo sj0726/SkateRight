@@ -126,9 +126,7 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
                 if (nameController.text.isNotEmpty) {
                   Navigator.of(context).pop();
                   _submitSpot();
-                } else{
-                  
-                }
+                } else {}
               },
             ),
           ],
@@ -163,19 +161,44 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
       comments: [],
       obstacles: spotObstacles,
     );
-    // firebaseHandler.addSpotToDatabase(toAdd);
 
-    firestoreInstance.collection('Coordinates').add({
-      "latitude": toAdd.latitude,
-      "longitude": toAdd.longitude,
-      "name": toAdd.title,
-      "pictures": toAdd.pictures,
-      "comments": toAdd.comments,
-      "obstacles": toAdd.obstacles,
-    }).then(((value) => firestoreInstance
-        .collection('Coordinates')
-        .doc(value.id)
-        .update({'id': value.id})));
+    final docRef = firestoreInstance.collection('SkateSpots').doc();
+    final data = {
+      'title': toAdd.title,
+      'address': toAdd.address,
+      'latitude': toAdd.latitude,
+      'longitude': toAdd.longitude,
+      'pictures': toAdd.pictures,
+      'comments': toAdd.comments,
+      'obstacles': toAdd.obstacles,
+    };
+    docRef.set(data);
+    print('Added Data with ID: ${docRef.id}');
+    final newDocRef = firestoreInstance.collection('SkateSpots').doc(docRef.id);
+    newDocRef.update({
+      'comments': FieldValue.arrayUnion(["updated successfully!"]),
+    });
+
+    // firestoreInstance
+    //     .collection('SkateSpots')
+    //     .add(data)
+    //     .then((value) => print('Added Data with ID: ${value.id}'));
+
+    // docRef.set(data).then((value) {
+    //   print('Added Data with ID: ${value.id}');
+    // });
+
+    // firestoreInstance.collection('SkateSpots').add({
+    //   "latitude": toAdd.latitude,
+    //   "longitude": toAdd.longitude,
+    //   "name": toAdd.title,
+    //   "pictures": toAdd.pictures,
+    //   "comments": toAdd.comments,
+    //   "obstacles": toAdd.obstacles,
+    // }).then(((value) => firestoreInstance
+    //     .collection('Coordinates')
+    //     .doc(value.id)
+    //     .update({'id': value.id})));
 
     widget.addSpotToMap(toAdd);
 

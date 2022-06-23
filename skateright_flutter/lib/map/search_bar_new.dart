@@ -291,7 +291,7 @@ class _SearchBarState extends State<SearchBar> {
 
       List<Spot> spots = body.map(
         (item) {
-          return Spot.fromJson(item, 'AIzaSyBHbE8gY1lkShRnfptN5wLNJgB06qgFNvg');
+          return Spot.fromJson(item, 'AIzaSyBGiyH12S9SDH7Pn9AdFbRRvYG8WF4DCy0');
         },
       ).toList();
 
