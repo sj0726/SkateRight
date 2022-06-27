@@ -179,6 +179,11 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
       'comments': FieldValue.arrayUnion(["updated successfully!"]),
     });
 
+    firestoreInstance.collection("SkateSpots").get().then(
+          (res) => print("Got ${res.docs.length} spots"),
+          onError: (e) => print("Error completing: $e"),
+        );
+
     // firestoreInstance
     //     .collection('SkateSpots')
     //     .add(data)
