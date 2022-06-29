@@ -63,7 +63,7 @@ class _SearchBarState extends State<SearchBar> {
     addSpotMarker = widget.placeSpotMarker;
     goToSpot = widget.goToSpot;
     placeCaller = PlacesInterface(location: widget.location);
-    _getResultsFromQuery(' ');
+    _getResultsFromQuery('');
 
     for (String opt in options) {
       selections[opt] =
@@ -71,7 +71,7 @@ class _SearchBarState extends State<SearchBar> {
     }
     selections['Park'] = 1; // Used for demo day 4/20 to showcase API calls
 
-    //  _loadAroundUser();
+     _loadAroundUser();
   }
 
   StatefulBuilder _advSearchBuilder() {

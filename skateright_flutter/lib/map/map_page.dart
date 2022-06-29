@@ -10,7 +10,7 @@ import '../entities/spot.dart';
 import 'fake_spot.dart';
 import '../styles/hero_dialog_route.dart';
 import '../spot_page/spot_popup_card.dart';
-import 'search_bar.dart';
+import 'search_bar_new.dart';
 import '../spot_editing/create_spot_page.dart';
 
 class MapScreen extends StatefulWidget {
@@ -198,7 +198,7 @@ class _MapScreenState extends State<MapScreen> {
             .listen((newPos) => _currentLocation = newPos);
       }
     });
-    setDummyMarkers();
+    // setDummyMarkers();
 
     _mapCreated = true;
   }

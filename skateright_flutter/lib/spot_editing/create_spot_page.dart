@@ -2,7 +2,6 @@ import 'dart:developer' as dev;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:skateright_flutter/spot_editing/obstacle_selection.dart';
 import 'package:skateright_flutter/spot_editing/submit_text_field.dart';
 import 'package:skateright_flutter/entities/spot.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -173,37 +172,6 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
       'obstacles': toAdd.obstacles,
     };
     docRef.set(data);
-    print('Added Data with ID: ${docRef.id}');
-    final newDocRef = firestoreInstance.collection('SkateSpots').doc(docRef.id);
-    newDocRef.update({
-      'comments': FieldValue.arrayUnion(["updated successfully!"]),
-    });
-
-    firestoreInstance.collection("SkateSpots").get().then(
-          (res) => print("Got ${res.docs.length} spots"),
-          onError: (e) => print("Error completing: $e"),
-        );
-
-    // firestoreInstance
-    //     .collection('SkateSpots')
-    //     .add(data)
-    //     .then((value) => print('Added Data with ID: ${value.id}'));
-
-    // docRef.set(data).then((value) {
-    //   print('Added Data with ID: ${value.id}');
-    // });
-
-    // firestoreInstance.collection('SkateSpots').add({
-    //   "latitude": toAdd.latitude,
-    //   "longitude": toAdd.longitude,
-    //   "name": toAdd.title,
-    //   "pictures": toAdd.pictures,
-    //   "comments": toAdd.comments,
-    //   "obstacles": toAdd.obstacles,
-    // }).then(((value) => firestoreInstance
-    //     .collection('Coordinates')
-    //     .doc(value.id)
-    //     .update({'id': value.id})));
 
     widget.addSpotToMap(toAdd);
 

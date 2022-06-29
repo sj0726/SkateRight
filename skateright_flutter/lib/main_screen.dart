@@ -32,7 +32,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     profileIcon = const ImageIcon(AssetImage('assets/icons/profile_icon.png'));
-    searchIcon = const  ImageIcon(AssetImage("assets/icons/search.png"));
+    searchIcon = const ImageIcon(AssetImage("assets/icons/search.png"));
 
     pageList = <Widget>[
       MapScreen(
@@ -72,23 +72,19 @@ class _MainScreenState extends State<MainScreen> {
               onTap: _onNavigationTap,
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
-                  icon: searchIcon,
-                  activeIcon: ColorFiltered(
-                      colorFilter: ColorFilter.mode(
-                          Theme.of(context).accentColor,
-                          BlendMode.srcATop),
-                      child: searchIcon),
-                      label: ''
-                ),
+                    icon: searchIcon,
+                    activeIcon: ColorFiltered(
+                        colorFilter: ColorFilter.mode(
+                            Theme.of(context).accentColor, BlendMode.srcATop),
+                        child: searchIcon),
+                    label: ''),
                 BottomNavigationBarItem(
-                  icon: profileIcon,
-                  activeIcon: ColorFiltered(
-                      colorFilter: ColorFilter.mode(
-                          Theme.of(context).accentColor,
-                          BlendMode.srcATop),
-                      child: profileIcon),
-                      label: ''
-                ),
+                    icon: profileIcon,
+                    activeIcon: ColorFiltered(
+                        colorFilter: ColorFilter.mode(
+                            Theme.of(context).accentColor, BlendMode.srcATop),
+                        child: profileIcon),
+                    label: ''),
                 // BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Map'),
                 // BottomNavigationBarItem(
                 //     icon: Icon(Icons.person_sharp), label: 'User'),
