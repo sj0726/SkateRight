@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:skateright_flutter/profile/profile_form1.dart';
+import 'package:skateright_flutter/profile/profile_form.dart';
 import 'package:skateright_flutter/styles/skate_theme.dart';
 
 import 'package:skateright_flutter/entities/user.dart';

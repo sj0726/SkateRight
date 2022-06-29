@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:skateright_flutter/profile/load_profile_page.dart';
-import 'package:skateright_flutter/profile/profile_form1.dart';
+import 'package:skateright_flutter/profile/profile_form.dart';
 
 import 'map/map_page.dart';
 import 'package:firebase_core/firebase_core.dart';
