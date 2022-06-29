@@ -22,6 +22,7 @@ class SpotFeed extends StatelessWidget {
         // See above comment block for Scaffold attrs
         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         child: ListView(
+          physics: BouncingScrollPhysics(),
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
           children: [

@@ -2,7 +2,6 @@ import 'dart:developer' as dev;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:skateright_flutter/spot_editing/obstacle_selection.dart';
 import 'package:skateright_flutter/spot_editing/submit_text_field.dart';
 import 'package:skateright_flutter/entities/spot.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -163,19 +162,18 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
       comments: [],
       obstacles: spotObstacles,
     );
-    // firebaseHandler.addSpotToDatabase(toAdd);
 
-    firestoreInstance.collection('Coordinates').add({
-      "latitude": toAdd.latitude,
-      "longitude": toAdd.longitude,
-      "name": toAdd.title,
-      "pictures": toAdd.pictures,
-      "comments": toAdd.comments,
-      "obstacles": toAdd.obstacles,
-    }).then(((value) => firestoreInstance
-        .collection('Coordinates')
-        .doc(value.id)
-        .update({'id': value.id})));
+    final docRef = firestoreInstance.collection('SkateSpots').doc();
+    final data = {
+      'title': toAdd.title,
+      'address': toAdd.address,
+      'latitude': toAdd.latitude,
+      'longitude': toAdd.longitude,
+      'pictures': toAdd.pictures,
+      'comments': toAdd.comments,
+      'obstacles': toAdd.obstacles,
+    };
+    docRef.set(data);
 
     widget.addSpotToMap(toAdd);
 

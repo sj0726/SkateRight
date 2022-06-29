@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:meta/meta.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -55,6 +57,17 @@ class Spot {
   }
 
   factory Spot.fromJson(Map<String, dynamic> json, String apiKey) {
+    List<String> photos = [];
+    if (json['photos'] != null) {
+      for (var picture in json['photos']) {
+        photos.add(
+            "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=" +
+                picture['photo_reference'] +
+                "&key=" +
+                apiKey);
+      }
+    }
+
     return Spot(
       id: json['place_id'],
       title: json['name'],
@@ -62,14 +75,7 @@ class Spot {
       latitude: json['geometry']['location']['lat'],
       longitude: json['geometry']['location']['lng'],
       isPark: true,
-      pictures: [
-        for (var picture in json['photos']) ...[
-          "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=" +
-              picture['photo_reference'] +
-              "&key=" +
-              apiKey
-        ],
-      ],
+      pictures: photos,
       comments: [],
       obstacles: [],
     );

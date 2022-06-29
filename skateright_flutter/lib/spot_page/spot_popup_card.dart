@@ -1,5 +1,6 @@
 import 'dart:developer' as dev;
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import '/styles/skate_theme.dart';
@@ -37,6 +38,7 @@ class SpotPopupCard extends StatelessWidget {
               // ),
               color: Theme.of(context).backgroundColor,
               child: SingleChildScrollView(
+                // physics: BouncingScrollPhysics(),
                 child: Padding(
                   padding: const EdgeInsets.only(
                     top: 20.0,
@@ -53,11 +55,11 @@ class SpotPopupCard extends StatelessWidget {
                       // const _Interactions(),
                       // const SizedBox(height: 24),
 
-                      if (spot.obstacles.isNotEmpty) ...[
-                        _DisplayObstacles(
-                            obstacles: spot.obstacles), // Call with spot
-                        const SizedBox(height: 24)
-                      ],
+                      // if (spot.obstacles.isNotEmpty) ...[
+                      _DisplayObstacles(
+                          obstacles: spot.obstacles), // Call with spot
+                      const SizedBox(height: 24),
+                      // ],
                       if (spot.comments.isNotEmpty) ...[
                         _SpotReviews(reviews: spot.comments),
                         const SizedBox(height: 12),
@@ -285,8 +287,39 @@ class _DisplayObstacles extends StatelessWidget {
           style: Theme.of(context).textTheme.headline2,
         ),
         const SizedBox(height: 8),
-        Row(children: obbyList),
+        Row(children: [
+          ...obbyList,
+          SizedBox(width: 15),
+          _addObstaclesButton(obstacles)
+        ]),
       ],
+    );
+  }
+}
+
+class _addObstaclesButton extends StatelessWidget {
+  const _addObstaclesButton(this.selectedObstacles, {Key? key})
+      : super(key: key);
+  final List<String> selectedObstacles;
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform.rotate(
+      angle: -pi * 3 / 7,
+      child: Container(
+        color: Theme.of(context).accentColor,
+        child: IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ObstacleSelection(
+                selectedObstacles: selectedObstacles,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -360,6 +393,88 @@ class _SpotReviews extends StatelessWidget {
           ..._buildReviewCards()
         ]
       ],
+    );
+  }
+}
+
+class ObstacleSelection extends StatelessWidget {
+  ObstacleSelection({
+    List<String>? this.selectedObstacles,
+    Key? key,
+  }) : super(key: key);
+  List<String>? selectedObstacles;
+  final obSelects = {};
+
+  // Converts options list into a map... note: bad for desired stair implementation
+
+  void _initSelections() {
+    // obSelects ??= {};
+
+    for (var opt in validObstacles) {
+      if (!obSelects.containsKey(opt)) {
+        obSelects[opt] = 0;
+      }
+    }
+
+    for (var ob in selectedObstacles ?? []) {
+      obSelects[ob] = 1;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Obstacles obby = Obstacles();
+    _initSelections();
+    var size = MediaQuery.of(context).size;
+
+    return Scaffold(
+      appBar: AppBar(title: Text('Add Obstacles')),
+      body: Material(
+        color: Theme.of(context).backgroundColor,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.only(top: 24, bottom: 48),
+            child: StatefulBuilder(
+              builder: ((context, setState) {
+                return GridView.count(
+                  childAspectRatio: MediaQuery.of(context).size.width /
+                      (MediaQuery.of(context).size.height / 1.8),
+                  mainAxisSpacing: 30,
+                  crossAxisCount: 3,
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  children: obSelects.keys.map((key) {
+                    return GestureDetector(
+                      onTap: () => setState(
+                          () => obSelects[key] = ((obSelects[key] + 1) % 2)),
+                      child: Container(
+                        width: size.width / 7,
+                        child: Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: obby.loadObstacle(key),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Icon(
+                                  (obSelects[key] == 0)
+                                      ? Icons.circle_outlined
+                                      : Icons.circle,
+                                  color: Theme.of(context).accentColor),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                );
+              }),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
