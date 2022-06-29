@@ -7,7 +7,7 @@ final booth = Spot(
   address: '820 Commonwealth Avenue',
   latitude: 42.35044728773325,
   longitude: -71.11247537573053,
-  obstacles: ['flat', 'rail', 'stairs', 'bank', 'ledge'],
+  obstacles: ['hand_rail', 'stairs', 'bank', 'ledge'],
   pictures: _picsBooth,
   comments: _comments,
 );
@@ -24,7 +24,7 @@ final buBeach = Spot(
   address: '270 Bay State Rd',
   latitude: 42.35109403387847,
   longitude: -71.10606205440969,
-  obstacles: ['flat', 'ledge'],
+  obstacles: ['ledge', 'man_pad'],
   pictures: _picsBuBeach,
   comments: _comments,
 );
@@ -44,7 +44,7 @@ final fakeSpot = Spot(
   score: 5.0,
   comments: _comments,
   pictures: _picsLFS,
-  obstacles: ["ramp", "rail", "bump", "flat"],
+  obstacles: ["ramp", "hand_rail", "stairs"],
   latitude: 42.35111488978059,
   longitude: -71.10889075787007,
 );
@@ -63,7 +63,11 @@ final fakeSpot1 = Spot(
   score: 5.0,
   comments: _comments,
   pictures: _picsGSU,
-  obstacles: ["ramp", "rail", "bump", "flat"],
+  obstacles: [
+    "bowl",
+    "hand_rail",
+    "bump",
+  ],
   latitude: 42.350669405851505,
   longitude: -71.11207366936073,
 );
