@@ -21,7 +21,7 @@ class PlacesInterface {
   /// future plans will have a variable/sliding searchRadius
   ///   - define backend calls as dynamic in searchtem & radius (with cap)
   final int searchRadius = 5000;
-  final String apiKey = "AIzaSyBHbE8gY1lkShRnfptN5wLNJgB06qgFNvg";
+  final String apiKey = "AIzaSyBGiyH12S9SDH7Pn9AdFbRRvYG8WF4DCy0";
   final String exactSearchPostURL =
       "https://maps.googleapis.com/maps/api/place/findplacefromtext/json";
   final String nearbyPostURL =
@@ -29,8 +29,8 @@ class PlacesInterface {
   final String photoPostURL =
       "https://maps.googleapis.com/maps/api/place/photo";
 
-  Future<List<Spot>> nearbySearch({String? keyword,
-      int? searchRadius = 5000}) async {
+  Future<List<Spot>> nearbySearch(
+      {String? keyword, int? searchRadius = 5000}) async {
     // Optimization tweak cuz otherwise FSB makes like 3 calls per submit
     if (prevResult != null && keyword == prevQuery) {
       return prevResult!;
@@ -39,7 +39,10 @@ class PlacesInterface {
     currentLocation ??= await location.getLocation();
     log("getLocation() obtained");
 
-    String call = nearbyPostURL + ((keyword != null) ? "?keyword=$keyword%22skatepark" : '?keyword=skatepark');
+    String call = nearbyPostURL +
+        ((keyword != null)
+            ? "?keyword=$keyword%22skatepark"
+            : '?keyword=skatepark');
     call +=
         "&location=${currentLocation!.latitude},${currentLocation!.longitude}";
     call += "&radius=$searchRadius";

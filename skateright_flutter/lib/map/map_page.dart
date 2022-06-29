@@ -336,7 +336,7 @@ class _MapScreenState extends State<MapScreen> {
 
   _buildAddSpotPage() {
     LatLng cLatLng = currentCameraPos.target;
-    
+
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => CreateSpotPage(
               latitude: cLatLng.latitude,

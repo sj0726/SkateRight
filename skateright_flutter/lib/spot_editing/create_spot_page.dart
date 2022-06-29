@@ -125,9 +125,7 @@ class _CreateSpotPageState extends State<CreateSpotPage> {
                 if (nameController.text.isNotEmpty) {
                   Navigator.of(context).pop();
                   _submitSpot();
-                } else{
-                  
-                }
+                } else {}
               },
             ),
           ],
