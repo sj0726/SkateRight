@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:skateright_flutter/profile/load_profile_page.dart';
 import 'package:skateright_flutter/profile/profile_form.dart';
+import 'package:skateright_flutter/state_control/spot_holder.dart';
 
 import 'map/map_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,7 +25,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final Future<FirebaseApp> _future = Firebase.initializeApp();
+  // final Future<FirebaseApp> _future = Firebase.initializeApp();
   late List<Widget> pageList;
   late final ImageIcon profileIcon;
   late final ImageIcon searchIcon;
@@ -34,11 +36,16 @@ class _MainScreenState extends State<MainScreen> {
     profileIcon = const ImageIcon(AssetImage('assets/icons/profile_icon.png'));
     searchIcon = const ImageIcon(AssetImage("assets/icons/search.png"));
 
+
+
     pageList = <Widget>[
-      MapScreen(
-        key: PageStorageKey('Map'),
-        customMarker: widget.markerIcon,
-        mapStyle: widget.mapStyle,
+      ChangeNotifierProvider(
+        create: (context) => SpotHolder(),
+        child: MapScreen(
+          key: const PageStorageKey('Map'),
+          customMarker: widget.markerIcon,
+          mapStyle: widget.mapStyle,
+        ),
       ),
       ProfileForm(),
       // ClickerPage(key: PageStorageKey('Clicker')),
@@ -56,12 +63,12 @@ class _MainScreenState extends State<MainScreen> {
   // final PageStorageBucket bucket = PageStorageBucket();
 
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _future,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
-        } else {
+    // return FutureBuilder(
+    //   future: _future,
+    //   builder: (context, snapshot) {
+    //     if (snapshot.hasError) {
+    //       return Text(snapshot.error.toString());
+    //     } else {
           return Scaffold(
             resizeToAvoidBottomInset: false,
             body: IndexedStack(children: pageList, index: _pageIndex),
@@ -92,22 +99,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
           );
         }
-      },
-    );
-    //   resizeToAvoidBottomInset: false,
-    //   body: PageStorage(  /// Saves state of pages... no reload required
-    //     child: pageList[_pageIndex],
-    //     bucket: bucket,
-    //   ),
-    //   bottomNavigationBar: BottomNavigationBar(
-    //     // All styling info stored in skate_theme
-    //     currentIndex: _pageIndex,
-    //     onTap: (int index) => setState(() => _pageIndex = index),
-    //     items: const <BottomNavigationBarItem>[
-    //       BottomNavigationBarItem(icon: Icon(Icons.map_outlined), label: 'Spots'),
-    //       BottomNavigationBarItem(icon: Icon(Icons.cookie), label: 'Clicker'),
-    //     ],
-    //   ),
+      // },
     // );
   }
-}
+// }

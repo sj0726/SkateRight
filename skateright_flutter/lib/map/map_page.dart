@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 import 'package:location/location.dart';
+import 'package:provider/provider.dart';
+import 'package:skateright_flutter/state_control/spot_holder.dart';
 
 import '../entities/spot.dart';
 import 'fake_spot.dart';
@@ -46,22 +48,6 @@ class _MapScreenState extends State<MapScreen> {
 
   /*  ----- Init state methods -----   */
 
-  /// Called from [initState]
-  /// Initiallizes marker icons
-  // loadCustomMarker() async {
-  //   String path = 'assets/map/map_pin';
-  //   int width = 70;
-  //   ByteData data = await rootBundle.load(path);
-  //   ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
-  //       targetWidth: width);
-  //   ui.FrameInfo fi = await codec.getNextFrame();
-  //   Uint8List byteMarker =
-  //       (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
-  //           .buffer
-  //           .asUint8List();
-  //   customMarker = BitmapDescriptor.fromBytes(byteMarker);
-  // }
-
   /// Old version of loading asset, no option to change size
   void loadCustomMarker1() async {
     customMarker = await BitmapDescriptor.fromAssetImage(
@@ -73,12 +59,14 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-    // Ideally we do the following asset loading in the splash loader
     customMarker = widget.customMarker;
     _mapStyle = widget.mapStyle;
     _checkLocationPerms();
     location.requestPermission();
     location.requestService();
+
+    _markers = <Marker>{};
+    addSpotMarkersFromList(Provider.of<SpotHolder>(context, listen: false).getSpots());
 
     // Overlay setup
     WidgetsBinding.instance
@@ -408,7 +396,9 @@ class _MapScreenState extends State<MapScreen> {
     }
     setState(() {
       for (Marker marker in markerList) {
-        if (!_markers.contains(marker)) _markers.add(marker);
+        if (!_markers.contains(marker)) {
+          _markers.add(marker);
+        }
       }
     });
   }

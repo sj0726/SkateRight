@@ -1,9 +1,5 @@
-import 'dart:developer';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -12,7 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:provider/provider.dart';
 import 'package:skateright_flutter/onboarding/onboarding.dart';
+import 'package:skateright_flutter/state_control/location_provider.dart';
 
 import 'package:skateright_flutter/splash_screen.dart';
 import 'main_screen.dart';
@@ -47,7 +45,7 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _buildChild = SplashScreen();
+    _buildChild = const SplashScreen();
     location = Location();
     // _controller =
     //     AnimationController(vsync: this, duration: const Duration(seconds: 1));
@@ -74,7 +72,6 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
     // return Future.value(true);
   }
 
-
   Future<bool> _checkLocationPerms() async {
     _locationServEnabled = await location.serviceEnabled();
     if (!_locationServEnabled) {
@@ -100,7 +97,6 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: skateTheme,
@@ -108,6 +104,12 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
         future: Future.wait([
           _loadMapStyle(),
           _loadCustomMarker(),
+          _checkLocationPerms().then((enabled) async {
+            if (enabled) {
+              LocationData locationData = await location.getLocation();
+              return locationData;
+            }
+          }),
           Future.delayed(const Duration(milliseconds: 3000))
         ]),
         builder: (context, AsyncSnapshot snapshot) {
@@ -119,16 +121,30 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
               snapshot.hasData) {
             String mapStyle = snapshot.data[0];
             BitmapDescriptor customMarker = snapshot.data[1];
-            var mainScreen =
-                MainScreen(mapStyle: mapStyle, markerIcon: customMarker);
-            MaterialPageRoute mainScreenPageRoute =
-                MaterialPageRoute(builder: (context) => mainScreen);
+            LocationData locationData = snapshot.data[2];
 
-            _buildChild = 
+            // Allows access to a locationData throughout the app :)
+            Widget mainScreen = StreamProvider<LocationData?>(
+              create: (context) => LocationProvider(
+                      location: location, initialLocation: locationData)
+                  .locationData,
+              initialData: locationData,
+              child: MainScreen(mapStyle: mapStyle, markerIcon: customMarker)
+            );
+
+            // Widget mainScreen = ChangeNotifierProvider(
+            //     create: (context) => LocationProvider(
+            //         location: location, initialLocation: locationData),
+            //     child:
+            //         MainScreen(mapStyle: mapStyle, markerIcon: customMarker));
+
+            // MaterialPageRoute mainScreenPageRoute =
+            //     MaterialPageRoute(builder: (context) => mainScreen);
+
+            _buildChild = mainScreen;
             // OnBoardPage(
-              // nextRoute: mainScreenPageRoute,
-            // ); //  TODO: Switch line comments to not deal with unnecessary loading
-            mainScreen;  // See above... uncomment to not deal with loading
+            // nextRoute: mainScreenPageRoute,
+            // );
           }
 
           return AnimatedSwitcher(

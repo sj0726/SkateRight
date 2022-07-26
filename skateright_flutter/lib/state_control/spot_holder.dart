@@ -1,0 +1,40 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'dart:collection';
+import 'package:skateright_flutter/entities/spot.dart';
+import 'package:skateright_flutter/map/fake_spot.dart';
+
+class SpotHolder extends ChangeNotifier {
+  /// Internal, private state of the cart.
+  final List<Spot> _heldSpots = [booth, buBeach];
+
+  /// An unmodifiable view of the items in the cart.
+  UnmodifiableListView<Spot> get heldSpots => UnmodifiableListView(_heldSpots);
+
+  /// Adds [spot] to cart. This and [removeAll] are the only ways to modify the
+  /// cart from the outside.
+  void add(Spot spot) {
+    _heldSpots.add(spot);
+    // This call tells the widgets that are listening to this model to rebuild.
+    notifyListeners();
+  }
+
+  /// Removes all items from the cart.
+  void removeAll() {
+    _heldSpots.clear();
+    // This call tells the widgets that are listening to this model to rebuild.
+    notifyListeners();
+  }
+
+  List<Spot> getSpots() {
+    return _heldSpots;
+  }
+}
+
+
+/**
+ * Notes from documentation:
+ * 
+ * notifyListeners()
+ *   - Call this method any time the model changes in a way that might change your app’s UI.
+ */

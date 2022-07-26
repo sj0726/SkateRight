@@ -64,7 +64,7 @@ class _SearchBarState extends State<SearchBar> {
       selections[opt] =
           1; // Note: eventually need to figure out a way to do staircount
     }
-    _loadAroundUser();
+    // _loadAroundUser();
   }
 
   void _loadAroundUser() async {
