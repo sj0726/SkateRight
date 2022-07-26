@@ -5,7 +5,9 @@ class LocationProvider{
   LocationProvider({this.location, this.initialLocation});
 
   final Location? location;
-  final LocationData? initialLocation;
+  LocationData? initialLocation;
+
+  Location? getLocation() => location;
 
   Stream<LocationData?> get locationData async* {
     LocationData? temp = initialLocation;
@@ -13,6 +15,15 @@ class LocationProvider{
         .listen((newLocationData) => temp = newLocationData);
     yield temp;
   }
+  Future<LocationData> getLocationData() async {
+    try {
+      initialLocation = await location!.getLocation();
+    } on Exception catch (e) {
+      print('Could not get location: ${e.toString()}');
+    }
+    return initialLocation!;
+  }
+
 /*
   get locationData => _locationData;
   get location => _location; // No reason for this to be called.

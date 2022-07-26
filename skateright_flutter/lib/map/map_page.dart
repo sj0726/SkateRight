@@ -6,6 +6,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
+import 'package:skateright_flutter/state_control/firebase_provider.dart';
+import 'package:skateright_flutter/state_control/location_provider.dart';
 import 'package:skateright_flutter/state_control/spot_holder.dart';
 
 import '../entities/spot.dart';
@@ -37,10 +39,8 @@ class _MapScreenState extends State<MapScreen> {
 
   bool _mapCreated = false;
   late GoogleMapController googleMapController;
-  Location location = Location();
   late LocationData _currentLocation;
-  late bool _locationServEnabled;
-  late PermissionStatus _locationPermEnabled;
+  // late LocationData _locationData;
 
   BitmapDescriptor? customMarker;
   String? _mapStyle;
@@ -61,12 +61,9 @@ class _MapScreenState extends State<MapScreen> {
     super.initState();
     customMarker = widget.customMarker;
     _mapStyle = widget.mapStyle;
-    _checkLocationPerms();
-    location.requestPermission();
-    location.requestService();
-
     _markers = <Marker>{};
-    addSpotMarkersFromList(Provider.of<SpotHolder>(context, listen: false).getSpots());
+    addSpotMarkersFromList(
+        Provider.of<SpotHolder>(context, listen: false).getSpots());
 
     // Overlay setup
     WidgetsBinding.instance
@@ -78,31 +75,6 @@ class _MapScreenState extends State<MapScreen> {
   void dispose() {
     super.dispose();
     googleMapController.dispose();
-  }
-
-  /*  ----- Methods Called on Map Build -----  */
-
-  Future<bool> _checkLocationPerms() async {
-    _locationServEnabled = await location.serviceEnabled();
-    if (!_locationServEnabled) {
-      _locationServEnabled = await location.requestService();
-
-      // If denied -> no point in continuing
-      if (!_locationServEnabled) {
-        return false;
-      }
-    }
-
-    _locationPermEnabled = await location.hasPermission();
-    if (_locationPermEnabled == PermissionStatus.denied) {
-      _locationPermEnabled = await location.requestPermission();
-
-      if (_locationPermEnabled == PermissionStatus.denied) {
-        return false;
-      }
-    }
-
-    return true;
   }
 
   /// Called from [_myLocationButton]
@@ -176,23 +148,12 @@ class _MapScreenState extends State<MapScreen> {
         }
       },
     );
-
-    // Ensure/Request location permissions
-    _checkLocationPerms().then((enabled) async {
-      if (enabled) {
-        _currentLocation = await location.getLocation();
-
-        location.onLocationChanged
-            .listen((newPos) => _currentLocation = newPos);
-      }
-    });
-    // setDummyMarkers();
-
     _mapCreated = true;
   }
 
   @override
   Widget build(BuildContext context) {
+    _currentLocation = Provider.of<LocationData>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: WillPopScope(
@@ -217,7 +178,6 @@ class _MapScreenState extends State<MapScreen> {
             SearchBar(
               placeSpotMarker: addSpotMarker,
               goToSpot: goToSpot,
-              location: location,
             ),
             _myLocationButton(),
             // _buildLogo(),

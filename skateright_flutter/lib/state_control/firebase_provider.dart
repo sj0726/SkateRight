@@ -7,7 +7,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 
 /// Current belief is this is not necessary... fireXXX.instance is not async
 /// ------------ NOT IN USE -----------------
-class LocationProvider extends ChangeNotifier {
+class FirebaseProvider extends ChangeNotifier {
 
   final _firestore = FirebaseFirestore.instance;
   final _functions = FirebaseFunctions.instance;

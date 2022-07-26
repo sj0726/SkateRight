@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:location/location.dart';
+import 'package:provider/provider.dart';
 
 import '../entities/spot.dart';
 // import 'places_interface.dart';
@@ -28,11 +29,9 @@ class SearchBar extends StatefulWidget {
     Key? key,
     required this.placeSpotMarker,
     required this.goToSpot,
-    required this.location,
   }) : super(key: key);
   final placeSpotMarker;
   final goToSpot;
-  final Location location;
 
   @override
   State<SearchBar> createState() => _SearchBarState();
@@ -44,7 +43,6 @@ class _SearchBarState extends State<SearchBar> {
   late final addSpotMarker;
   late final goToSpot;
   late final HttpsCallable firebaseCaller;
-  late final Location location;
   LocationData? _locationData;
 
   String query = '';
@@ -58,7 +56,6 @@ class _SearchBarState extends State<SearchBar> {
     goToSpot = widget.goToSpot;
     firebaseCaller =
         FirebaseFunctions.instance.httpsCallable('getGoogleNearbyOnCall');
-    location = Location();
 
     for (String opt in options) {
       selections[opt] =
@@ -118,6 +115,7 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    _locationData = Provider.of<LocationData>(context);
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
@@ -248,7 +246,6 @@ class _SearchBarState extends State<SearchBar> {
   }
 
   Future<List<Spot>> _getResultsFromQuery(String query) async {
-    _locationData = await location.getLocation();
     query = query.toLowerCase();
 
     List<Spot> spots;
