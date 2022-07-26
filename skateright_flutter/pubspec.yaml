@@ -46,6 +46,7 @@ dependencies:
   cloud_firestore: ^3.1.11
   location: ^4.2.0
   location_web: ^3.1.1
+  provider: ^6.0.3
 
   material_floating_search_bar: ^0.3.7
   flutter_svg: ^1.0.3
