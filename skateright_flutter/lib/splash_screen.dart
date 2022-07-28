@@ -40,6 +40,7 @@ class _SplashScreenState extends State<SplashScreen>
               ..duration = composition.duration
               ..forward();
           },
+          repeat: true,
         ),
       ),
     );
