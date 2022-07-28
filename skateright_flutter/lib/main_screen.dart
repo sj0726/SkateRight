@@ -6,7 +6,6 @@ import 'package:skateright_flutter/profile/profile_form.dart';
 import 'package:skateright_flutter/state_control/spot_holder.dart';
 
 import 'map/map_page.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:skateright_flutter/entities/spot.dart';
 
 class MainScreen extends StatefulWidget {
@@ -36,16 +35,11 @@ class _MainScreenState extends State<MainScreen> {
     profileIcon = const ImageIcon(AssetImage('assets/icons/profile_icon.png'));
     searchIcon = const ImageIcon(AssetImage("assets/icons/search.png"));
 
-
-
     pageList = <Widget>[
-      ChangeNotifierProvider(
-        create: (context) => SpotHolder(),
-        child: MapScreen(
-          key: const PageStorageKey('Map'),
-          customMarker: widget.markerIcon,
-          mapStyle: widget.mapStyle,
-        ),
+      MapScreen(
+        key: const PageStorageKey('Map'),
+        customMarker: widget.markerIcon,
+        mapStyle: widget.mapStyle,
       ),
       ProfileForm(),
       // ClickerPage(key: PageStorageKey('Clicker')),
@@ -63,43 +57,35 @@ class _MainScreenState extends State<MainScreen> {
   // final PageStorageBucket bucket = PageStorageBucket();
 
   Widget build(BuildContext context) {
-    // return FutureBuilder(
-    //   future: _future,
-    //   builder: (context, snapshot) {
-    //     if (snapshot.hasError) {
-    //       return Text(snapshot.error.toString());
-    //     } else {
-          return Scaffold(
-            resizeToAvoidBottomInset: false,
-            body: IndexedStack(children: pageList, index: _pageIndex),
-            bottomNavigationBar: BottomNavigationBar(
-              backgroundColor: Theme.of(context).primaryColorDark,
-              type: BottomNavigationBarType.fixed,
-              currentIndex: _pageIndex,
-              onTap: _onNavigationTap,
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                    icon: searchIcon,
-                    activeIcon: ColorFiltered(
-                        colorFilter: ColorFilter.mode(
-                            Theme.of(context).accentColor, BlendMode.srcATop),
-                        child: searchIcon),
-                    label: ''),
-                BottomNavigationBarItem(
-                    icon: profileIcon,
-                    activeIcon: ColorFiltered(
-                        colorFilter: ColorFilter.mode(
-                            Theme.of(context).accentColor, BlendMode.srcATop),
-                        child: profileIcon),
-                    label: ''),
-                // BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Map'),
-                // BottomNavigationBarItem(
-                //     icon: Icon(Icons.person_sharp), label: 'User'),
-              ],
-            ),
-          );
-        }
-      // },
-    // );
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: IndexedStack(children: pageList, index: _pageIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Theme.of(context).primaryColorDark,
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _pageIndex,
+        onTap: _onNavigationTap,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+              icon: searchIcon,
+              activeIcon: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                      Theme.of(context).accentColor, BlendMode.srcATop),
+                  child: searchIcon),
+              label: ''),
+          BottomNavigationBarItem(
+              icon: profileIcon,
+              activeIcon: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                      Theme.of(context).accentColor, BlendMode.srcATop),
+                  child: profileIcon),
+              label: ''),
+          // BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Map'),
+          // BottomNavigationBarItem(
+          //     icon: Icon(Icons.person_sharp), label: 'User'),
+        ],
+      ),
+    );
   }
+}
 // }

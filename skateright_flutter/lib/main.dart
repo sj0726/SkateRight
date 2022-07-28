@@ -1,8 +1,10 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:cloud_functions/cloud_functions.dart';
 
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,8 +13,10 @@ import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:skateright_flutter/onboarding/onboarding.dart';
 import 'package:skateright_flutter/state_control/location_provider.dart';
+import 'package:skateright_flutter/state_control/spot_holder.dart';
 
 import 'package:skateright_flutter/splash_screen.dart';
+import 'entities/spot.dart';
 import 'main_screen.dart';
 import 'styles/skate_theme.dart';
 
@@ -41,6 +45,7 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
   late var _locationServEnabled;
   late var _locationPermEnabled;
   late Location location;
+  List<Spot>? nearbySpots;
 
   @override
   void initState() {
@@ -95,23 +100,55 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
     return true;
   }
 
+  /// Populate the initial list of spots to be added to SpotProvider
+  /// Returns an unused value in order to signal the future to complete
+  Future<dynamic> querySpots(LocationData currentLocation) async {
+    var firebaseCaller =
+        FirebaseFunctions.instance.httpsCallable('getGoogleNearbyOnCall');
+    var call = await firebaseCaller.call(<String, dynamic>{
+      'latitude': currentLocation.latitude!,
+      'longitude': currentLocation.longitude!,
+      'radius': 5000,
+      'keyword': ''
+    });
+
+    List<dynamic> body = call.data['results'];
+
+    var spots = body.map(
+      (item) {
+        Map<String, dynamic> itemF = Map.from(item);
+
+        return Spot.fromJson(itemF, 'AIzaSyBHbE8gY1lkShRnfptN5wLNJgB06qgFNvg');
+      },
+    ).toList();
+    return spots;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: skateTheme,
       home: FutureBuilder(
-        future: Future.wait([
-          _loadMapStyle(),
-          _loadCustomMarker(),
-          _checkLocationPerms().then((enabled) async {
-            if (enabled) {
-              LocationData locationData = await location.getLocation();
-              return locationData;
-            }
-          }),
-          Future.delayed(const Duration(milliseconds: 3000))
-        ]),
+        future: Future.wait(
+          [
+            _loadMapStyle(),
+            _loadCustomMarker(),
+            _checkLocationPerms().then(
+              (enabled) async {
+                if (enabled) {
+                  LocationData currentLocation = await location.getLocation();
+                  return currentLocation;
+                }
+              },
+            ).then(
+              (currentLocation) async {
+                nearbySpots = await querySpots(currentLocation!);
+                return currentLocation;
+              },
+            ),
+          ],
+        ),
         builder: (context, AsyncSnapshot snapshot) {
           /* Loading screen / future error handling */
           if (snapshot.hasError) {
@@ -129,7 +166,11 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
                       location: location, initialLocation: locationData)
                   .locationData,
               initialData: locationData,
-              child: MainScreen(mapStyle: mapStyle, markerIcon: customMarker)
+              child: ChangeNotifierProvider(
+                create: (context) => SpotHolder(
+                    nearbySpots ?? []), // if nearbyspots is null assign []
+                child: MainScreen(mapStyle: mapStyle, markerIcon: customMarker),
+              ),
             );
 
             // Widget mainScreen = ChangeNotifierProvider(

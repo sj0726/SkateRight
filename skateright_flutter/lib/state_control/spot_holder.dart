@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'dart:collection';
 import 'package:skateright_flutter/entities/spot.dart';
 import 'package:skateright_flutter/map/fake_spot.dart';
 
 class SpotHolder extends ChangeNotifier {
-  /// Internal, private state of the cart.
-  final List<Spot> _heldSpots = [booth, buBeach];
+  SpotHolder(this._heldSpots);
+
+  /// Internal, private state of spots.
+  final List<Spot> _heldSpots;
 
   /// An unmodifiable view of the items in the cart.
   UnmodifiableListView<Spot> get heldSpots => UnmodifiableListView(_heldSpots);
