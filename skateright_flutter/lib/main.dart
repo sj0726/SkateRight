@@ -11,6 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
+import 'package:skateright_flutter/map/fake_spot.dart';
 import 'package:skateright_flutter/onboarding/onboarding.dart';
 import 'package:skateright_flutter/state_control/location_provider.dart';
 import 'package:skateright_flutter/state_control/spot_holder.dart';
@@ -144,6 +145,7 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
             ).then(
               (currentLocation) async {
                 nearbySpots = await querySpots(currentLocation!);
+                // nearbySpots?.addAll([booth, buBeach]);
                 return currentLocation;
               },
             ),

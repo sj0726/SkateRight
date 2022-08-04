@@ -44,7 +44,7 @@ class _MapScreenState extends State<MapScreen> {
 
   BitmapDescriptor? customMarker;
   String? _mapStyle;
-  Set<Marker> _markers = {};
+  late Set<Marker> _markers;
 
   /*  ----- Init state methods -----   */
 
@@ -62,8 +62,6 @@ class _MapScreenState extends State<MapScreen> {
     customMarker = widget.customMarker;
     _mapStyle = widget.mapStyle;
     _markers = <Marker>{};
-    addSpotMarkersFromList(
-        Provider.of<SpotHolder>(context, listen: false).getSpots());
 
     // Overlay setup
     WidgetsBinding.instance
@@ -101,11 +99,11 @@ class _MapScreenState extends State<MapScreen> {
         child: FloatingActionButton(
           heroTag: 'myLocal',
           onPressed: () {
+            Provider.of<SpotHolder>(context, listen: false).add(booth);
             _goToCurrentLocation();
           },
           child: const Icon(
               Icons.my_location), //alt: my_location, memory, control_camera
-          // Note: pin_drop seems good for placing spot button
         ),
       ),
     );
@@ -125,13 +123,6 @@ class _MapScreenState extends State<MapScreen> {
         ),
       ),
     );
-  }
-
-  /// Called from [_onMapCreated]
-  /// TODO: Delete after database connection set up
-  void setDummyMarkers() async {
-    addSpotMarker(buBeach);
-    addSpotMarker(booth);
   }
 
   void _onMapCreated(controller) async {
@@ -172,11 +163,11 @@ class _MapScreenState extends State<MapScreen> {
               zoomControlsEnabled: false,
               initialCameraPosition: _initialCameraPosition,
               onMapCreated: (controller) => _onMapCreated(controller),
-              markers: _markers,
+              markers: spotsToMarker(
+                  Provider.of<SpotHolder>(context, listen: true).getSpots()),
               buildingsEnabled: false,
             ),
             SearchBar(
-              placeSpotMarker: addSpotMarker,
               goToSpot: goToSpot,
             ),
             _myLocationButton(),
@@ -312,9 +303,6 @@ class _MapScreenState extends State<MapScreen> {
   /// Called from [SearchBar], [CreateSpotPage]
   /// Centers camera on given spot
   void goToSpot(Spot spot) {
-    // Add spot marker to map if not there already
-    addSpotMarker(spot);
-
     LatLng newLatLng = LatLng(spot.latitude, spot.longitude);
     googleMapController.moveCamera(
       CameraUpdate.newCameraPosition(
@@ -344,22 +332,23 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   addSpotMarkersFromList(List<Spot> spots) {
-    List<Marker> markerList = [];
     for (Spot spot in spots) {
-      markerList.add(
-        Marker(
-            markerId: MarkerId(spot.id),
-            position: LatLng(spot.latitude, spot.longitude),
-            icon: customMarker!,
-            onTap: () => _onMarkerTap(spot)),
-      );
+      addSpotMarker(spot);
     }
-    setState(() {
-      for (Marker marker in markerList) {
-        if (!_markers.contains(marker)) {
-          _markers.add(marker);
-        }
-      }
-    });
+  }
+
+  Set<Marker> spotsToMarker(List<Spot> spots) {
+    Set<Marker> res = <Marker>{};
+    for (Spot spot in spots) {
+      Marker newMarker = Marker(
+        markerId: MarkerId(spot.id),
+        position: LatLng(spot.latitude, spot.longitude),
+        icon: customMarker!,
+        onTap: () => _onMarkerTap(spot),
+      );
+      res.add(newMarker);
+    }
+
+    return res;
   }
 }

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:skateright_flutter/profile/load_profile_page.dart';
 import 'package:skateright_flutter/profile/profile_form.dart';
 import 'package:skateright_flutter/state_control/spot_holder.dart';
+import 'package:skateright_flutter/state_control/overlay_provider.dart';
 
 import 'map/map_page.dart';
 import 'package:skateright_flutter/entities/spot.dart';
@@ -36,10 +37,13 @@ class _MainScreenState extends State<MainScreen> {
     searchIcon = const ImageIcon(AssetImage("assets/icons/search.png"));
 
     pageList = <Widget>[
-      MapScreen(
-        key: const PageStorageKey('Map'),
-        customMarker: widget.markerIcon,
-        mapStyle: widget.mapStyle,
+      ChangeNotifierProvider(
+        create: (context) => OverlayProvider(),
+        child: MapScreen(
+          key: const PageStorageKey('Map'),
+          customMarker: widget.markerIcon,
+          mapStyle: widget.mapStyle,
+        ),
       ),
       ProfileForm(),
       // ClickerPage(key: PageStorageKey('Clicker')),

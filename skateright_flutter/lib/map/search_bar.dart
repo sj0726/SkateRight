@@ -7,6 +7,7 @@ import 'package:http/http.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
+import 'package:skateright_flutter/state_control/spot_holder.dart';
 
 import '../entities/spot.dart';
 // import 'places_interface.dart';
@@ -27,10 +28,8 @@ Map<String, int> selections = {};
 class SearchBar extends StatefulWidget {
   const SearchBar({
     Key? key,
-    required this.placeSpotMarker,
     required this.goToSpot,
   }) : super(key: key);
-  final placeSpotMarker;
   final goToSpot;
 
   @override
@@ -40,7 +39,6 @@ class SearchBar extends StatefulWidget {
 class _SearchBarState extends State<SearchBar> {
   late FloatingSearchBarController _controller;
   // functions from [map_page]
-  late final addSpotMarker;
   late final goToSpot;
   late final HttpsCallable firebaseCaller;
   LocationData? _locationData;
@@ -52,7 +50,6 @@ class _SearchBarState extends State<SearchBar> {
   void initState() {
     super.initState();
     _controller = FloatingSearchBarController();
-    addSpotMarker = widget.placeSpotMarker;
     goToSpot = widget.goToSpot;
     firebaseCaller =
         FirebaseFunctions.instance.httpsCallable('getGoogleNearbyOnCall');
@@ -62,14 +59,6 @@ class _SearchBarState extends State<SearchBar> {
           1; // Note: eventually need to figure out a way to do staircount
     }
     // _loadAroundUser();
-  }
-
-  void _loadAroundUser() async {
-    var res = await _getResultsFromQuery(''); // returns future list of spot
-    log('${res.toString()}');
-    for (Spot spot in res) {
-      addSpotMarker(spot);
-    }
   }
 
   StatefulBuilder _advSearchBuilder() {
@@ -195,6 +184,7 @@ class _SearchBarState extends State<SearchBar> {
                             snapshot.error.toString(),
                           );
                         }
+
                         return _buildSearchResults(snapshot.data!);
                       } else {
                         return const SizedBox(
@@ -234,6 +224,8 @@ class _SearchBarState extends State<SearchBar> {
             ),
             onTap: () {
               _controller.close();
+              // Provider updated with new spots after user taps on one
+              Provider.of<SpotHolder>(context, listen: false).addSpots(results);
               goToSpot(result);
             },
             tileColor: backgroundColor,

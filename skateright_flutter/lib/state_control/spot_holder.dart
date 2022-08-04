@@ -22,6 +22,17 @@ class SpotHolder extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Adds multiple spots from a list
+  void addSpots(List<Spot> spots) {
+    int numSpots = _heldSpots.length;
+    _heldSpots.addAll(spots);
+
+    // Check to make sure a change has been made before sending notification
+    if (_heldSpots.length != numSpots) {
+      notifyListeners();
+    }
+  }
+
   /// Removes all items from the cart.
   void removeAll() {
     _heldSpots.clear();
