@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -6,13 +8,18 @@ import 'package:skateright_flutter/entities/spot.dart';
 import 'package:skateright_flutter/map/fake_spot.dart';
 
 class SpotHolder extends ChangeNotifier {
-  SpotHolder(this._heldSpots);
-
   /// Internal, private state of spots.
-  final List<Spot> _heldSpots;
+  final List<Spot> _heldSpots = [];
+  Spot? _currentSpot;
 
   /// An unmodifiable view of the items in the cart.
   UnmodifiableListView<Spot> get heldSpots => UnmodifiableListView(_heldSpots);
+  Spot? get currentSpot => _currentSpot;
+
+  void addReview(Comment review) {
+    _currentSpot?.comments.add(review);
+    notifyListeners();
+  }
 
   /// Adds [spot] to cart. This and [removeAll] are the only ways to modify the
   /// cart from the outside.
@@ -42,6 +49,20 @@ class SpotHolder extends ChangeNotifier {
 
   List<Spot> getSpots() {
     return _heldSpots;
+  }
+
+  // Searches for a specific spot
+  // Called from spot_popup_card
+  Spot? getSpot(id) {
+    for (Spot heldSpot in _heldSpots) {
+      if (heldSpot.id == id) {
+        _currentSpot = heldSpot;
+        log('current spot changed');
+        return heldSpot;
+      }
+    }
+    log('no current spot');
+    return null;
   }
 }
 

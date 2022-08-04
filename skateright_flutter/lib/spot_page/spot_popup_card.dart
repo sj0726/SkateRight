@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:skateright_flutter/state_control/spot_holder.dart';
 import '/styles/skate_theme.dart';
 import '../entities/spot.dart';
 import 'review_card.dart';
@@ -11,18 +13,20 @@ import '../spot_page/spot_feed.dart';
 import '../entities/obstacles.dart';
 
 class SpotPopupCard extends StatelessWidget {
-  const SpotPopupCard({Key? key, required this.spot}) : super(key: key);
-  final Spot spot;
+  SpotPopupCard({Key? key, required this.spotID}) : super(key: key);
+  final spotID;
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    Spot spot = Provider.of<SpotHolder>(context, listen: false).getSpot(spotID)!;
+
     return Hero(
       tag: spot.id,
       child: Container(
         alignment: Alignment.bottomCenter,
         child: Dismissible(
-          key: Key('spotPage'),
+          key: const Key('spotPage'),
           direction: DismissDirection.down,
           onDismissed: (_) => Navigator.pop(context),
           child: ConstrainedBox(
@@ -348,7 +352,7 @@ class _ToReviews extends StatelessWidget {
         onPressed: () => {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ReviewsPage(spot: spot)),
+            MaterialPageRoute(builder: (context) => const ReviewsPage()),
           )
         },
       ),

@@ -1,31 +1,34 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:skateright_flutter/entities/spot.dart';
+import '../state_control/spot_holder.dart';
 import './review_card.dart';
 import 'package:skateright_flutter/spot_editing/create_review.dart';
 
 class ReviewsPage extends StatefulWidget {
-  const ReviewsPage({Key? key, required this.spot}) : super(key: key);
+  const ReviewsPage({Key? key}) : super(key: key);
 
-  final Spot spot;
 
   @override
   State<ReviewsPage> createState() => _ReviewsPageState();
 }
 
 class _ReviewsPageState extends State<ReviewsPage> {
-  late Spot spot;
+  // late Spot spot;
 
   @override
   void initState() {
     super.initState();
 
-    spot = widget.spot;
+    // spot = widget.spot;
   }
 
   @override
   Widget build(BuildContext context) {
+    Spot spot = Provider.of<SpotHolder>(context, listen: false).currentSpot!;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -42,17 +45,19 @@ class _ReviewsPageState extends State<ReviewsPage> {
         child: ListView(
           children: [
             Text("Reviews", style: Theme.of(context).textTheme.headline1),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             ListTile(
               leading: const Icon(Icons.add),
-              title: Text("Add a Review", style: Theme.of(context).textTheme.subtitle1,),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => CreateReviewForm(spot: spot),)
+              title: Text(
+                "Add a Review",
+                style: Theme.of(context).textTheme.subtitle1,
               ),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => CreateReviewForm(),
+              )),
             ),
-
-            SizedBox(height: 12),
-            for (final review in spot.comments) ReviewCard(review: review)
+            const SizedBox(height: 12),
+            for (final review in Provider.of<SpotHolder>(context).currentSpot!.comments) ReviewCard(review: review)
           ],
         ),
       ),

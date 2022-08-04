@@ -4,7 +4,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
 import 'package:skateright_flutter/entities/spot.dart';
+import 'package:skateright_flutter/state_control/spot_holder.dart';
 
 alertDialog(BuildContext context) {
   // This is the ok button
@@ -42,8 +44,7 @@ alertDialog(BuildContext context) {
 }
 
 class CreateReviewForm extends StatefulWidget {
-  const CreateReviewForm({Key? key, required this.spot}) : super(key: key);
-  final Spot spot;
+  const CreateReviewForm({Key? key}) : super(key: key);
 
   @override
   State<CreateReviewForm> createState() => _CreateReviewForm();
@@ -65,12 +66,13 @@ class _CreateReviewForm extends State<CreateReviewForm> {
   @override
   void initState() {
     super.initState();
-    spotName = widget.spot.title;
-    spot = widget.spot;
   }
 
   @override
   Widget build(BuildContext context) {
+    spot = Provider.of<SpotHolder>(context, listen: false).currentSpot!;
+    spotName = spot.title;
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Material(
@@ -276,10 +278,11 @@ class _CreateReviewForm extends State<CreateReviewForm> {
 
                               String stupidNumber =
                                   Random().nextInt(1000).toString();
-                              spot.comments.add(Comment(
-                                  id: stupidNumber,
-                                  user: stupidNumber,
-                                  description: addReview.text));
+                              Provider.of<SpotHolder>(context, listen: false).addReview(
+                                  Comment(
+                                      id: stupidNumber,
+                                      user: stupidNumber,
+                                      description: addReview.text));
                             },
                             child: const Text(
                               "Done",

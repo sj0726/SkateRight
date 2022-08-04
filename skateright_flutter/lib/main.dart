@@ -31,7 +31,12 @@ void main() async {
       await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
   SecurityContext.defaultContext
       .setTrustedCertificatesBytes(data.buffer.asUint8List());
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => SpotHolder(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -162,17 +167,15 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
             BitmapDescriptor customMarker = snapshot.data[1];
             LocationData locationData = snapshot.data[2];
 
+            Provider.of<SpotHolder>(context, listen: false).addSpots(nearbySpots ?? []);
+
             // Allows access to a locationData throughout the app :)
             Widget mainScreen = StreamProvider<LocationData?>(
               create: (context) => LocationProvider(
                       location: location, initialLocation: locationData)
                   .locationData,
               initialData: locationData,
-              child: ChangeNotifierProvider(
-                create: (context) => SpotHolder(
-                    nearbySpots ?? []), // if nearbyspots is null assign []
-                child: MainScreen(mapStyle: mapStyle, markerIcon: customMarker),
-              ),
+              child: MainScreen(mapStyle: mapStyle, markerIcon: customMarker),
             );
 
             // Widget mainScreen = ChangeNotifierProvider(

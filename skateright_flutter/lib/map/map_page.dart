@@ -296,7 +296,7 @@ class _MapScreenState extends State<MapScreen> {
   _onMarkerTap(Spot spot) {
     _hideAddSpotOverlay();
     Navigator.of(context).push(
-      HeroDialogRoute(builder: (context) => SpotPopupCard(spot: spot)),
+      HeroDialogRoute(builder: (context) => SpotPopupCard(spotID: spot.id,)),
     );
   }
 
