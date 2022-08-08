@@ -109,21 +109,23 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
   /// Populate the initial list of spots to be added to SpotProvider
   /// Returns an unused value in order to signal the future to complete
   Future<dynamic> querySpots(LocationData currentLocation) async {
-    var firebaseCaller =
-        FirebaseFunctions.instance.httpsCallable('getGoogleNearbyOnCall');
+    var firebaseCaller = FirebaseFunctions.instance.httpsCallable('getSpots');
     var call = await firebaseCaller.call(<String, dynamic>{
       'latitude': currentLocation.latitude!,
       'longitude': currentLocation.longitude!,
       'radius': 5000,
       'keyword': ''
     });
-
-    List<dynamic> body = call.data['results'];
-
+    List<dynamic> body = call.data;
+    log('${call.data}');
     var spots = body.map(
       (item) {
-        Map<String, dynamic> itemF = Map.from(item);
+        if (item == []) {
+          log('GOOGLE PLACES REQUEST FAILED');
+        }
+        item = item[0];
 
+        Map<String, dynamic> itemF = Map.from(item);
         return Spot.fromJson(itemF, 'AIzaSyBHbE8gY1lkShRnfptN5wLNJgB06qgFNvg');
       },
     ).toList();
@@ -167,7 +169,8 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
             BitmapDescriptor customMarker = snapshot.data[1];
             LocationData locationData = snapshot.data[2];
 
-            Provider.of<SpotHolder>(context, listen: false).addSpots(nearbySpots ?? []);
+            Provider.of<SpotHolder>(context, listen: false)
+                .addSpots(nearbySpots ?? [], rebuild: false);
 
             // Allows access to a locationData throughout the app :)
             Widget mainScreen = StreamProvider<LocationData?>(

@@ -24,7 +24,7 @@ class SharedVars extends InheritedWidget {
   }
 
   getNearbyFunction() {
-    return functions.httpsCallable('getGoogleNearbyOnCall');
+    return functions.httpsCallable('getSpots');
   }
 
   @override

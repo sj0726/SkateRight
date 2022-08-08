@@ -30,12 +30,12 @@ class SpotHolder extends ChangeNotifier {
   }
 
   /// Adds multiple spots from a list
-  void addSpots(List<Spot> spots) {
+  void addSpots(List<Spot> spots, {rebuild = true}) {
     int numSpots = _heldSpots.length;
     _heldSpots.addAll(spots);
 
     // Check to make sure a change has been made before sending notification
-    if (_heldSpots.length != numSpots) {
+    if (rebuild && _heldSpots.length != numSpots) {
       notifyListeners();
     }
   }

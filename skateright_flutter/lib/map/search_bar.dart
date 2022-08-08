@@ -51,8 +51,7 @@ class _SearchBarState extends State<SearchBar> {
     super.initState();
     _controller = FloatingSearchBarController();
     goToSpot = widget.goToSpot;
-    firebaseCaller =
-        FirebaseFunctions.instance.httpsCallable('getGoogleNearbyOnCall');
+    firebaseCaller = FirebaseFunctions.instance.httpsCallable('getSpots');
 
     for (String opt in options) {
       selections[opt] =
@@ -250,10 +249,11 @@ class _SearchBarState extends State<SearchBar> {
       'keyword': query,
     });
 
-    List<dynamic> body = call.data['results'];
+    List<dynamic> body = call.data;
 
     spots = body.map(
       (item) {
+        item = item[0];
         Map<String, dynamic> itemF = Map.from(item);
 
         return Spot.fromJson(itemF, 'AIzaSyBHbE8gY1lkShRnfptN5wLNJgB06qgFNvg');
